@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+.env
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Over GitHub's ~100 MB file limit (obtain via BIRD Mini-Dev / HuggingFace; see setup_bird.py)
+Mini Dev/MINIDEV/dev_databases/card_games/card_games.sqlite
+Mini Dev/MINIDEV/dev_databases/codebase_community/codebase_community.sqlite
+Mini Dev/MINIDEV/dev_databases/european_football_2/european_football_2.sqlite
+Mini Dev/MINIDEV_mysql/BIRD_dev.sql

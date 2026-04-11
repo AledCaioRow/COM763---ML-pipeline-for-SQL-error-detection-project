@@ -1,0 +1,54 @@
+COM 763 � SQL Query Performance Predictor
+============================================================
+
+Train set : 265 queries
+Test  set : 55 queries
+
+Cross-Validation Results (on training set)
+--------------------------------------------------
+  XGBoost                    F1 = 0.5362 � 0.0515
+  Random Forest              F1 = 0.5126 � 0.0459
+  Gradient Boosting          F1 = 0.4728 � 0.0998
+  Logistic Regression        F1 = 0.4138 � 0.0638
+
+Best model: XGBoost
+
+Held-Out Test Set Evaluation
+--------------------------------------------------
+  F1 Score : 0.1765
+  ROC-AUC  : 0.5442
+
+              precision    recall  f1-score   support
+
+        fast       0.89      0.49      0.63        49
+        slow       0.11      0.50      0.18         6
+
+    accuracy                           0.49        55
+   macro avg       0.50      0.49      0.40        55
+weighted avg       0.80      0.49      0.58        55
+
+Top 10 Features
+--------------------------------------------------
+  has_correlated_subquery        0.3371
+  n_sum                          0.0681
+  has_limit                      0.0659
+  n_max                          0.0563
+  has_between                    0.0489
+  has_order_by                   0.0472
+  max_nesting_depth              0.0450
+  n_count                        0.0448
+  n_joins                        0.0419
+  has_group_by                   0.0409
+
+=== Per-Database Breakdown ===
+Database                     N    Acc     F1    Prec  Recall
+financial                   22   0.55   0.17    0.11    0.33
+formula_1                   33   0.45   0.18    0.11    0.67
+
+=== Per-Difficulty Breakdown ===
+Difficulty                   N    Acc     F1
+challenging                  9   0.44   0.44
+moderate                    23   0.57   0.17
+simple                      23   0.43   0.00
+
+Note: database-aware split was used. The following databases were held out and never seen during training: formula_1, financial.
