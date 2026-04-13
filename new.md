@@ -1,65 +1,76 @@
-# Project Explanation (Beginner-Friendly)
+# Project explanation (beginner friendly)
 
-## What this project is now
+## Two projects in one repo
 
-This project trains a machine learning model to predict whether a SQL query is **fast** or **slow**.
+| What | Where | Question it answers |
+|------|--------|----------------------|
+| **Fast vs slow classifier (legacy)** | Repository root (`main.py`) | Will this query be slow or fast? |
+| **Runtime predictor (new)** | `sql_runtime_predictor/` | About how many seconds will this query take? |
 
-It now uses **BIRD Mini-Dev** queries (real benchmark queries), not the old synthetic TPC-H generator.
+Both use BIRD Mini-Dev style assets. They do **not** share model files, feature formats, or artifacts.
 
-## Why this matters
+---
 
-The old synthetic workflow had repeated query patterns, so results could look better than real-world performance.
+## A) Fast/slow classifier (root, legacy)
 
-The new workflow uses real queries across multiple databases, which gives a more realistic test of generalization.
+**Idea:** Convert measured runtimes into classes (for example fast vs slow), extract SQL structure features, train sklearn models, and report classification metrics.
 
-## Current pipeline (BIRD version)
+**Steps**
 
-The pipeline is run from `main.py`:
+1. `python setup_bird.py` — checks that BIRD files exist.  
+2. `python -u main.py` — load queries, time them, featurize, train, evaluate.
 
-1. Load BIRD queries from JSON (`mini_dev_sqlite.json` preferred, fallback `mini_dev_mysql.json`)
-2. Time each query on its matching SQLite database (`src/data/load_bird.py`)
-3. Save `data/query_dataset_raw.csv`
-4. Extract SQL structural features (`src/features/extract_features.py`)
-5. Label queries as fast/slow from runtime (`src/features/extract_features.py`)
-6. Split data and train models (`src/models/train.py`)
-7. Evaluate and save reports (`src/evaluation/evaluate.py`)
+**Outputs (project root)**
 
-## Key files
+- `data/query_dataset_raw.csv`, `data/query_dataset_features.csv`  
+- `artifacts/best_model.joblib`  
+- `reports/model_results.txt`, `reports/per_database_results.csv`, `reports/per_difficulty_results.csv`
 
-- `setup_bird.py`  
-  Checks whether required BIRD files are present.
+**Key code**
 
-- `src/data/load_bird.py`  
-  Loads BIRD JSON, performs optional MySQL->SQLite query conversion, times queries, and builds raw dataset.
+- `src/data/load_bird.py` — load JSON, optional MySQL→SQLite tweaks, timing  
+- `src/features/extract_features.py` — features + labels  
+- `src/models/train.py` — splits (including holding out whole databases)  
+- `src/evaluation/evaluate.py` — metrics and reports  
 
-- `src/features/extract_features.py`  
-  Parses SQL into model features; keeps metadata (`db_id`, `difficulty`) for analysis.
+The **Streamlit app** in `streamlit_app/` is built for this pipeline (CSVs + joblib + `config.py`).
 
-- `src/models/train.py`  
-  Supports `random` split and `database_aware` split (hold out whole databases).
+---
 
-- `src/evaluation/evaluate.py`  
-  Produces overall metrics plus per-database and per-difficulty breakdowns.
+## B) Runtime regression (`sql_runtime_predictor/`, current)
 
-## Outputs
+**Idea:** Generate synthetic queries per database, time them, build features from SQLite query plans, train a PyTorch tree model, and compare predictions to real BIRD dev runtimes plus simple baselines.
 
-- `data/query_dataset_raw.csv`
-- `data/query_dataset_features.csv`
-- `artifacts/best_model.joblib`
-- `reports/model_results.txt`
-- `reports/per_database_results.csv`
-- `reports/per_difficulty_results.csv`
+**Steps** (run from inside `sql_runtime_predictor`)
 
-## How to run
-
-1. Verify data:
 ```bash
-python setup_bird.py
+cd sql_runtime_predictor
+python -m pip install -r requirements.txt
+python -m src.generate_queries --per-db 500
+python -m src.collect_runtimes
+python -m src.extract_features
+python -m src.train
+python -m src.evaluate
 ```
 
-2. Run pipeline:
-```bash
-python -u main.py
-```
+**Outputs**
 
-If BIRD files are missing, `main.py` now exits with a clear setup message.
+- `sql_runtime_predictor/data/synthetic_queries/*.jsonl`
+- `sql_runtime_predictor/data/collected_runtimes/*.jsonl`
+- `sql_runtime_predictor/data/features/train_all.jsonl` (+ shards and bird dev features)
+- `sql_runtime_predictor/artifacts/runtime_predictor.pt`
+- `sql_runtime_predictor/artifacts/train_meta.json`
+- `sql_runtime_predictor/artifacts/eval_report.json`
+
+**Config**
+
+- `sql_runtime_predictor/configs/default.yaml` controls paths, timing, and training hyperparameters
+
+Set **`BIRD_ROOT`** or **`SRP_BIRD_ROOT`** to point at your Mini-Dev root, or rely on `bird_root_candidates` in the YAML config.
+
+---
+
+## Which should you use?
+
+- Use **A** if you need binary decisions and the existing Streamlit dashboard.
+- Use **B** if you need continuous runtime estimates, plan-based modeling, and the new codebase.

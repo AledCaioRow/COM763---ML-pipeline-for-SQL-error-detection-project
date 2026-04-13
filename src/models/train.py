@@ -1,29 +1,25 @@
 """
-Stage 6 — Model training with proper train / test separation.
-
-Workflow
---------
-1. split_data()        → stratified 80 / 20 train-test split
-2. build_models()      → dictionary of candidate classifiers
-3. train_and_select()  → 5-fold stratified CV on *train only*,
-                         refit best model, save artifact to disk
+Stage 6 — model training with expanded cross-validation statistics.
 """
 
 import os
+import re
+from typing import Dict
 
+import joblib
 import numpy as np
 import pandas as pd
-import joblib
-from sklearn.model_selection import (
-    train_test_split,
-    cross_val_score,
-    StratifiedKFold,
-)
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import (
+    StratifiedKFold,
+    cross_val_predict,
+    cross_validate,
+    train_test_split,
+)
 from sklearn.pipeline import Pipeline
-from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.preprocessing import StandardScaler
 
 from config import (
     RANDOM_SEED,
@@ -40,7 +36,7 @@ from config import (
 # ============================================================
 
 def split_data(df):
-    """Return train/test splits and aligned metadata DataFrame for test rows."""
+    """Return train/test splits and aligned metadata DataFrames."""
     required_meta = {"db_id", "difficulty", "question_id", "sql"}
     missing = required_meta - set(df.columns)
     if missing:
@@ -103,7 +99,14 @@ def split_data(df):
     print(f"  train label balance: {_label_counts(y_train)}")
     print(f"  test label balance : {_label_counts(y_test)}")
 
-    return X_train, X_test, y_train, y_test, meta_test.reset_index(drop=True)
+    return (
+        X_train,
+        X_test,
+        y_train,
+        y_test,
+        meta_train.reset_index(drop=True),
+        meta_test.reset_index(drop=True),
+    )
 
 
 # ============================================================
@@ -161,37 +164,85 @@ def build_models():
 # TRAINING + MODEL SELECTION
 # ============================================================
 
-def train_and_select(X_train, y_train, models):
-    """Run stratified 5-fold CV on the *training* set, pick the best model,
-    refit on the full training set, and persist to disk.
+def _model_slug(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
-    Returns (cv_results, best_model, best_name).
-    """
+
+def train_and_select(X_train, y_train, models: Dict[str, BaseEstimator]):
+    """Run CV with fold-level arrays, fit all models, and persist artifacts."""
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_SEED)
     cv_results = {}
 
-    print(f"[STAGE 6b] Cross-validation on {len(X_train)} training samples, "
-          f"{len(FEATURE_COLS)} features")
-    print(f"  Class balance: slow={int(y_train.sum())}, "
-          f"fast={int(len(y_train) - y_train.sum())}")
+    print(
+        f"[STAGE 6b] Cross-validation on {len(X_train)} training samples, "
+        f"{len(FEATURE_COLS)} features"
+    )
+    print(
+        f"  Class balance: slow={int(y_train.sum())}, "
+        f"fast={int(len(y_train) - y_train.sum())}"
+    )
+
+    scoring = {
+        "f1": "f1",
+        "accuracy": "accuracy",
+        "precision": "precision",
+        "recall": "recall",
+        "roc_auc": "roc_auc",
+    }
 
     for name, model in models.items():
-        scores = cross_val_score(model, X_train, y_train, cv=cv, scoring="f1")
+        model_cv = cross_validate(
+            model,
+            X_train,
+            y_train,
+            cv=cv,
+            scoring=scoring,
+            return_train_score=True,
+            return_estimator=True,
+            n_jobs=None,
+        )
         cv_results[name] = {
-            "f1_mean": scores.mean(),
-            "f1_std": scores.std(),
-            "scores": scores,
+            "f1_mean": float(np.mean(model_cv["test_f1"])),
+            "f1_std": float(np.std(model_cv["test_f1"])),
+            "cv_raw": model_cv,
         }
-        print(f"  {name:25s}  F1 = {scores.mean():.4f} ± {scores.std():.4f}")
+        print(
+            f"  {name:25s}  F1 = {cv_results[name]['f1_mean']:.4f} "
+            f"+/- {cv_results[name]['f1_std']:.4f}"
+        )
 
     best_name = max(cv_results, key=lambda k: cv_results[k]["f1_mean"])
     print(f"\n  Best model (by CV F1): {best_name}")
 
-    best_model = models[best_name]
-    best_model.fit(X_train, y_train)
+    fitted_models = {}
+    for name, model in models.items():
+        full_model = clone(model)
+        full_model.fit(X_train, y_train)
+        fitted_models[name] = full_model
 
-    model_path = os.path.join(ARTIFACTS_DIR, "best_model.joblib")
-    joblib.dump(best_model, model_path)
-    print(f"  Model saved -> {model_path}")
+        model_filename = f"{_model_slug(name)}_model.joblib"
+        model_path = os.path.join(ARTIFACTS_DIR, model_filename)
+        joblib.dump(full_model, model_path)
+        print(f"  Saved model artifact -> {model_path}")
 
-    return cv_results, best_model, best_name
+    best_model = fitted_models[best_name]
+    best_model_path = os.path.join(ARTIFACTS_DIR, "best_model.joblib")
+    joblib.dump(best_model, best_model_path)
+    print(f"  Best model copy saved -> {best_model_path}")
+
+    y_proba_cv = cross_val_predict(
+        clone(models[best_name]),
+        X_train,
+        y_train,
+        cv=cv,
+        method="predict_proba",
+    )
+
+    return {
+        "cv_results": cv_results,
+        "best_model": best_model,
+        "best_name": best_name,
+        "fitted_models": fitted_models,
+        "y_proba_cv": y_proba_cv,
+        "y_train": y_train.to_numpy(),
+    }

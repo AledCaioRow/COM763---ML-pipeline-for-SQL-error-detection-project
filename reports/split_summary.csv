@@ -1,0 +1,3 @@
+split,n_queries,fast,slow,databases
+Train (CV),269,168,101,"california_schools, card_games, codebase_community, debit_card_specializing, european_football_2, student_club, superhero, thrombosis_prediction, toxicology"
+Test,51,45,6,"financial, formula_1"

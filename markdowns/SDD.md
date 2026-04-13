@@ -1,42 +1,75 @@
-# Software Design Document -- SQL Query Performance Predictor
+# Software design document — SQL performance repository
 
 ## 1. Purpose
 
-This system predicts SQL runtime class (**fast** vs **slow**) using static SQL structure features.
-The data source is BIRD Mini-Dev with per-query timing on SQLite databases.
+This repository implements two related systems:
 
-## 2. Architecture
+1. **Legacy classification**: predict fast vs slow from static SQL features and timed BIRD Mini-Dev data (`main.py` at repo root)
+2. **Current regression**: predict runtime in seconds from `EXPLAIN QUERY PLAN` trees + global features (`sql_runtime_predictor/`)
 
-- `config.py`: central configuration
-- `setup_bird.py`: setup verification for BIRD assets
-- `src/data/load_bird.py`: load + optional MySQL-to-SQLite conversion + runtime timing
-- `src/features/extract_features.py`: 25 feature extraction + runtime-based labels
-- `src/models/train.py`: split, CV model selection, save best model
-- `src/evaluation/evaluate.py`: test metrics + grouped reporting
-- `src/models/predict.py`: inference API for new SQL queries
+---
 
-## 3. Data Flow
+## 2. System A — root classifier (legacy)
 
-1. Load BIRD query JSON (`mini_dev_sqlite.json`, fallback `mini_dev_mysql.json`)
-2. Resolve database file by `db_id` (`dev_databases/<db_id>/<db_id>.sqlite`)
-3. Execute each query with timeout and record median runtime
-4. Save raw dataset (`query_dataset_raw.csv`)
-5. Extract features and apply labels (`query_dataset_features.csv`)
-6. Train models and persist best artifact (`best_model.joblib`)
-7. Evaluate on held-out test data and write reports
+### 2.1 Components
 
-## 4. Split Strategy
+- `config.py` — paths, timing, split mode, holdout DBs, `FEATURE_COLS`
+- `setup_bird.py` — verifies BIRD JSON + SQLite assets
+- `src/data/load_bird.py` — query loading and runtime timing
+- `src/features/extract_features.py` — structural SQL features + labels
+- `src/models/train.py` — split strategies, CV, model persistence
+- `src/evaluation/evaluate.py` — metrics and grouped reports
+- `src/models/predict.py` — inference helpers  
 
-- `random`: stratified 80/20 split (baseline)
-- `database_aware`: hold out complete databases (`HOLDOUT_DATABASES`) for testing
+### 2.2 Data flow
 
-The `database_aware` split is the primary method because it tests schema-level generalization.
+1. Read `mini_dev_sqlite.json` or `mini_dev_mysql.json`.  
+2. Execute on matching SQLite files; record median runtime.  
+3. `query_dataset_raw.csv` → features + labels → `query_dataset_features.csv`.  
+4. Train → `artifacts/best_model.joblib`.  
+5. Evaluate → `reports/*`.
 
-## 5. Evaluation Outputs
+### 2.3 Split strategy
 
-- Overall classification report, F1, ROC-AUC
-- Per-database metrics (`reports/per_database_results.csv`)
-- Per-difficulty metrics (`reports/per_difficulty_results.csv`)
-- Human-readable summary (`reports/model_results.txt`)
+- Random stratified split or **database-aware** holdout (entire `db_id` groups in test), per `config.py`.
 
-Edge cases (single-class or too-small groups) are reported as `N/A`.
+### 2.4 Evaluation outputs
+
+Classification outputs include precision/recall/F1, optional ROC-AUC, grouped CSVs, and `model_results.txt`.
+
+---
+
+## 3. System B — `sql_runtime_predictor` (current plan-tree regression)
+
+### 3.1 Components
+
+- `configs/default.yaml` — path candidates, data dirs, synthetic volume, timing, training hyperparameters, q-error settings
+- `src/database/utils.py` — config loading, BIRD root resolution (`BIRD_ROOT` / `SRP_BIRD_ROOT`), schema helpers
+- `src/creation/generate_queries.py` — schema-driven synthetic SQL generation and validation
+- `src/creation/collect_runtimes.py` — warm-up + repeated timing, median runtime, timeout/error tracking
+- `src/modeling/extract_features.py` — `EXPLAIN QUERY PLAN` parsing to plan-tree and global vectors (`--bird-only` supported)
+- `src/modeling/model.py` — `RuntimePredictor` tree encoder + regression head
+- `src/modeling/train.py` — stratified-by-db split, AdamW, cosine scheduler, early stopping, checkpoint save
+- `src/performance/evaluate.py` — BIRD dev retiming and metrics (q-error, Spearman, MAE-log, median-split accuracy) + Ridge baselines
+- `src/data_queries/` — namespace for query/data-query helper modules
+- `src/*.py` — compatibility entry points for older command paths
+
+### 3.2 Data flow
+
+1. Synthetic JSONL in `data/synthetic_queries/`
+2. Timed JSONL in `data/collected_runtimes/` (+ `collection_meta.json`)
+3. Feature JSONL in `data/features/` (`train_all.jsonl`, shards, `bird_dev_features.jsonl`)
+4. Checkpoint `artifacts/runtime_predictor.pt` + metadata `train_meta.json`
+5. Evaluation report `artifacts/eval_report.json`
+
+### 3.3 Design notes
+
+- Training target is `log1p(median_runtime_seconds)` for successful synthetic runs
+- Evaluation compares `expm1(prediction)` to freshly timed BIRD runtimes
+- Baselines run only when optional deps are available (`scikit-learn`, `scipy`)
+
+---
+
+## 4. Streamlit dashboard
+
+`streamlit_app/` is a read-only UI for System A (root classifier outputs). It does not load `sql_runtime_predictor` checkpoints.

@@ -18,6 +18,7 @@ import random
 import warnings
 
 import numpy as np
+import pandas as pd
 
 from config import (
     RANDOM_SEED,
@@ -33,7 +34,7 @@ from src.data.load_bird import load_and_time_bird_queries, pick_bird_json_path
 from src.features.extract_features import add_parsed_features, add_labels
 from src.models.train import split_data, build_models, train_and_select
 from src.evaluation.evaluate import (
-    evaluate_on_test,
+    evaluate_models_on_test,
     get_feature_importance,
     save_report,
 )
@@ -87,14 +88,30 @@ def main():
     df = add_labels(df)
 
     # Stage 4 — train / test split + model selection via CV
-    X_train, X_test, y_train, y_test, meta_test = split_data(df)
+    X_train, X_test, y_train, y_test, meta_train, meta_test = split_data(df)
     models = build_models()
-    cv_results, best_model, best_name = train_and_select(
+    train_outputs = train_and_select(
         X_train, y_train, models,
     )
+    cv_results = train_outputs["cv_results"]
+    best_model = train_outputs["best_model"]
+    best_name = train_outputs["best_name"]
+    fitted_models = train_outputs["fitted_models"]
 
     # Stage 5 — evaluate on held-out test set
-    test_metrics = evaluate_on_test(best_model, X_test, y_test, meta_test)
+    test_metrics = evaluate_models_on_test(
+        fitted_models=fitted_models,
+        best_name=best_name,
+        cv_results=cv_results,
+        X_train=X_train,
+        y_train=y_train,
+        X_test=X_test,
+        y_test=y_test,
+        train_meta=meta_train,
+        test_meta=meta_test,
+        raw_df=pd.read_csv(raw_path),
+        labeled_df=df,
+    )
     feat_imp = get_feature_importance(best_model)
 
     # Stage 6 — save report
@@ -112,6 +129,21 @@ def main():
         os.path.join(REPORTS_DIR, "model_results.txt"),
         os.path.join(REPORTS_DIR, "per_database_results.csv"),
         os.path.join(REPORTS_DIR, "per_difficulty_results.csv"),
+        os.path.join(REPORTS_DIR, "all_models_test_comparison.csv"),
+        os.path.join(REPORTS_DIR, "classification_report.csv"),
+        os.path.join(REPORTS_DIR, "cv_fold_scores.csv"),
+        os.path.join(REPORTS_DIR, "confusion_matrix.csv"),
+        os.path.join(REPORTS_DIR, "confusion_matrix.png"),
+        os.path.join(REPORTS_DIR, "confusion_matrix_normalised.png"),
+        os.path.join(REPORTS_DIR, "roc_curve.png"),
+        os.path.join(REPORTS_DIR, "pr_curve.png"),
+        os.path.join(REPORTS_DIR, "feature_importance.csv"),
+        os.path.join(REPORTS_DIR, "feature_importance.png"),
+        os.path.join(REPORTS_DIR, "class_distribution.png"),
+        os.path.join(REPORTS_DIR, "runtime_distribution.png"),
+        os.path.join(REPORTS_DIR, "cv_boxplot.png"),
+        os.path.join(REPORTS_DIR, "learning_curve.png"),
+        os.path.join(REPORTS_DIR, "split_summary.csv"),
     ]:
         tag = "OK" if os.path.exists(f) else "MISSING"
         print(f"  {tag}  {f}")

@@ -11,6 +11,7 @@ def render_sidebar(
     pipeline_config: Any,
     missing_files: List[str],
     page_options: List[str],
+    artefact_status: Any = None,
     page_key: str = "sqpp_page",
 ) -> str:
     st.sidebar.title("SQPP Dashboard")
@@ -44,6 +45,12 @@ def render_sidebar(
         st.sidebar.error("Missing files:")
         for m in missing_files:
             st.sidebar.caption(f"• {m}")
+
+    if artefact_status:
+        with st.sidebar.expander("Artefact status"):
+            for label, exists in artefact_status.items():
+                icon = "✅" if exists else "❌"
+                st.caption(f"{icon} {label}")
 
     st.sidebar.divider()
     page = st.sidebar.radio("Page", page_options, key=page_key)

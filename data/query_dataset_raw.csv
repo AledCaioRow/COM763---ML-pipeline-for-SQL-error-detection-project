@@ -1,5 +1,5 @@
 question_id,db_id,sql,difficulty,runtime_s
-1471,debit_card_specializing,SELECT  CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN Currency = 'CZK' THEN 1 ELSE 0 END) FROM customers,simple,0.0027754999755416065
+1471,debit_card_specializing,SELECT  CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN Currency = 'CZK' THEN 1 ELSE 0 END) FROM customers,simple,0.012632400001166388
 1472,debit_card_specializing,"SELECT
   T1.CustomerID
 FROM customers AS T1
@@ -11,21 +11,21 @@ GROUP BY
   T1.CustomerID
 ORDER BY
   SUM(T2.Consumption) ASC
-LIMIT 1",moderate,0.05362799999420531
+LIMIT 1",moderate,0.18693160000111675
 1473,debit_card_specializing,"SELECT
   AVG(T2.Consumption) / 12
 FROM customers AS T1
 INNER JOIN yearmonth AS T2
   ON T1.CustomerID = T2.CustomerID
 WHERE
-  SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'",moderate,0.06015019997721538
+  SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'",moderate,0.1874309999984689
 1476,debit_card_specializing,"SELECT
   SUM(CASE WHEN T1.Currency = 'CZK' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Currency = 'EUR' THEN T2.Consumption ELSE 0 END)
 FROM customers AS T1
 INNER JOIN yearmonth AS T2
   ON T1.CustomerID = T2.CustomerID
 WHERE
-  SUBSTR(T2.Date, 1, 4) = '2012'",challenging,0.07588420002139173
+  SUBSTR(T2.Date, 1, 4) = '2012'",challenging,0.18888890000380343
 1479,debit_card_specializing,"SELECT
   SUBSTR(T2.Date, 1, 4)
 FROM customers AS T1
@@ -37,7 +37,7 @@ GROUP BY
   SUBSTR(T2.Date, 1, 4)
 ORDER BY
   SUM(T2.Consumption) DESC
-LIMIT 1",moderate,0.19756689999485388
+LIMIT 1",moderate,0.5518128000039724
 1480,debit_card_specializing,"SELECT
   SUBSTR(T2.Date, 5, 2)
 FROM customers AS T1
@@ -49,7 +49,7 @@ GROUP BY
   SUBSTR(T2.Date, 5, 2)
 ORDER BY
   SUM(T2.Consumption) DESC
-LIMIT 1",moderate,0.1436561000009533
+LIMIT 1",moderate,0.37856990000000224
 1481,debit_card_specializing,"SELECT
   CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID),
   CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID),
@@ -64,7 +64,7 @@ WHERE
       MIN(Consumption)
     FROM yearmonth
   )
-  AND T2.Date BETWEEN 201301 AND 201312",challenging,0.22522089999984019
+  AND T2.Date BETWEEN 201301 AND 201312",challenging,0.680462999996962
 1482,debit_card_specializing,"SELECT
   CAST((
     SUM(
@@ -127,34 +127,34 @@ WHERE
   )
 FROM customers AS T1
 INNER JOIN yearmonth AS T2
-  ON T1.CustomerID = T2.CustomerID",challenging,0.17620929999975488
+  ON T1.CustomerID = T2.CustomerID",challenging,0.43916010000248207
 1483,debit_card_specializing,"SELECT
   SUM(Consumption)
 FROM yearmonth
 WHERE
-  CustomerID = 6 AND Date BETWEEN '201308' AND '201311'",simple,0.00895329998456873
+  CustomerID = 6 AND Date BETWEEN '201308' AND '201311'",simple,0.026941899996018037
 1484,debit_card_specializing,"SELECT
   SUM(CASE WHEN Country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END)
 FROM gasstations
 WHERE
-  Segment = 'Discount'",simple,0.00044850000995211303
+  Segment = 'Discount'",simple,0.001545099999930244
 1486,debit_card_specializing,"SELECT
   SUM(Currency = 'CZK') - SUM(Currency = 'EUR')
 FROM customers
 WHERE
-  Segment = 'SME'",simple,0.00435589998960495
+  Segment = 'SME'",simple,0.01121899999998277
 1490,debit_card_specializing,"SELECT
   CAST(SUM(CASE WHEN T2.Consumption > 46.73 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.CustomerID)
 FROM customers AS T1
 INNER JOIN yearmonth AS T2
   ON T1.CustomerID = T2.CustomerID
 WHERE
-  T1.Segment = 'LAM'",moderate,0.052467100002104416
+  T1.Segment = 'LAM'",moderate,0.13634209999872837
 1493,debit_card_specializing,"SELECT
   CAST(SUM(CASE WHEN Consumption > 528.3 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(CustomerID)
 FROM yearmonth
 WHERE
-  Date = '201202'",simple,0.016683199995895848
+  Date = '201202'",simple,0.06094479999592295
 1498,debit_card_specializing,"SELECT
   SUM(Consumption)
 FROM yearmonth
@@ -164,7 +164,7 @@ GROUP BY
   SUBSTR(Date, 5, 2)
 ORDER BY
   SUM(Consumption) DESC
-LIMIT 1",simple,0.10680740000680089
+LIMIT 1",simple,0.3014152000032482
 1500,debit_card_specializing,"SELECT
   T3.Description
 FROM transactions_1k AS T1
@@ -173,7 +173,7 @@ INNER JOIN yearmonth AS T2
 INNER JOIN products AS T3
   ON T1.ProductID = T3.ProductID
 WHERE
-  T2.Date = '201309'",simple,0.002622600004542619
+  T2.Date = '201309'",simple,0.007434300001477823
 1501,debit_card_specializing,"SELECT DISTINCT
   T2.Country
 FROM transactions_1k AS T1
@@ -182,14 +182,14 @@ INNER JOIN gasstations AS T2
 INNER JOIN yearmonth AS T3
   ON T1.CustomerID = T3.CustomerID
 WHERE
-  T3.Date = '201306'",moderate,0.002180800016503781
+  T3.Date = '201306'",moderate,0.005407700002251659
 1505,debit_card_specializing,"SELECT
   COUNT(*)
 FROM yearmonth AS T1
 INNER JOIN customers AS T2
   ON T1.CustomerID = T2.CustomerID
 WHERE
-  T2.Currency = 'EUR' AND T1.Consumption > 1000.00",simple,0.04317739998805337
+  T2.Currency = 'EUR' AND T1.Consumption > 1000.00",simple,0.13046809999650577
 1506,debit_card_specializing,"SELECT DISTINCT
   T3.Description
 FROM transactions_1k AS T1
@@ -198,14 +198,14 @@ INNER JOIN gasstations AS T2
 INNER JOIN products AS T3
   ON T1.ProductID = T3.ProductID
 WHERE
-  T2.Country = 'CZE'",moderate,0.0005068999889772385
+  T2.Country = 'CZE'",moderate,0.0016843999983393587
 1507,debit_card_specializing,"SELECT DISTINCT
   T1.Time
 FROM transactions_1k AS T1
 INNER JOIN gasstations AS T2
   ON T1.GasStationID = T2.GasStationID
 WHERE
-  T2.ChainID = 11",simple,0.00031040000612847507
+  T2.ChainID = 11",simple,0.0010364999980083667
 1514,debit_card_specializing,"SELECT DISTINCT
   T3.Currency
 FROM transactions_1k AS T1
@@ -214,14 +214,14 @@ INNER JOIN gasstations AS T2
 INNER JOIN customers AS T3
   ON T1.CustomerID = T3.CustomerID
 WHERE
-  T1.Date = '2012-08-24' AND T1.Time = '16:25:00'",simple,0.00021520000882446766
+  T1.Date = '2012-08-24' AND T1.Time = '16:25:00'",simple,0.0007470999989891425
 1515,debit_card_specializing,"SELECT
   T2.Segment
 FROM transactions_1k AS T1
 INNER JOIN customers AS T2
   ON T1.CustomerID = T2.CustomerID
 WHERE
-  T1.date = '2012-08-23' AND T1.time = '21:20:00'",simple,0.00016270001651719213
+  T1.date = '2012-08-23' AND T1.time = '21:20:00'",simple,0.0006176999959279783
 1521,debit_card_specializing,"SELECT
   COUNT(T1.TransactionID)
 FROM transactions_1k AS T1
@@ -230,21 +230,21 @@ INNER JOIN gasstations AS T2
 WHERE
   T1.Date = '2012-08-26'
   AND T1.Time BETWEEN '08:00:00' AND '09:00:00'
-  AND T2.Country = 'CZE'",moderate,0.0002043000131379813
+  AND T2.Country = 'CZE'",moderate,0.0007278999983100221
 1524,debit_card_specializing,"SELECT
   T2.Country
 FROM transactions_1k AS T1
 INNER JOIN gasstations AS T2
   ON T1.GasStationID = T2.GasStationID
 WHERE
-  T1.Date = '2012-08-24' AND  T1.Price = 548.4",simple,0.00018659999477677047
+  T1.Date = '2012-08-24' AND  T1.Price = 548.4",simple,0.0007387000005110167
 1525,debit_card_specializing,"SELECT
   CAST(SUM(CASE WHEN T2.Currency = 'EUR' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.CustomerID)
 FROM transactions_1k AS T1
 INNER JOIN customers AS T2
   ON T1.CustomerID = T2.CustomerID
 WHERE
-  T1.Date = '2012-08-25'",simple,0.0005824000108987093
+  T1.Date = '2012-08-25'",simple,0.002256700005091261
 1526,debit_card_specializing,"SELECT
   CAST(SUM(CASE WHEN SUBSTR(Date, 1, 4) = '2012' THEN Consumption ELSE 0 END) - SUM(CASE WHEN SUBSTR(Date, 1, 4) = '2013' THEN Consumption ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN SUBSTR(Date, 1, 4) = '2012' THEN Consumption ELSE 0 END)
 FROM yearmonth
@@ -256,10 +256,10 @@ WHERE
     INNER JOIN gasstations AS T2
       ON T1.GasStationID = T2.GasStationID
     WHERE
-      T1.Date = '2012-08-25' AND T1.Price  = 1513.12   )",challenging,0.02992519998224452
+      T1.Date = '2012-08-25' AND T1.Price  = 1513.12   )",challenging,0.08632390000275336
 1528,debit_card_specializing,"SELECT
   CAST(SUM(CASE WHEN Country = 'SVK' AND Segment = 'Premium' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END)
-FROM gasstations",simple,0.0007228999747894704
+FROM gasstations",simple,0.0021378000019467436
 1529,debit_card_specializing,"SELECT
   SUM(T1.Price ),
   SUM(CASE WHEN T3.Date = '201201' THEN T1.Price ELSE 0 END)
@@ -269,7 +269,7 @@ INNER JOIN gasstations AS T2
 INNER JOIN yearmonth AS T3
   ON T1.CustomerID = T3.CustomerID
 WHERE
-  T1.CustomerID = '38508'",moderate,0.037128199997823685
+  T1.CustomerID = '38508'",moderate,0.10557200000039302
 1531,debit_card_specializing,"SELECT
   T2.CustomerID,
   SUM(T2.Price / T2.Amount),
@@ -288,7 +288,7 @@ WHERE
   )
 GROUP BY
   T2.CustomerID,
-  T1.Currency",moderate,0.03649460000451654
+  T1.Currency",moderate,0.12233769999875221
 1533,debit_card_specializing,"SELECT
   T2.Consumption
 FROM transactions_1k AS T1
@@ -297,14 +297,14 @@ INNER JOIN yearmonth AS T2
 WHERE
   T1.Price / T1.Amount > 29.00
   AND T1.ProductID = 5
-  AND T2.Date = '201208'",moderate,0.00026929998421110213
+  AND T2.Date = '201208'",moderate,0.0019831999961752445
 1312,student_club,"SELECT
   T2.major_name
 FROM member AS T1
 INNER JOIN major AS T2
   ON T1.link_to_major = T2.major_id
 WHERE
-  T1.first_name = 'Angela' AND T1.last_name = 'Sanders'",simple,6.419999408535659e-05
+  T1.first_name = 'Angela' AND T1.last_name = 'Sanders'",simple,0.0002530999990995042
 1317,student_club,"SELECT
   COUNT(T1.event_id)
 FROM event AS T1
@@ -313,16 +313,16 @@ INNER JOIN attendance AS T2
 INNER JOIN member AS T3
   ON T2.link_to_member = T3.member_id
 WHERE
-  T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'",moderate,0.00018579998868517578
-1322,student_club,SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10,moderate,0.00011279998579993844
-1323,student_club,SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 AND NOT EXISTS (SELECT 1 FROM event AS E WHERE E.event_id = T1.event_id AND E.type = 'Fundraiser'),moderate,0.00013860000763088465
+  T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'",moderate,0.000825700000859797
+1322,student_club,SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10,moderate,0.000517000000400003
+1323,student_club,SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 AND NOT EXISTS (SELECT 1 FROM event AS E WHERE E.event_id = T1.event_id AND E.type = 'Fundraiser'),moderate,0.0004926999972667545
 1331,student_club,"SELECT
   T2.amount
 FROM member AS T1
 INNER JOIN income AS T2
   ON T1.member_id = T2.link_to_member
 WHERE
-  T1.position = 'Vice President'",simple,6.269998266361654e-05
+  T1.position = 'Vice President'",simple,0.00025090000417549163
 1334,student_club,"SELECT
   T1.first_name,
   T1.last_name
@@ -330,7 +330,7 @@ FROM member AS T1
 INNER JOIN zip_code AS T2
   ON T1.zip = T2.zip_code
 WHERE
-  T2.state = 'Illinois'",simple,0.00020640000002458692
+  T2.state = 'Illinois'",simple,0.0008264999996754341
 1338,student_club,"SELECT
   T3.approved
 FROM event AS T1
@@ -339,7 +339,7 @@ INNER JOIN budget AS T2
 INNER JOIN expense AS T3
   ON T2.budget_id = T3.link_to_budget
 WHERE
-  T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'",moderate,0.00010320000001229346
+  T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'",moderate,0.00038299999869195744
 1339,student_club,"SELECT
   AVG(T2.cost)
 FROM member AS T1
@@ -351,22 +351,22 @@ WHERE
   AND (
     SUBSTR(T2.expense_date, 6, 2) = '09'
     OR SUBSTR(T2.expense_date, 6, 2) = '10'
-  )",challenging,7.860001642256975e-05
+  )",challenging,0.0003355000008014031
 1340,student_club,"SELECT
   SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num
 FROM event AS T1
 INNER JOIN budget AS T2
-  ON T1.event_id = T2.link_to_event",moderate,0.00010159998782910407
+  ON T1.event_id = T2.link_to_event",moderate,0.00034359999699518085
 1344,student_club,"SELECT
   notes
 FROM income
 WHERE
-  source = 'Fundraising' AND date_received = '2019-09-14'",simple,4.5599997974932194e-05
+  source = 'Fundraising' AND date_received = '2019-09-14'",simple,0.00024310000299010426
 1346,student_club,"SELECT
   phone
 FROM member
 WHERE
-  first_name = 'Carlo' AND last_name = 'Jacobs'",simple,4.4599990360438824e-05
+  first_name = 'Carlo' AND last_name = 'Jacobs'",simple,0.0002689000029931776
 1350,student_club,"SELECT
   T1.event_status
 FROM budget AS T1
@@ -374,28 +374,28 @@ INNER JOIN expense AS T2
   ON T1.budget_id = T2.link_to_budget
 WHERE
   T2.expense_description = 'Post Cards, Posters'
-  AND T2.expense_date = '2019-08-20'",moderate,5.699999746866524e-05
+  AND T2.expense_date = '2019-08-20'",moderate,0.00023820000205887482
 1351,student_club,"SELECT
   T2.major_name
 FROM member AS T1
 INNER JOIN major AS T2
   ON T1.link_to_major = T2.major_id
 WHERE
-  T1.first_name = 'Brent' AND T1.last_name = 'Thomason'",simple,5.980001878924668e-05
+  T1.first_name = 'Brent' AND T1.last_name = 'Thomason'",simple,0.0002640000020619482
 1352,student_club,"SELECT
   COUNT(T1.member_id)
 FROM member AS T1
 INNER JOIN major AS T2
   ON T1.link_to_major = T2.major_id
 WHERE
-  T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'",moderate,8.38999985717237e-05
+  T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'",moderate,0.0004791000028490089
 1356,student_club,"SELECT
   T2.department
 FROM member AS T1
 INNER JOIN major AS T2
   ON T1.link_to_major = T2.major_id
 WHERE
-  T1.position = 'President'",simple,5.5199983762577176e-05
+  T1.position = 'President'",simple,0.00024670000129844993
 1357,student_club,"SELECT
   T2.date_received
 FROM member AS T1
@@ -404,38 +404,38 @@ INNER JOIN income AS T2
 WHERE
   T1.first_name = 'Connor'
   AND T1.last_name = 'Hilton'
-  AND T2.source = 'Dues'",simple,6.930000381544232e-05
+  AND T2.source = 'Dues'",simple,0.00040699999954085797
 1359,student_club,"SELECT
   CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END)
 FROM budget AS T1
 INNER JOIN event AS T2
   ON T1.link_to_event = T2.event_id
 WHERE
-  T1.category = 'Advertisement' AND T2.type = 'Meeting'",challenging,7.899999036453664e-05
+  T1.category = 'Advertisement' AND T2.type = 'Meeting'",challenging,0.0004191000043647364
 1361,student_club,"SELECT
   SUM(cost)
 FROM expense
 WHERE
-  expense_description = 'Pizza'",simple,4.650000482797623e-05
+  expense_description = 'Pizza'",simple,0.00022249999892665073
 1362,student_club,"SELECT
   COUNT(city)
 FROM zip_code
 WHERE
-  county = 'Orange County' AND state = 'Virginia'",simple,0.004298800020478666
+  county = 'Orange County' AND state = 'Virginia'",simple,0.015255899998010136
 1368,student_club,"SELECT
   T2.major_name
 FROM member AS T1
 INNER JOIN major AS T2
   ON T1.link_to_major = T2.major_id
 WHERE
-  T1.phone = '809-555-3360'",simple,6.130000110715628e-05
+  T1.phone = '809-555-3360'",simple,0.00025440000172238797
 1371,student_club,"SELECT
   COUNT(T2.link_to_member)
 FROM event AS T1
 INNER JOIN attendance AS T2
   ON T1.event_id = T2.link_to_event
 WHERE
-  T1.event_name = 'Women''s Soccer'",simple,7.730000652372837e-05
+  T1.event_name = 'Women''s Soccer'",simple,0.0003008999992744066
 1375,student_club,"SELECT
   T1.first_name,
   T1.last_name
@@ -443,7 +443,7 @@ FROM member AS T1
 INNER JOIN major AS T2
   ON T1.link_to_major = T2.major_id
 WHERE
-  T2.department = 'School of Applied Sciences, Technology and Education'",moderate,8.480000542476773e-05
+  T2.department = 'School of Applied Sciences, Technology and Education'",moderate,0.0003597000031732023
 1376,student_club,"SELECT
   T2.event_name
 FROM budget AS T1
@@ -453,11 +453,11 @@ WHERE
   T2.status = 'Closed'
 ORDER BY
   T1.spent / T1.amount DESC
-LIMIT 1",moderate,8.800000068731606e-05
+LIMIT 1",moderate,0.00041399999463465065
 1378,student_club,"SELECT
   MAX(spent)
-FROM budget",simple,5.020000389777124e-05
-1380,student_club,SELECT SUM(spent) FROM budget WHERE category = 'Food',simple,4.640000406652689e-05
+FROM budget",simple,0.00023689999943599105
+1380,student_club,SELECT SUM(spent) FROM budget WHERE category = 'Food',simple,0.000261799999861978
 1381,student_club,"SELECT
   T1.first_name,
   T1.last_name
@@ -467,7 +467,7 @@ INNER JOIN attendance AS T2
 GROUP BY
   T2.link_to_member
 HAVING
-  COUNT(T2.link_to_event) > 7",moderate,0.0002646000066306442
+  COUNT(T2.link_to_event) > 7",moderate,0.0007594000053359196
 1387,student_club,"SELECT
   T4.first_name,
   T4.last_name
@@ -479,7 +479,7 @@ INNER JOIN expense AS T3
 INNER JOIN member AS T4
   ON T3.link_to_member = T4.member_id
 WHERE
-  T1.event_name = 'Yearly Kickoff'",moderate,0.00010030000703409314
+  T1.event_name = 'Yearly Kickoff'",moderate,0.0004680999991251156
 1389,student_club,"SELECT
   T1.event_name
 FROM event AS T1
@@ -489,14 +489,14 @@ INNER JOIN expense AS T3
   ON T2.budget_id = T3.link_to_budget
 ORDER BY
   T3.cost
-LIMIT 1",simple,0.00010389997623860836
+LIMIT 1",simple,0.00038070000300649554
 1390,student_club,"SELECT
   CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS DOUBLE) * 100 / SUM(T3.cost)
 FROM event AS T1
 INNER JOIN budget AS T2
   ON T1.event_id = T2.link_to_event
 INNER JOIN expense AS T3
-  ON T2.budget_id = T3.link_to_budget",moderate,9.300000965595245e-05
+  ON T2.budget_id = T3.link_to_budget",moderate,0.00043759999971371144
 1392,student_club,"SELECT
   source
 FROM income
@@ -504,14 +504,14 @@ WHERE
   date_received BETWEEN '2019-09-01' AND '2019-09-30'
 ORDER BY
   source DESC
-LIMIT 1",simple,0.0001370999962091446
+LIMIT 1",simple,0.00026590000197757035
 1394,student_club,"SELECT
   COUNT(T2.member_id)
 FROM major AS T1
 INNER JOIN member AS T2
   ON T1.major_id = T2.link_to_major
 WHERE
-  T1.major_name = 'Physics Teaching'",simple,9.220000356435776e-05
+  T1.major_name = 'Physics Teaching'",simple,0.0003397999971639365
 1398,student_club,"SELECT
   T2.event_name
 FROM budget AS T1
@@ -521,7 +521,7 @@ WHERE
   T1.category = 'Advertisement'
 ORDER BY
   T1.spent DESC
-LIMIT 1",moderate,8.850000449456275e-05
+LIMIT 1",moderate,0.00042050000047311187
 1399,student_club,"SELECT
   CASE WHEN T3.event_name = 'Women''s Soccer' THEN 'YES' END AS result
 FROM member AS T1
@@ -530,7 +530,7 @@ INNER JOIN attendance AS T2
 INNER JOIN event AS T3
   ON T2.link_to_event = T3.event_id
 WHERE
-  T1.first_name = 'Maya' AND T1.last_name = 'Mclean'",moderate,0.0001700999855529517
+  T1.first_name = 'Maya' AND T1.last_name = 'Mclean'",moderate,0.0005935999943176284
 1401,student_club,"SELECT
   T3.cost
 FROM event AS T1
@@ -540,7 +540,7 @@ INNER JOIN expense AS T3
   ON T2.budget_id = T3.link_to_budget
 WHERE
   T1.event_name = 'September Speaker'
-  AND T3.expense_description = 'Posters'",moderate,8.030000026337802e-05
+  AND T3.expense_description = 'Posters'",moderate,0.0003172999931848608
 1403,student_club,"SELECT
   T2.event_name
 FROM budget AS T1
@@ -550,14 +550,14 @@ WHERE
   T1.event_status = 'Closed' AND T1.remaining < 0
 ORDER BY
   T1.remaining
-LIMIT 1",moderate,0.00018900001305155456
-1404,student_club,"SELECT T1.type, SUM(T3.cost) AS total_cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' GROUP BY T1.type",moderate,0.00016720002167858183
-1405,student_club,"SELECT T2.category, SUM(T2.amount) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC",moderate,9.57000011112541e-05
+LIMIT 1",moderate,0.0004991000023437664
+1404,student_club,"SELECT T1.type, SUM(T3.cost) AS total_cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' GROUP BY T1.type",moderate,0.0003780000042752363
+1405,student_club,"SELECT T2.category, SUM(T2.amount) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC",moderate,0.00035909999860450625
 1409,student_club,"SELECT
   SUM(cost)
 FROM expense
 WHERE
-  expense_date = '2019-08-20'",simple,4.749998333863914e-05
+  expense_date = '2019-08-20'",simple,0.0002476999943610281
 1410,student_club,"SELECT
   T1.first_name,
   T1.last_name,
@@ -566,21 +566,21 @@ FROM member AS T1
 INNER JOIN expense AS T2
   ON T1.member_id = T2.link_to_member
 WHERE
-  T1.member_id = 'rec4BLdZHS2Blfp4v'",simple,7.449998520314693e-05
+  T1.member_id = 'rec4BLdZHS2Blfp4v'",simple,0.0002877000006265007
 1411,student_club,"SELECT
   T2.expense_description
 FROM member AS T1
 INNER JOIN expense AS T2
   ON T1.member_id = T2.link_to_member
 WHERE
-  T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'",simple,7.000000914558768e-05
+  T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'",simple,0.00033409999741706997
 1422,student_club,"SELECT DISTINCT
   T2.category
 FROM event AS T1
 INNER JOIN budget AS T2
   ON T1.event_id = T2.link_to_event
 WHERE
-  T1.location = 'MU 215'",simple,9.929999941959977e-05
+  T1.location = 'MU 215'",simple,0.00035769999522017315
 1426,student_club,"SELECT
   T2.last_name,
   T1.department,
@@ -589,7 +589,7 @@ FROM major AS T1
 INNER JOIN member AS T2
   ON T1.major_id = T2.link_to_major
 WHERE
-  T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'",moderate,9.020001743920147e-05
+  T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'",moderate,0.0003769000031752512
 1427,student_club,"SELECT DISTINCT
   T2.category,
   T1.type
@@ -597,21 +597,21 @@ FROM event AS T1
 INNER JOIN budget AS T2
   ON T1.event_id = T2.link_to_event
 WHERE
-  T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'",moderate,9.499999578110874e-05
+  T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'",moderate,0.00038930000300752
 1432,student_club,"SELECT
   CAST(SUM(CASE WHEN T2.amount = 50 THEN 1.0 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T2.income_id)
 FROM member AS T1
 INNER JOIN income AS T2
   ON T1.member_id = T2.link_to_member
 WHERE
-  T1.position = 'Member' AND T1.t_shirt_size = 'Medium'",moderate,8.890000754036009e-05
+  T1.position = 'Member' AND T1.t_shirt_size = 'Medium'",moderate,0.00032780000037746504
 1435,student_club,"SELECT DISTINCT
   event_name
 FROM event
 WHERE
   type = 'Game'
   AND DATE(SUBSTR(event_date, 1, 10)) BETWEEN '2019-03-15' AND '2020-03-20'
-  AND status = 'Closed'",moderate,7.130001904442906e-05
+  AND status = 'Closed'",moderate,0.0003001000004587695
 1457,student_club,"SELECT DISTINCT
   T3.first_name,
   T3.last_name,
@@ -630,7 +630,7 @@ WHERE
       ON T1.link_to_budget = T2.budget_id
     INNER JOIN member AS T3
       ON T3.member_id = T1.link_to_member
-  )",challenging,0.00010370000381954014
+  )",challenging,0.0006412000002455898
 1460,student_club,"SELECT
   T2.first_name,
   T2.last_name,
@@ -639,7 +639,7 @@ FROM expense AS T1
 INNER JOIN member AS T2
   ON T1.link_to_member = T2.member_id
 WHERE
-  T1.expense_description = 'Water, Veggie tray, supplies'",challenging,6.699998630210757e-05
+  T1.expense_description = 'Water, Veggie tray, supplies'",challenging,0.00025019999884534627
 1464,student_club,"SELECT DISTINCT
   T3.first_name,
   T3.last_name,
@@ -652,17 +652,17 @@ INNER JOIN member AS T3
 INNER JOIN income AS T4
   ON T4.link_to_member = T3.member_id
 WHERE
-  T4.date_received = '2019-09-09'",challenging,0.0003319999959785491
+  T4.date_received = '2019-09-09'",challenging,0.0007968999998411164
 1149,thrombosis_prediction,"SELECT
   CAST(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
 FROM Patient
 WHERE
-  SEX = 'M'",moderate,0.00019809999503195286
+  SEX = 'M'",moderate,0.0008001000023796223
 1152,thrombosis_prediction,"SELECT
   SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
 FROM Patient
 WHERE
-  Diagnosis = 'SLE'",moderate,0.00021749999723397195
+  Diagnosis = 'SLE'",moderate,0.0008959999977378175
 1153,thrombosis_prediction,"SELECT
   T1.Diagnosis,
   T2.Date
@@ -670,7 +670,7 @@ FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T1.ID = 30609",simple,0.00011149997590109706
+  T1.ID = 30609",simple,0.00037790000351378694
 1155,thrombosis_prediction,"SELECT DISTINCT
   T1.ID,
   T1.SEX,
@@ -679,7 +679,7 @@ FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T2.LDH > 500",simple,0.003081000002566725
+  T2.LDH > 500",simple,0.010975600001984276
 1157,thrombosis_prediction,"SELECT DISTINCT
   T1.ID,
   T1.SEX,
@@ -688,7 +688,7 @@ FROM Patient AS T1
 INNER JOIN Examination AS T2
   ON T1.ID = T2.ID
 WHERE
-  T2.Thrombosis = 2",simple,8.640001760795712e-05
+  T2.Thrombosis = 2",simple,0.0003445999973337166
 1166,thrombosis_prediction,"SELECT
   T2.Symptoms,
   T1.Diagnosis
@@ -699,29 +699,29 @@ WHERE
   NOT T2.Symptoms IS NULL
 ORDER BY
   T1.Birthday DESC
-LIMIT 1",simple,9.190000128000975e-05
+LIMIT 1",simple,0.00039199999446282163
 1169,thrombosis_prediction,"SELECT
   CAST(SUM(CASE WHEN T2.UA <= 8.0 AND T1.SEX = 'M' THEN 1 ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN T2.UA <= 6.5 AND T1.SEX = 'F' THEN 1 ELSE 0 END)
 FROM Patient AS T1
 INNER JOIN Laboratory AS T2
-  ON T1.ID = T2.ID",challenging,0.004167600010987371
+  ON T1.ID = T2.ID",challenging,0.013848400005372241
 1187,thrombosis_prediction,"SELECT DISTINCT
   ID
 FROM Laboratory
 WHERE
-  Date BETWEEN '1987-07-06' AND '1996-01-31' AND GPT > 30 AND ALB < 4",moderate,0.0034727000165730715
+  Date BETWEEN '1987-07-06' AND '1996-01-31' AND GPT > 30 AND ALB < 4",moderate,0.012763300001097377
 1195,thrombosis_prediction,"SELECT
   AVG(T2.ALB)
 FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T2.PLT > 400 AND T1.Diagnosis = 'SLE' AND T1.SEX = 'F'",moderate,0.0013428999809548259
+  T2.PLT > 400 AND T1.Diagnosis = 'SLE' AND T1.SEX = 'F'",moderate,0.004596200000378303
 1198,thrombosis_prediction,"SELECT
   COUNT(ID)
 FROM Patient
 WHERE
-  SEX = 'F' AND Diagnosis = 'APS'",simple,0.00020640000002458692
+  SEX = 'F' AND Diagnosis = 'APS'",simple,0.0007078999988152646
 1205,thrombosis_prediction,"SELECT
   CASE
     WHEN (
@@ -737,14 +737,14 @@ FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T1.ID = 57266",moderate,0.00010900001507252455
+  T1.ID = 57266",moderate,0.00038010000571375713
 1208,thrombosis_prediction,"SELECT DISTINCT
   T1.ID
 FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T1.SEX = 'M' AND T2.GPT >= 60",moderate,0.0010605999850668013
+  T1.SEX = 'M' AND T2.GPT >= 60",moderate,0.0038314999983413145
 1209,thrombosis_prediction,"SELECT T1.Diagnosis
 FROM Patient AS T1
 INNER JOIN Laboratory AS T2
@@ -752,7 +752,7 @@ INNER JOIN Laboratory AS T2
 WHERE
   T2.GPT > 60
 ORDER BY
-  T1.Birthday ASC",moderate,0.003161600005114451
+  T1.Birthday ASC",moderate,0.010809300001710653
 1220,thrombosis_prediction,"SELECT DISTINCT
   T1.ID,
   T1.SEX,
@@ -761,7 +761,7 @@ FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T2.UN = 29",simple,0.0029135000077076256
+  T2.UN = 29",simple,0.009507299997494556
 1238,thrombosis_prediction,"SELECT
   T1.ID,
   T1.SEX
@@ -772,12 +772,12 @@ WHERE
   T1.Diagnosis = 'SLE' AND T2.HGB > 10 AND T2.HGB < 17
 ORDER BY
   T1.Birthday ASC
-LIMIT 1",moderate,0.0025308000040240586
+LIMIT 1",moderate,0.006612299999687821
 1241,thrombosis_prediction,"SELECT
   SUM(CASE WHEN T2.PLT <= 100 THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.PLT >= 400 THEN 1 ELSE 0 END)
 FROM Patient AS T1
 INNER JOIN Laboratory AS T2
-  ON T1.ID = T2.ID",challenging,0.004027899994980544
+  ON T1.ID = T2.ID",challenging,0.012042200003634207
 1247,thrombosis_prediction,"SELECT
   COUNT(DISTINCT T1.ID)
 FROM Patient AS T1
@@ -788,7 +788,7 @@ WHERE
   OR T2.FG >= 450
   AND T2.WBC > 3.5
   AND T2.WBC < 9.0
-  AND T1.SEX = 'M'",challenging,0.004265900002792478
+  AND T1.SEX = 'M'",challenging,0.013737499997660052
 1251,thrombosis_prediction,"SELECT
   COUNT(DISTINCT T1.ID)
 FROM Patient AS T1
@@ -797,7 +797,7 @@ INNER JOIN Laboratory AS T2
 INNER JOIN Examination AS T3
   ON T3.ID = T2.ID
 WHERE
-  T2.IGG >= 2000",simple,0.004350500006694347
+  T2.IGG >= 2000",simple,0.01339449999795761
 1252,thrombosis_prediction,"SELECT
   COUNT(T1.ID)
 FROM Patient AS T1
@@ -806,7 +806,7 @@ INNER JOIN Laboratory AS T2
 INNER JOIN Examination AS T3
   ON T3.ID = T2.ID
 WHERE
-  T2.IGG BETWEEN 900 AND 2000 AND NOT T3.Symptoms IS NULL",moderate,0.00018330002785660326
+  T2.IGG BETWEEN 900 AND 2000 AND NOT T3.Symptoms IS NULL",moderate,0.000665700004901737
 1255,thrombosis_prediction,"SELECT
   T1.Diagnosis
 FROM Patient AS T1
@@ -818,22 +818,22 @@ GROUP BY
   T1.Diagnosis
 ORDER BY
   COUNT(T1.Diagnosis) DESC
-LIMIT 1",moderate,0.003599399991799146
-1256,thrombosis_prediction,SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE (T2.CRP = '+' ) AND T1.Description IS NULL,moderate,0.004401500016683713
+LIMIT 1",moderate,0.010750300003564917
+1256,thrombosis_prediction,SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE (T2.CRP = '+' ) AND T1.Description IS NULL,moderate,0.011278499994659796
 1265,thrombosis_prediction,"SELECT
   COUNT(DISTINCT T1.ID)
 FROM Patient AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T2.RNP = 'negative' OR T2.RNP = '0' AND T1.Admission = '+'",moderate,0.0050466000102460384
+  T2.RNP = 'negative' OR T2.RNP = '0' AND T1.Admission = '+'",moderate,0.015440200004377402
 1267,thrombosis_prediction,"SELECT
   COUNT(T1.ID)
 FROM Examination AS T1
 INNER JOIN Laboratory AS T2
   ON T1.ID = T2.ID
 WHERE
-  T2.SM IN ('negative', '0') AND T1.Thrombosis = 0",moderate,0.00046690000453963876
+  T2.SM IN ('negative', '0') AND T1.Thrombosis = 0",moderate,0.0013212000048952177
 1270,thrombosis_prediction,"SELECT
   COUNT(DISTINCT T1.ID)
 FROM Patient AS T1
@@ -846,7 +846,7 @@ WHERE
     T2.SC170 = 'negative' OR T2.SC170 = '0'
   )
   AND T1.SEX = 'F'
-  AND T3.Symptoms IS NULL",challenging,0.004316999984439462
+  AND T3.Symptoms IS NULL",challenging,0.014088900003116578
 1275,thrombosis_prediction,"SELECT
   COUNT(DISTINCT T1.ID)
 FROM Patient AS T1
@@ -855,7 +855,7 @@ INNER JOIN Laboratory AS T2
 WHERE
   T2.CENTROMEA IN ('negative', '0')
   AND T2.SSB IN ('negative', '0')
-  AND T1.SEX = 'M'",moderate,0.001352000021142885
+  AND T1.SEX = 'M'",moderate,0.004170699998212513
 1281,thrombosis_prediction,"SELECT
   T1.Birthday
 FROM Patient AS T1
@@ -865,7 +865,7 @@ WHERE
   T2.GOT >= 60
 ORDER BY
   T1.Birthday DESC
-LIMIT 1",moderate,0.0025514999870210886
+LIMIT 1",moderate,0.010298499997588806
 1302,thrombosis_prediction,"SELECT
   COUNT(T1.ID)
 FROM Patient AS T1
@@ -877,7 +877,7 @@ WHERE
   T2.CPK < 250
   AND (
     T3.KCT = '+' OR T3.RVVT = '+' OR T3.LAC = '+'
-  )",challenging,0.00019000002066604793
+  )",challenging,0.0007162999972933903
 1025,european_football_2,"SELECT  t2.name FROM Match AS t1 INNER JOIN League AS t2
   ON t1.league_id = t2.id
 WHERE
@@ -886,7 +886,7 @@ GROUP BY
   t2.name
 ORDER BY
   SUM(t1.home_team_goal + t1.away_team_goal) DESC
-LIMIT 1",moderate,0.06899860000703484
+LIMIT 1",moderate,0.24952519999351352
 1028,european_football_2,"SELECT
   teamInfo.team_long_name
 FROM League AS leagueData
@@ -902,7 +902,7 @@ GROUP BY
   matchData.away_team_api_id
 ORDER BY
   COUNT(*) DESC
-LIMIT 1",challenging,0.07527460000710562
+LIMIT 1",challenging,0.23994249999668682
 1029,european_football_2,"SELECT
   t1.buildUpPlaySpeed
 FROM Team_Attributes AS t1
@@ -910,7 +910,7 @@ INNER JOIN Team AS t2
   ON t1.team_api_id = t2.team_api_id
 ORDER BY
   t1.buildUpPlaySpeed ASC
-LIMIT 4",moderate,0.001024700002744794
+LIMIT 4",moderate,0.004452099994523451
 1030,european_football_2,"SELECT
   t2.name
 FROM Match AS t1
@@ -922,7 +922,7 @@ GROUP BY
   t2.name
 ORDER BY
   COUNT(t1.id) DESC
-LIMIT 1",moderate,0.06495410000206903
+LIMIT 1",moderate,0.244704400000046
 1032,european_football_2,"SELECT
   t2.name,
   COUNT(t1.id)
@@ -933,26 +933,26 @@ GROUP BY
   t2.name
 ORDER BY
   COUNT(t1.id) DESC
-LIMIT 1",moderate,0.07768499999656342
+LIMIT 1",moderate,0.2340970000004745
 1035,european_football_2,"SELECT DISTINCT
   team_fifa_api_id
 FROM Team_Attributes
 WHERE
-  buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60",simple,0.0008015999919734895
+  buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60",simple,0.0034365000028628856
 1037,european_football_2,"SELECT
   CAST(COUNT(CASE WHEN t2.preferred_foot = 'left' THEN t1.id ELSE NULL END) AS DOUBLE) * 100 / COUNT(t1.id) AS percent
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  SUBSTR(t1.birthday, 1, 4) BETWEEN '1987' AND '1992'",challenging,0.14203119999729097
+  SUBSTR(t1.birthday, 1, 4) BETWEEN '1987' AND '1992'",challenging,0.4550989999988815
 1039,european_football_2,"SELECT
   CAST(SUM(t2.long_shots) AS DOUBLE) / COUNT(t2.date)
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  t1.player_name = 'Ahmed Samir Farag'",simple,0.12868280001566745
+  t1.player_name = 'Ahmed Samir Farag'",simple,0.39843509999627713
 1040,european_football_2,"SELECT
   t1.player_name
 FROM Player AS t1
@@ -964,7 +964,7 @@ GROUP BY
   t1.id
 ORDER BY
   CAST(SUM(t2.heading_accuracy) AS DOUBLE) / COUNT(t2.player_fifa_api_id) DESC
-LIMIT 10",moderate,0.17707019997760653
+LIMIT 10",moderate,0.5275393000047188
 1042,european_football_2,"SELECT
   t1.name
 FROM League AS t1
@@ -979,20 +979,20 @@ HAVING
     CAST(SUM(t2.home_team_goal) AS DOUBLE) / COUNT(DISTINCT t2.id)
   ) - (
     CAST(SUM(t2.away_team_goal) AS DOUBLE) / COUNT(DISTINCT t2.id)
-  ) > 0",challenging,0.06740940001327544
+  ) > 0",challenging,0.24352789999829838
 1044,european_football_2,"SELECT
   player_name
 FROM Player
 WHERE
-  SUBSTR(birthday, 1, 7) = '1970-10'",simple,0.003923600015696138
+  SUBSTR(birthday, 1, 7) = '1970-10'",simple,0.013252600001578685
 1057,european_football_2,"SELECT
   CAST(SUM(t2.home_team_goal) AS DOUBLE) / COUNT(t2.id)
 FROM Country AS t1
 INNER JOIN Match AS t2
   ON t1.id = t2.country_id
 WHERE
-  t1.name = 'Poland' AND t2.season = '2010/2011'",moderate,0.061260599992237985
-1058,european_football_2,"SELECT A FROM (SELECT AVG(finishing) AS result, 'Max' AS A FROM Player AS T1 INNER JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T1.height = (SELECT MAX(height) FROM Player) UNION SELECT AVG(finishing) AS result, 'Min' AS A FROM Player AS T1 INNER JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T1.height = (SELECT MIN(height) FROM Player)) AS derived ORDER BY result DESC LIMIT 1",challenging,0.2632850999943912
+  t1.name = 'Poland' AND t2.season = '2010/2011'",moderate,0.23548309999750927
+1058,european_football_2,"SELECT A FROM (SELECT AVG(finishing) AS result, 'Max' AS A FROM Player AS T1 INNER JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T1.height = (SELECT MAX(height) FROM Player) UNION SELECT AVG(finishing) AS result, 'Min' AS A FROM Player AS T1 INNER JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T1.height = (SELECT MIN(height) FROM Player)) AS derived ORDER BY result DESC LIMIT 1",challenging,0.7781794000038644
 1076,european_football_2,"SELECT
   CAST(SUM(
     CASE WHEN t1.player_name = 'Abdou Diallo' THEN t2.ball_control ELSE 0 END
@@ -1005,7 +1005,7 @@ WHERE
   ) AS DOUBLE) / COUNT(CASE WHEN t1.player_name = 'Aaron Appindangoye' THEN t2.id ELSE NULL END)
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
-  ON t1.player_api_id = t2.player_api_id",challenging,0.16008490000967868
+  ON t1.player_api_id = t2.player_api_id",challenging,0.47090330000355607
 1078,european_football_2,"SELECT
   player_name
 FROM Player
@@ -1013,32 +1013,32 @@ WHERE
   player_name IN ('Aaron Lennon', 'Abdelaziz Barrada')
 ORDER BY
   birthday ASC
-LIMIT 1",simple,0.003476699988823384
+LIMIT 1",simple,0.01253290000022389
 1079,european_football_2,"SELECT
   player_name
 FROM Player
 ORDER BY
   height DESC
-LIMIT 1",simple,0.0031639999942854047
+LIMIT 1",simple,0.011143400006403681
 1080,european_football_2,"SELECT
   COUNT(player_api_id)
 FROM Player_Attributes
 WHERE
-  preferred_foot = 'left' AND attacking_work_rate = 'low'",moderate,0.09882899999502115
+  preferred_foot = 'left' AND attacking_work_rate = 'low'",moderate,0.2794568999961484
 1088,european_football_2,"SELECT DISTINCT
   t1.player_name
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  t2.volleys > 70 AND t2.dribbling > 70",moderate,0.10064899999997579
+  t2.volleys > 70 AND t2.dribbling > 70",moderate,0.31003939999936847
 1091,european_football_2,"SELECT
   COUNT(t2.id)
 FROM League AS t1
 INNER JOIN Match AS t2
   ON t1.id = t2.league_id
 WHERE
-  t1.name = 'Belgium Jupiler League' AND SUBSTR(t2.date, 1, 7) = '2009-04'",moderate,0.06236119999084622
+  t1.name = 'Belgium Jupiler League' AND SUBSTR(t2.date, 1, 7) = '2009-04'",moderate,0.2548490999979549
 1094,european_football_2,"SELECT
   (
     SUM(
@@ -1055,14 +1055,14 @@ WHERE
   )
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
-  ON t1.player_api_id = t2.player_api_id",challenging,0.13669169999775477
+  ON t1.player_api_id = t2.player_api_id",challenging,0.42935600000055274
 1096,european_football_2,"SELECT
   CAST(SUM(t2.overall_rating) AS DOUBLE) / COUNT(t2.id)
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  t1.player_name = 'Pietro Marino'",moderate,0.11946320001152344
+  t1.player_name = 'Pietro Marino'",moderate,0.3943913999974029
 1098,european_football_2,"SELECT
   t2.chanceCreationPassing,
   t2.chanceCreationPassingClass
@@ -1073,7 +1073,7 @@ WHERE
   t1.team_long_name = 'Ajax'
 ORDER BY
   t2.chanceCreationPassing DESC
-LIMIT 1",moderate,0.0015244999958667904
+LIMIT 1",moderate,0.004416299998410977
 1102,european_football_2,"SELECT
   t1.player_name
 FROM Player AS t1
@@ -1083,36 +1083,36 @@ WHERE
   SUBSTR(t2.date, 1, 10) = '2016-06-23' AND t2.overall_rating = 77
 ORDER BY
   t1.birthday ASC
-LIMIT 1",moderate,0.0813897000043653
+LIMIT 1",moderate,0.289245399995707
 1103,european_football_2,"SELECT
   t2.overall_rating
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  SUBSTR(t2.date, 1, 10) = '2016-02-04' AND t1.player_name = 'Aaron Mooy'",moderate,0.09995910001453012
+  SUBSTR(t2.date, 1, 10) = '2016-02-04' AND t1.player_name = 'Aaron Mooy'",moderate,0.30854050000198185
 1105,european_football_2,"SELECT
   t2.attacking_work_rate
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  t2.date LIKE '2015-05-01%' AND t1.player_name = 'Francesco Migliore'",moderate,0.09678009999333881
-1107,european_football_2,"SELECT date FROM (SELECT t2.crossing, t2.date FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_fifa_api_id = t2.player_fifa_api_id WHERE t1.player_name = 'Kevin Constant' ORDER BY t2.crossing DESC) AS subquery ORDER BY date DESC LIMIT 1",moderate,0.1351208999985829
+  t2.date LIKE '2015-05-01%' AND t1.player_name = 'Francesco Migliore'",moderate,0.28773670000373386
+1107,european_football_2,"SELECT date FROM (SELECT t2.crossing, t2.date FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_fifa_api_id = t2.player_fifa_api_id WHERE t1.player_name = 'Kevin Constant' ORDER BY t2.crossing DESC) AS subquery ORDER BY date DESC LIMIT 1",moderate,0.4016459999984363
 1110,european_football_2,"SELECT
   t2.buildUpPlayPassingClass
 FROM Team AS t1
 INNER JOIN Team_Attributes AS t2
   ON t1.team_api_id = t2.team_api_id
 WHERE
-  t1.team_long_name = 'FC Lorient' AND t2.date LIKE '2010-02-22%'",moderate,0.0009386999881826341
+  t1.team_long_name = 'FC Lorient' AND t2.date LIKE '2010-02-22%'",moderate,0.003173400000378024
 1113,european_football_2,"SELECT
   t2.defenceAggressionClass
 FROM Team AS t1
 INNER JOIN Team_Attributes AS t2
   ON t1.team_api_id = t2.team_api_id
 WHERE
-  t1.team_long_name = 'Hannover 96' AND t2.date LIKE '2015-09-10%'",moderate,0.0008922999841161072
+  t1.team_long_name = 'Hannover 96' AND t2.date LIKE '2015-09-10%'",moderate,0.0035266000049887225
 1114,european_football_2,"SELECT
   CAST(SUM(t2.overall_rating) AS DOUBLE) / COUNT(t2.id)
 FROM Player AS t1
@@ -1120,7 +1120,7 @@ INNER JOIN Player_Attributes AS t2
   ON t1.player_fifa_api_id = t2.player_fifa_api_id
 WHERE
   t1.player_name = 'Marko Arnautovic'
-  AND SUBSTR(t2.date, 1, 10) BETWEEN '2007-02-22' AND '2016-04-21'",challenging,0.14383620000444353
+  AND SUBSTR(t2.date, 1, 10) BETWEEN '2007-02-22' AND '2016-04-21'",challenging,0.4392669000008027
 1115,european_football_2,"SELECT
   (
     SUM(
@@ -1143,30 +1143,30 @@ FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_fifa_api_id = t2.player_fifa_api_id
 WHERE
-  SUBSTR(t2.date, 1, 10) = '2013-07-12'",challenging,0.08624129998497665
-1122,european_football_2,SELECT DISTINCT t1.player_name FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.overall_rating = (SELECT MAX(overall_rating) FROM Player_Attributes),simple,0.16390069999033585
+  SUBSTR(t2.date, 1, 10) = '2013-07-12'",challenging,0.30144770000333665
+1122,european_football_2,SELECT DISTINCT t1.player_name FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.overall_rating = (SELECT MAX(overall_rating) FROM Player_Attributes),simple,0.5177425000001676
 1124,european_football_2,"SELECT DISTINCT
   t1.player_name
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
   ON t1.player_api_id = t2.player_api_id
 WHERE
-  t2.attacking_work_rate = 'high'",moderate,0.11051310002221726
+  t2.attacking_work_rate = 'high'",moderate,0.3941236000027857
 1130,european_football_2,"SELECT DISTINCT
   t1.team_short_name
 FROM Team AS t1
 INNER JOIN Team_Attributes AS t2
   ON t1.team_api_id = t2.team_api_id
 WHERE
-  t2.chanceCreationPassingClass = 'Safe'",moderate,0.0009278000215999782
+  t2.chanceCreationPassingClass = 'Safe'",moderate,0.003499099999316968
 1133,european_football_2,"SELECT
   COUNT(id)
 FROM Player
 WHERE
-  birthday > '1990' AND player_name LIKE 'Aaron%'",simple,0.00345660001039505
+  birthday > '1990' AND player_name LIKE 'Aaron%'",simple,0.014247400002204813
 1134,european_football_2,"SELECT
   SUM(CASE WHEN t1.id = 6 THEN t1.jumping ELSE 0 END) - SUM(CASE WHEN t1.id = 23 THEN t1.jumping ELSE 0 END)
-FROM Player_Attributes AS t1",simple,0.08316789998207241
+FROM Player_Attributes AS t1",simple,0.2707232000029762
 1135,european_football_2,"SELECT
   id
 FROM Player_Attributes
@@ -1174,7 +1174,7 @@ WHERE
   preferred_foot = 'right'
 ORDER BY
   potential ASC
-LIMIT 4",moderate,0.09636730002239347
+LIMIT 4",moderate,0.31886459999805083
 1136,european_football_2,"SELECT
   COUNT(t1.id)
 FROM Player_Attributes AS t1
@@ -1184,7 +1184,7 @@ WHERE
     SELECT
       MAX(crossing)
     FROM Player_Attributes
-  )",moderate,0.16460429999278858
+  )",moderate,0.5582393000004231
 1139,european_football_2,"SELECT
   t2.home_team_goal,
   t2.away_team_goal
@@ -1192,14 +1192,14 @@ FROM League AS t1
 INNER JOIN Match AS t2
   ON t1.id = t2.league_id
 WHERE
-  t1.name = 'Belgium Jupiler League' AND t2.date LIKE '2008-09-24%'",challenging,0.06492609999259003
+  t1.name = 'Belgium Jupiler League' AND t2.date LIKE '2008-09-24%'",challenging,0.25047900000208756
 1141,european_football_2,"SELECT DISTINCT
   t1.buildUpPlaySpeedClass
 FROM Team_Attributes AS t1
 INNER JOIN Team AS t2
   ON t1.team_api_id = t2.team_api_id
 WHERE
-  t2.team_long_name = 'KSV Cercle Brugge'",moderate,0.0010643000132404268
+  t2.team_long_name = 'KSV Cercle Brugge'",moderate,0.003824300001724623
 1144,european_football_2,"SELECT
   id,
   finishing,
@@ -1214,7 +1214,7 @@ WHERE
       weight DESC
     LIMIT 1
   )
-LIMIT 1",simple,0.047260899998946115
+LIMIT 1",simple,0.15607599999930244
 1145,european_football_2,"SELECT
   t1.name
 FROM League AS t1
@@ -1226,7 +1226,7 @@ GROUP BY
   t1.name
 ORDER BY
   COUNT(t2.id) DESC
-LIMIT 4",simple,0.07906180000281893
+LIMIT 4",simple,0.2663968000051682
 1146,european_football_2,"SELECT
   t2.team_long_name
 FROM Match AS t1
@@ -1234,7 +1234,7 @@ INNER JOIN Team AS t2
   ON t1.away_team_api_id = t2.team_api_id
 ORDER BY
   t1.away_team_goal DESC
-LIMIT 1",moderate,0.10012080002343282
+LIMIT 1",moderate,0.2915506999997888
 1147,european_football_2,"SELECT DISTINCT
   t1.player_name
 FROM Player AS t1
@@ -1245,12 +1245,12 @@ WHERE
     SELECT
       MAX(overall_rating)
     FROM Player_Attributes
-  )",simple,0.14670060001662932
+  )",simple,0.5265413999950397
 1148,european_football_2,"SELECT
   CAST(COUNT(CASE WHEN t2.overall_rating > 70 AND t1.height < 180 THEN t1.id ELSE NULL END) AS DOUBLE) * 100 / COUNT(t1.id) AS percent
 FROM Player AS t1
 INNER JOIN Player_Attributes AS t2
-  ON t1.player_api_id = t2.player_api_id",moderate,0.1325780999904964
+  ON t1.player_api_id = t2.player_api_id",moderate,0.41048670000600396
 846,formula_1,"SELECT
   T2.driverRef
 FROM qualifying AS T1
@@ -1260,7 +1260,7 @@ WHERE
   T1.raceId = 20
 ORDER BY
   T1.q1 DESC
-LIMIT 5",moderate,0.0005265999934636056
+LIMIT 5",moderate,0.0020307000013417564
 847,formula_1,"SELECT
   T2.surname
 FROM qualifying AS T1
@@ -1270,14 +1270,14 @@ WHERE
   T1.raceId = 19
 ORDER BY
   T1.q2 ASC
-LIMIT 1",simple,0.00041719997534528375
+LIMIT 1",simple,0.001957800006493926
 850,formula_1,"SELECT DISTINCT
   T2.name
 FROM circuits AS T1
 INNER JOIN races AS T2
   ON T2.circuitID = T1.circuitId
 WHERE
-  T1.country = 'Germany'",simple,0.00028509998810477555
+  T1.country = 'Germany'",simple,0.0010796999995363876
 854,formula_1,"SELECT DISTINCT
   T1.lat,
   T1.lng
@@ -1285,7 +1285,7 @@ FROM circuits AS T1
 INNER JOIN races AS T2
   ON T2.circuitID = T1.circuitId
 WHERE
-  T2.name = 'Australian Grand Prix'",simple,0.00018199998885393143
+  T2.name = 'Australian Grand Prix'",simple,0.0007125999982235953
 857,formula_1,"SELECT DISTINCT
   T1.lat,
   T1.lng
@@ -1293,21 +1293,21 @@ FROM circuits AS T1
 INNER JOIN races AS T2
   ON T2.circuitID = T1.circuitId
 WHERE
-  T2.name = 'Abu Dhabi Grand Prix'",simple,0.0001875000016298145
+  T2.name = 'Abu Dhabi Grand Prix'",simple,0.0006666999979643151
 859,formula_1,"SELECT
   T1.q1
 FROM qualifying AS T1
 INNER JOIN drivers AS T2
   ON T2.driverId = T1.driverId
 WHERE
-  T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna'",simple,0.00047950001317076385
+  T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna'",simple,0.0015869999988353811
 861,formula_1,"SELECT
   T2.number
 FROM qualifying AS T1
 INNER JOIN drivers AS T2
   ON T2.driverId = T1.driverId
 WHERE
-  T1.raceId = 903 AND T1.q3 LIKE '1:54%'",simple,0.0005017000075895339
+  T1.raceId = 903 AND T1.q3 LIKE '1:54%'",simple,0.0014425999979721382
 862,formula_1,"SELECT
   COUNT(T3.driverId)
 FROM races AS T1
@@ -1316,7 +1316,7 @@ INNER JOIN results AS T2
 INNER JOIN drivers AS T3
   ON T3.driverId = T2.driverId
 WHERE
-  T1.year = 2007 AND T1.name = 'Bahrain Grand Prix' AND T2.time IS NULL",simple,0.0034826000046450645
+  T1.year = 2007 AND T1.name = 'Bahrain Grand Prix' AND T2.time IS NULL",simple,0.010596799998893403
 865,formula_1,"SELECT
   T1.forename,
   T1.surname
@@ -1327,7 +1327,7 @@ WHERE
   T2.raceId = 592 AND NOT T2.time IS NULL AND NOT T1.dob IS NULL
 ORDER BY
   T1.dob ASC
-LIMIT 1",moderate,0.002413199981674552
+LIMIT 1",moderate,0.0066936000002897345
 866,formula_1,"SELECT DISTINCT
   T2.forename,
   T2.surname,
@@ -1336,7 +1336,7 @@ FROM lapTimes AS T1
 INNER JOIN drivers AS T2
   ON T2.driverId = T1.driverId
 WHERE
-  T1.raceId = 161 AND T1.time LIKE '1:27%'",moderate,0.00036410000757314265
+  T1.raceId = 161 AND T1.time LIKE '1:27%'",moderate,0.0010466000021551736
 868,formula_1,"SELECT DISTINCT
   T1.lat,
   T1.lng
@@ -1344,7 +1344,7 @@ FROM circuits AS T1
 INNER JOIN races AS T2
   ON T2.circuitID = T1.circuitId
 WHERE
-  T2.name = 'Malaysian Grand Prix'",simple,0.00021880000713281333
+  T2.name = 'Malaysian Grand Prix'",simple,0.0007809999951859936
 869,formula_1,"SELECT
   T2.url
 FROM constructorResults AS T1
@@ -1354,21 +1354,21 @@ WHERE
   T1.raceId = 9
 ORDER BY
   T1.points DESC
-LIMIT 1",moderate,0.0005191999953240156
+LIMIT 1",moderate,0.0015184999938355759
 872,formula_1,"SELECT
   T2.code
 FROM qualifying AS T1
 INNER JOIN drivers AS T2
   ON T2.driverId = T1.driverId
 WHERE
-  T1.raceId = 45 AND T1.q3 LIKE '1:33%'",simple,0.0005079000256955624
+  T1.raceId = 45 AND T1.q3 LIKE '1:33%'",simple,0.00242870000511175
 875,formula_1,"SELECT
   T2.url
 FROM races AS T1
 INNER JOIN seasons AS T2
   ON T2.year = T1.year
 WHERE
-  T1.raceId = 901",simple,7.799998275004327e-05
+  T1.raceId = 901",simple,0.0002303000001120381
 877,formula_1,"SELECT
   T1.forename,
   T1.surname
@@ -1379,7 +1379,7 @@ WHERE
   T2.raceId = 872 AND NOT T2.time IS NULL
 ORDER BY
   T1.dob DESC
-LIMIT 1",moderate,0.0020086000149603933
+LIMIT 1",moderate,0.006047300004865974
 879,formula_1,"SELECT
   T1.nationality
 FROM drivers AS T1
@@ -1387,7 +1387,7 @@ INNER JOIN results AS T2
   ON T2.driverId = T1.driverId
 ORDER BY
   T2.fastestLapSpeed DESC
-LIMIT 1",moderate,0.006818300025770441
+LIMIT 1",moderate,0.015966799997841008
 880,formula_1,"SELECT
   (
     SUM(CASE WHEN T2.raceId = 853 THEN T2.fastestLapSpeed ELSE 0 END) - SUM(CASE WHEN T2.raceId = 854 THEN T2.fastestLapSpeed ELSE 0 END)
@@ -1396,14 +1396,14 @@ FROM drivers AS T1
 INNER JOIN results AS T2
   ON T2.driverId = T1.driverId
 WHERE
-  T1.forename = 'Paul' AND T1.surname = 'di Resta'",challenging,0.006629300012718886
+  T1.forename = 'Paul' AND T1.surname = 'di Resta'",challenging,0.01444679999985965
 881,formula_1,"SELECT
   CAST(COUNT(CASE WHEN NOT T2.time IS NULL THEN T2.driverId END) AS DOUBLE) * 100 / COUNT(T2.driverId)
 FROM races AS T1
 INNER JOIN results AS T2
   ON T2.raceId = T1.raceId
 WHERE
-  T1.date = '1983-07-16'",moderate,0.003961599984904751
+  T1.date = '1983-07-16'",moderate,0.012618400003702845
 892,formula_1,"SELECT
   T3.forename,
   T3.surname,
@@ -1415,7 +1415,7 @@ INNER JOIN drivers AS T3
   ON T3.driverId = T2.driverId
 ORDER BY
   T2.points DESC
-LIMIT 1",moderate,0.0064205999951809645
+LIMIT 1",moderate,0.018413000005239155
 894,formula_1,"SELECT
   T2.milliseconds,
   T1.forename,
@@ -1428,7 +1428,7 @@ INNER JOIN races AS T3
   ON T2.raceId = T3.raceId
 ORDER BY
   T2.milliseconds ASC
-LIMIT 1",moderate,0.05184759999974631
+LIMIT 1",moderate,0.16109760000108508
 895,formula_1,"SELECT
   AVG(T2.milliseconds)
 FROM races AS T1
@@ -1440,7 +1440,7 @@ WHERE
   T3.forename = 'Lewis'
   AND T3.surname = 'Hamilton'
   AND T1.year = 2009
-  AND T1.name = 'Malaysian Grand Prix'",moderate,0.04604939999990165
+  AND T1.name = 'Malaysian Grand Prix'",moderate,0.13815690000046743
 896,formula_1,"SELECT
   CAST(COUNT(CASE WHEN T2.position <> 1 THEN T2.position END) AS DOUBLE) * 100 / COUNT(T2.driverStandingsId)
 FROM races AS T1
@@ -1449,7 +1449,7 @@ INNER JOIN driverStandings AS T2
 INNER JOIN drivers AS T3
   ON T3.driverId = T2.driverId
 WHERE
-  T3.surname = 'Hamilton' AND T1.year >= 2010",challenging,0.0032364999933633953
+  T3.surname = 'Hamilton' AND T1.year >= 2010",challenging,0.009006899999803863
 897,formula_1,"SELECT
   T1.forename,
   T1.surname,
@@ -1466,7 +1466,7 @@ GROUP BY
   T1.nationality
 ORDER BY
   COUNT(T2.wins) DESC
-LIMIT 1",moderate,0.00424919999204576
+LIMIT 1",moderate,0.01231260000349721
 902,formula_1,"SELECT
   T1.name
 FROM races AS T1
@@ -1475,7 +1475,7 @@ INNER JOIN driverStandings AS T2
 INNER JOIN drivers AS T3
   ON T3.driverId = T2.driverId
 WHERE
-  T3.forename = 'Alex' AND T3.surname = 'Yoong' AND T2.position < 20",simple,0.004555599996820092
+  T3.forename = 'Alex' AND T3.surname = 'Yoong' AND T2.position < 20",simple,0.012323800001468044
 904,formula_1,"SELECT
   T1.name,
   T1.year
@@ -1488,7 +1488,7 @@ WHERE
   T3.forename = 'Michael' AND T3.surname = 'Schumacher'
 ORDER BY
   T2.milliseconds ASC
-LIMIT 1",moderate,0.062272999988636
+LIMIT 1",moderate,0.13790719999815337
 906,formula_1,"SELECT
   T1.name,
   T2.points
@@ -1501,25 +1501,25 @@ WHERE
   T3.forename = 'Lewis' AND T3.surname = 'Hamilton'
 ORDER BY
   T1.year ASC
-LIMIT 1",moderate,0.005945899989455938
+LIMIT 1",moderate,0.016148999995493796
 909,formula_1,"SELECT
   CAST(COUNT(CASE WHEN T1.country = 'Germany' THEN T2.circuitID END) AS DOUBLE) * 100 / COUNT(T2.circuitId)
 FROM circuits AS T1
 INNER JOIN races AS T2
   ON T2.circuitID = T1.circuitId
 WHERE
-  T2.name = 'European Grand Prix'",moderate,0.00019710001652128994
+  T2.name = 'European Grand Prix'",moderate,0.0010455000010551885
 910,formula_1,"SELECT
   lat,
   lng
 FROM circuits
 WHERE
-  name = 'Silverstone Circuit'",simple,6.049999501556158e-05
+  name = 'Silverstone Circuit'",simple,0.00026839999918593094
 912,formula_1,"SELECT
   circuitRef
 FROM circuits
 WHERE
-  name = 'Marina Bay Street Circuit'",simple,5.360000068321824e-05
+  name = 'Marina Bay Street Circuit'",simple,0.00023299999884329736
 915,formula_1,"SELECT
   nationality
 FROM drivers
@@ -1527,7 +1527,7 @@ WHERE
   NOT dob IS NULL
 ORDER BY
   dob ASC
-LIMIT 1",simple,0.00018989999080076814
+LIMIT 1",simple,0.0006357999955071136
 928,formula_1,"SELECT
   T3.forename,
   T3.surname,
@@ -1538,7 +1538,7 @@ INNER JOIN results AS T2
 INNER JOIN drivers AS T3
   ON T3.driverId = T2.driverId
 WHERE
-  T1.name = 'Canadian Grand Prix' AND T2.rank = 1 AND T1.year = 2007",moderate,0.0024253999872598797
+  T1.name = 'Canadian Grand Prix' AND T2.rank = 1 AND T1.year = 2007",moderate,0.00717350000195438
 930,formula_1,"SELECT
   name
 FROM races
@@ -1556,7 +1556,7 @@ WHERE
         WHERE
           forename = 'Lewis' AND surname = 'Hamilton'
       )
-  )",simple,0.002378300006967038
+  )",simple,0.007342000004427973
 931,formula_1,"SELECT
   T2.fastestLapSpeed
 FROM races AS T1
@@ -1568,7 +1568,7 @@ WHERE
   AND NOT T2.fastestLapSpeed IS NULL
 ORDER BY
   T2.fastestLapSpeed DESC
-LIMIT 1",moderate,0.0041111999889835715
+LIMIT 1",moderate,0.008130399997753557
 933,formula_1,"SELECT
   T2.positionOrder
 FROM races AS T1
@@ -1580,15 +1580,15 @@ WHERE
   T3.forename = 'Lewis'
   AND T3.surname = 'Hamilton'
   AND T1.name = 'Chinese Grand Prix'
-  AND T1.year = 2008",moderate,0.004029200004879385
+  AND T1.year = 2008",moderate,0.009373499997309409
 937,formula_1,"SELECT
   T1.time
 FROM results AS T1
 INNER JOIN races AS T2
   ON T1.raceId = T2.raceId
 WHERE
-  T1.rank = 2 AND T2.name = 'Chinese Grand Prix' AND T2.year = 2008",simple,0.002729400002863258
-940,formula_1,SELECT COUNT(*) FROM (SELECT T1.driverId FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.name = 'Chinese Grand Prix' AND T2.year = 2008 AND T1.time IS NOT NULL GROUP BY T1.driverId HAVING COUNT(T2.raceId) > 0) AS derived_table,moderate,0.003621400013798848
+  T1.rank = 2 AND T2.name = 'Chinese Grand Prix' AND T2.year = 2008",simple,0.008071700001892168
+940,formula_1,SELECT COUNT(*) FROM (SELECT T1.driverId FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.name = 'Chinese Grand Prix' AND T2.year = 2008 AND T1.time IS NOT NULL GROUP BY T1.driverId HAVING COUNT(T2.raceId) > 0) AS derived_table,moderate,0.008905200003937352
 944,formula_1,"WITH time_in_seconds AS (
   SELECT
     T1.positionOrder,
@@ -1640,26 +1640,26 @@ SELECT
         FROM last_driver_incremental
       )
     FROM champion_time
-  )",challenging,0.004508599988184869
+  )",challenging,0.011914499998965766
 945,formula_1,"SELECT
   COUNT(circuitId)
 FROM circuits
 WHERE
-  location = 'Adelaide' AND country = 'Australia'",simple,6.250001024454832e-05
+  location = 'Adelaide' AND country = 'Australia'",simple,0.000265499998931773
 948,formula_1,"SELECT
   MAX(T1.points)
 FROM constructorStandings AS T1
 INNER JOIN constructors AS T2
   ON T1.constructorId = T2.constructorId
 WHERE
-  T2.nationality = 'British'",simple,0.0025531000283081084
+  T2.nationality = 'British'",simple,0.007581899997603614
 950,formula_1,"SELECT
   T2.name
 FROM constructorStandings AS T1
 INNER JOIN constructors AS T2
   ON T1.constructorId = T2.constructorId
 WHERE
-  T1.points = 0 AND T1.raceId = 291",simple,0.0011722000199370086
+  T1.points = 0 AND T1.raceId = 291",simple,0.0024931000007200055
 951,formula_1,"SELECT
   COUNT(T1.raceId)
 FROM constructorStandings AS T1
@@ -1670,7 +1670,7 @@ WHERE
 GROUP BY
   T1.constructorId
 HAVING
-  COUNT(raceId) = 2",simple,0.0018763999978546053
+  COUNT(raceId) = 2",simple,0.0040067000009003095
 954,formula_1,"SELECT
   CAST(SUM(CASE WHEN NOT T1.time IS NULL THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.raceId)
 FROM results AS T1
@@ -1679,22 +1679,22 @@ INNER JOIN races AS T2
 INNER JOIN drivers AS T3
   ON T1.driverId = T3.driverId
 WHERE
-  T3.nationality = 'Japanese' AND T2.year BETWEEN 2007 AND 2009",challenging,0.0036899999831803143
-955,formula_1,"WITH time_in_seconds AS (SELECT T2.year, T2.raceId, T1.positionOrder, CASE WHEN T1.positionOrder = 1 THEN (CAST(SUBSTR(T1.time, 1, 1) AS FLOAT) * 3600) + (CAST(SUBSTR(T1.time, 3, 2) AS FLOAT) * 60) + CAST(SUBSTR(T1.time, 6, 2) AS FLOAT) + CAST(SUBSTR(T1.time, 9) AS FLOAT) / 1000 ELSE 0 END AS time_seconds FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE NOT T1.time IS NULL), champion_time AS (SELECT year, raceId, time_seconds FROM time_in_seconds WHERE positionOrder = 1) SELECT year, AVG(time_seconds) FROM champion_time WHERE year < 1975 GROUP BY year HAVING NOT AVG(time_seconds) IS NULL",challenging,0.0027171999972779304
+  T3.nationality = 'Japanese' AND T2.year BETWEEN 2007 AND 2009",challenging,0.008494299996527843
+955,formula_1,"WITH time_in_seconds AS (SELECT T2.year, T2.raceId, T1.positionOrder, CASE WHEN T1.positionOrder = 1 THEN (CAST(SUBSTR(T1.time, 1, 1) AS FLOAT) * 3600) + (CAST(SUBSTR(T1.time, 3, 2) AS FLOAT) * 60) + CAST(SUBSTR(T1.time, 6, 2) AS FLOAT) + CAST(SUBSTR(T1.time, 9) AS FLOAT) / 1000 ELSE 0 END AS time_seconds FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE NOT T1.time IS NULL), champion_time AS (SELECT year, raceId, time_seconds FROM time_in_seconds WHERE positionOrder = 1) SELECT year, AVG(time_seconds) FROM champion_time WHERE year < 1975 GROUP BY year HAVING NOT AVG(time_seconds) IS NULL",challenging,0.009129300000495277
 959,formula_1,"SELECT
   T1.fastestLap
 FROM results AS T1
 INNER JOIN races AS T2
   ON T1.raceId = T2.raceId
 WHERE
-  T2.year = 2009 AND T1.time LIKE '_:%:__.___'",simple,0.003921299998182803
+  T2.year = 2009 AND T1.time LIKE '_:%:__.___'",simple,0.008875599996827077
 960,formula_1,"SELECT
   AVG(T1.fastestLapSpeed)
 FROM results AS T1
 INNER JOIN races AS T2
   ON T1.raceId = T2.raceId
 WHERE
-  T2.year = 2009 AND T2.name = 'Spanish Grand Prix'",moderate,0.0030759000219404697
+  T2.year = 2009 AND T2.name = 'Spanish Grand Prix'",moderate,0.007707799995841924
 963,formula_1,"SELECT
   COUNT(T1.driverId)
 FROM drivers AS T1
@@ -1704,22 +1704,22 @@ WHERE
   T1.nationality = 'French'
   AND (
     CAST(SUBSTR(T2.time, 1, 2) AS SIGNED) * 60 + CAST(SUBSTR(T2.time, 4, 2) AS SIGNED) + CAST(SUBSTR(T2.time, 7, 2) AS DOUBLE) / 1000
-  ) < 120",moderate,0.17147239999030717
-964,formula_1,SELECT code FROM drivers WHERE Nationality = 'American',simple,0.0001976999919861555
-967,formula_1,SELECT COUNT(*) FROM (SELECT T1.nationality FROM drivers AS T1 ORDER BY T1.dob DESC LIMIT 3) AS T3 WHERE T3.nationality = 'Dutch',simple,0.00017870002193376422
-971,formula_1,SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY dob ASC LIMIT 1,simple,0.00019270001212134957
+  ) < 120",moderate,0.4161932000060915
+964,formula_1,SELECT code FROM drivers WHERE Nationality = 'American',simple,0.0007923000011942349
+967,formula_1,SELECT COUNT(*) FROM (SELECT T1.nationality FROM drivers AS T1 ORDER BY T1.dob DESC LIMIT 3) AS T3 WHERE T3.nationality = 'Dutch',simple,0.0007316999981412664
+971,formula_1,SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY dob ASC LIMIT 1,simple,0.0006493999972008169
 977,formula_1,"SELECT
   SUM(CASE WHEN NOT time IS NULL THEN 1 ELSE 0 END)
 FROM results
 WHERE
-  statusId = 2 AND raceID < 100 AND raceId > 50",simple,0.0025171000161208212
+  statusId = 2 AND raceID < 100 AND raceId > 50",simple,0.008050199998251628
 978,formula_1,"SELECT DISTINCT
   location,
   lat,
   lng
 FROM circuits
 WHERE
-  country = 'Austria'",simple,8.339999476447701e-05
+  country = 'Austria'",simple,0.00027520000003278255
 981,formula_1,"SELECT
   T3.year,
   T3.name,
@@ -1741,7 +1741,7 @@ WHERE
   )
 ORDER BY
   T3.date ASC
-LIMIT 1",moderate,0.0007039000047370791
+LIMIT 1",moderate,0.0024132999969879165
 989,formula_1,"SELECT
   T1.time
 FROM results AS T1
@@ -1750,7 +1750,7 @@ INNER JOIN races AS T2
 WHERE
   T2.name = 'Canadian Grand Prix'
   AND T2.year = 2008
-  AND T1.time LIKE '_:%:__.___'",moderate,0.002605199988465756
+  AND T1.time LIKE '_:%:__.___'",moderate,0.008384000000660308
 990,formula_1,"SELECT
   T3.constructorRef,
   T3.url
@@ -1762,8 +1762,8 @@ INNER JOIN constructors AS T3
 WHERE
   T2.name = 'Singapore Grand Prix'
   AND T2.year = 2009
-  AND T1.time LIKE '_:%:__.___'",challenging,0.002718600007938221
-717,superhero,SELECT  T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2  ON T1.id = T2.hero_id INNER JOIN superpower AS T3  ON T2.power_id = T3.id WHERE  T1.superhero_name = '3-D Man',simple,0.0004885000234935433
+  AND T1.time LIKE '_:%:__.___'",challenging,0.008837900000798982
+717,superhero,SELECT  T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2  ON T1.id = T2.hero_id INNER JOIN superpower AS T3  ON T2.power_id = T3.id WHERE  T1.superhero_name = '3-D Man',simple,0.0027486000035423785
 994,formula_1,"SELECT
   SUM(T1.points),
   T2.name,
@@ -1779,7 +1779,7 @@ GROUP BY
   T2.name
 ORDER BY
   SUM(T1.points) DESC
-LIMIT 1",challenging,0.0012595000152941793
+LIMIT 1",challenging,0.004921500003547408
 1001,formula_1,"SELECT
   T2.forename,
   T2.surname
@@ -1800,8 +1800,8 @@ WHERE
   )
 ORDER BY
   CAST(SUBSTR(q3, 1, INSTR(q3, ':') - 1) AS SIGNED) * 60 + CAST(SUBSTR(q3, INSTR(q3, ':') + 1, INSTR(q3, '.') - INSTR(q3, ':') - 1) AS DOUBLE) + CAST(SUBSTR(q3, INSTR(q3, '.') + 1) AS DOUBLE) / 1000 ASC
-LIMIT 1",challenging,0.0007117000059224665
-1002,formula_1,"SELECT T1.forename, T1.surname, T1.nationality, T3.name FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T1.driverId = T2.driverId INNER JOIN races AS T3 ON T2.raceId = T3.raceId ORDER BY T1.dob DESC LIMIT 1",moderate,0.007201500004157424
+LIMIT 1",challenging,0.003209300004527904
+1002,formula_1,"SELECT T1.forename, T1.surname, T1.nationality, T3.name FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T1.driverId = T2.driverId INNER JOIN races AS T3 ON T2.raceId = T3.raceId ORDER BY T1.dob DESC LIMIT 1",moderate,0.01963209999667015
 1003,formula_1,"SELECT
   COUNT(T1.driverId)
 FROM results AS T1
@@ -1815,8 +1815,8 @@ GROUP BY
   T1.driverId
 ORDER BY
   COUNT(T1.driverId) DESC
-LIMIT 1",moderate,0.00282979998155497
-1011,formula_1,"WITH lap_times_in_seconds AS (SELECT driverId, (CASE WHEN SUBSTR(time, 1, INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, 1, INSTR(time, ':') - 1) AS FLOAT) * 60 ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) AS FLOAT) ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, '.') + 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, '.') + 1) AS FLOAT) / 1000 ELSE 0 END) AS time_in_seconds FROM lapTimes) SELECT T2.forename, T2.surname, T1.driverId FROM (SELECT driverId, MIN(time_in_seconds) AS min_time_in_seconds FROM lap_times_in_seconds GROUP BY driverId) AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T1.min_time_in_seconds ASC LIMIT 20",challenging,0.4718834000232164
+LIMIT 1",moderate,0.010915600003500003
+1011,formula_1,"WITH lap_times_in_seconds AS (SELECT driverId, (CASE WHEN SUBSTR(time, 1, INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, 1, INSTR(time, ':') - 1) AS FLOAT) * 60 ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) AS FLOAT) ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, '.') + 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, '.') + 1) AS FLOAT) / 1000 ELSE 0 END) AS time_in_seconds FROM lapTimes) SELECT T2.forename, T2.surname, T1.driverId FROM (SELECT driverId, MIN(time_in_seconds) AS min_time_in_seconds FROM lap_times_in_seconds GROUP BY driverId) AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T1.min_time_in_seconds ASC LIMIT 20",challenging,1.2036339999976917
 1014,formula_1,"WITH fastest_lap_times AS (
   SELECT
     T1.raceId,
@@ -1865,7 +1865,7 @@ INNER JOIN (
   ) + (
     CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS DOUBLE) / 1000
   ) = T4.min_time_in_seconds
-LIMIT 1",challenging,1.8010022999951616
+LIMIT 1",challenging,4.142907800000103
 719,superhero,"SELECT
   COUNT(T1.id)
 FROM superhero AS T1
@@ -1874,7 +1874,7 @@ INNER JOIN hero_power AS T2
 INNER JOIN superpower AS T3
   ON T2.power_id = T3.id
 WHERE
-  T3.power_name = 'Super Strength' AND T1.height_cm > 200",moderate,0.0009379000111948699
+  T3.power_name = 'Super Strength' AND T1.height_cm > 200",moderate,0.0020977000021957792
 723,superhero,"SELECT
   COUNT(T1.id)
 FROM superhero AS T1
@@ -1885,7 +1885,7 @@ INNER JOIN superpower AS T3
 INNER JOIN colour AS T4
   ON T1.eye_colour_id = T4.id
 WHERE
-  T3.power_name = 'Agility' AND T4.colour = 'Blue'",moderate,0.0012933000107295811
+  T3.power_name = 'Agility' AND T4.colour = 'Blue'",moderate,0.002854099999240134
 724,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -1894,7 +1894,7 @@ INNER JOIN colour AS T2
 INNER JOIN colour AS T3
   ON T1.hair_colour_id = T3.id
 WHERE
-  T2.colour = 'Blue' AND T3.colour = 'Blond'",challenging,0.00029979998362250626
+  T2.colour = 'Blue' AND T3.colour = 'Blond'",challenging,0.0006417000040528364
 726,superhero,"SELECT
   superhero_name,
   height_cm,
@@ -1903,7 +1903,7 @@ FROM superhero
 INNER JOIN publisher
   ON superhero.publisher_id = publisher.id
 WHERE
-  publisher.publisher_name = 'Marvel Comics'",moderate,0.0009482000023126602
+  publisher.publisher_name = 'Marvel Comics'",moderate,0.002640300001075957
 728,superhero,"SELECT
   colour.colour AS EyeColor,
   COUNT(superhero.id) AS Count,
@@ -1916,7 +1916,7 @@ INNER JOIN publisher
 WHERE
   publisher.publisher_name = 'Marvel Comics'
 GROUP BY
-  colour.colour",moderate,0.0005261999904178083
+  colour.colour",moderate,0.0011848000067402609
 730,superhero,"SELECT
   superhero_name
 FROM superhero AS T1
@@ -1936,7 +1936,7 @@ WHERE
     FROM publisher AS T4
     WHERE
       T4.publisher_name = 'Marvel Comics' AND T1.publisher_id = T4.id
-  )",challenging,0.11579119999078102
+  )",challenging,0.31436410000605974
 732,superhero,"SELECT
   T2.publisher_name
 FROM superhero AS T1
@@ -1950,7 +1950,7 @@ WHERE
   T4.attribute_name = 'Speed'
 ORDER BY
   T3.attribute_value
-LIMIT 1",moderate,0.0005601999873761088
+LIMIT 1",moderate,0.0016964999958872795
 733,superhero,"SELECT
   COUNT(T1.id)
 FROM superhero AS T1
@@ -1959,7 +1959,7 @@ INNER JOIN publisher AS T2
 INNER JOIN colour AS T3
   ON T1.eye_colour_id = T3.id
 WHERE
-  T2.publisher_name = 'Marvel Comics' AND T3.colour = 'Gold'",moderate,0.0001855999871622771
+  T2.publisher_name = 'Marvel Comics' AND T3.colour = 'Gold'",moderate,0.0006320000029518269
 736,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -1971,14 +1971,14 @@ WHERE
   T3.attribute_name = 'Intelligence'
 ORDER BY
   T2.attribute_value
-LIMIT 1",moderate,0.0005023999838158488
+LIMIT 1",moderate,0.0015954999980749562
 737,superhero,"SELECT
   T2.race
 FROM superhero AS T1
 INNER JOIN race AS T2
   ON T1.race_id = T2.id
 WHERE
-  T1.superhero_name = 'Copycat'",simple,0.00010790000669658184
+  T1.superhero_name = 'Copycat'",simple,0.00042780000512721017
 738,superhero,"SELECT
   superhero_name
 FROM superhero AS T1
@@ -1993,7 +1993,7 @@ WHERE
       T3.attribute_name = 'Durability'
       AND T2.attribute_value < 50
       AND T1.id = T2.hero_id
-  )",simple,0.10424089999287389
+  )",simple,0.26907139999821084
 739,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -2002,7 +2002,7 @@ INNER JOIN hero_power AS T2
 INNER JOIN superpower AS T3
   ON T2.power_id = T3.id
 WHERE
-  T3.power_name = 'Death Touch'",moderate,0.0008803000091575086
+  T3.power_name = 'Death Touch'",moderate,0.0026670000006561168
 740,superhero,"SELECT
   COUNT(T1.id)
 FROM superhero AS T1
@@ -2015,7 +2015,7 @@ INNER JOIN gender AS T4
 WHERE
   T3.attribute_name = 'Strength'
   AND T2.attribute_value = 100
-  AND T4.gender = 'Female'",moderate,0.0002921000123023987
+  AND T4.gender = 'Female'",moderate,0.0010886999953072518
 743,superhero,"SELECT
   (
     CAST(COUNT(*) AS DOUBLE) * 100 / (
@@ -2031,29 +2031,29 @@ INNER JOIN publisher AS T2
 INNER JOIN alignment AS T3
   ON T3.id = T1.alignment_id
 WHERE
-  T3.alignment = 'Bad'",challenging,0.0002018999948631972
+  T3.alignment = 'Bad'",challenging,0.0006862000009277835
 744,superhero,"SELECT
   SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END)
 FROM superhero AS T1
 INNER JOIN publisher AS T2
-  ON T1.publisher_id = T2.id",challenging,0.00017680000746622682
+  ON T1.publisher_id = T2.id",challenging,0.0007403999989037402
 745,superhero,"SELECT
   id
 FROM publisher
 WHERE
-  publisher_name = 'Star Trek'",simple,4.1799998143687844e-05
+  publisher_name = 'Star Trek'",simple,0.00021350000315578654
 747,superhero,"SELECT
   COUNT(id)
 FROM superhero
 WHERE
-  full_name IS NULL",simple,9.549999958835542e-05
+  full_name IS NULL",simple,0.0003752000047825277
 750,superhero,"SELECT
   AVG(T1.weight_kg)
 FROM superhero AS T1
 INNER JOIN gender AS T2
   ON T1.gender_id = T2.id
 WHERE
-  T2.gender = 'Female'",simple,0.0001449999981559813
+  T2.gender = 'Female'",simple,0.0005084000003989786
 751,superhero,"SELECT
   T3.power_name
 FROM superhero AS T1
@@ -2065,14 +2065,14 @@ INNER JOIN gender AS T4
   ON T4.id = T1.gender_id
 WHERE
   T4.gender = 'Male'
-LIMIT 5",moderate,7.509998977184296e-05
+LIMIT 5",moderate,0.0003125000002910383
 753,superhero,"SELECT DISTINCT
   T1.superhero_name
 FROM superhero AS T1
 INNER JOIN colour AS T2
   ON T1.eye_colour_id = T2.id
 WHERE
-  T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'",moderate,0.0001723000023048371
+  T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'",moderate,0.0005560999998124316
 758,superhero,"SELECT DISTINCT
   T3.colour
 FROM superhero AS T1
@@ -2081,14 +2081,14 @@ INNER JOIN race AS T2
 INNER JOIN colour AS T3
   ON T1.hair_colour_id = T3.id
 WHERE
-  T1.height_cm = 185 AND T2.race = 'Human'",moderate,0.00013810000382363796
+  T1.height_cm = 185 AND T2.race = 'Human'",moderate,0.0005402000024332665
 760,superhero,"SELECT
   CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM superhero AS T1
 INNER JOIN publisher AS T2
   ON T1.publisher_id = T2.id
 WHERE
-  T1.height_cm BETWEEN 150 AND 180",challenging,0.00014280001050792634
+  T1.height_cm BETWEEN 150 AND 180",challenging,0.0005224000051384792
 761,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -2100,22 +2100,22 @@ WHERE
     SELECT
       AVG(weight_kg)
     FROM superhero
-  ) * 79",moderate,0.00020670000230893493
+  ) * 79",moderate,0.0006273000035434961
 764,superhero,"SELECT DISTINCT
   T2.power_name
 FROM hero_power AS T1
 INNER JOIN superpower AS T2
   ON T1.power_id = T2.id
 WHERE
-  T1.hero_id = 1",simple,0.0003065000055357814
+  T1.hero_id = 1",simple,0.0008912999983294867
 765,superhero,"SELECT
   COUNT(T1.hero_id)
 FROM hero_power AS T1
 INNER JOIN superpower AS T2
   ON T1.power_id = T2.id
 WHERE
-  T2.power_name = 'Stealth'",simple,0.0007139999943319708
-766,superhero,SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC LIMIT 1,moderate,0.0005227999936323613
+  T2.power_name = 'Stealth'",simple,0.0021195000008447096
+766,superhero,SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC LIMIT 1,moderate,0.0015910000001895241
 769,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -2130,7 +2130,7 @@ WHERE
   AND T3.attribute_name = 'Durability'
 ORDER BY
   T2.attribute_value DESC
-LIMIT 1",challenging,0.0005780000064987689
+LIMIT 1",challenging,0.002001699998800177
 772,superhero,"SELECT
   T1.eye_colour_id,
   T1.hair_colour_id,
@@ -2141,7 +2141,7 @@ INNER JOIN publisher AS T2
 INNER JOIN gender AS T3
   ON T3.id = T1.gender_id
 WHERE
-  T2.publisher_name = 'Dark Horse Comics' AND T3.gender = 'Female'",challenging,0.00017170002683997154
+  T2.publisher_name = 'Dark Horse Comics' AND T3.gender = 'Female'",challenging,0.0006022999950801022
 773,superhero,"SELECT
   T1.superhero_name,
   T2.publisher_name
@@ -2150,7 +2150,7 @@ INNER JOIN publisher AS T2
   ON T1.publisher_id = T2.id
 WHERE
   T1.eye_colour_id = T1.hair_colour_id
-  AND T1.eye_colour_id = T1.skin_colour_id",challenging,0.0002834000042639673
+  AND T1.eye_colour_id = T1.skin_colour_id",challenging,0.0008452999973087572
 775,superhero,"SELECT
   CAST(COUNT(CASE WHEN T3.colour = 'Blue' THEN T1.id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM superhero AS T1
@@ -2159,35 +2159,35 @@ INNER JOIN gender AS T2
 INNER JOIN colour AS T3
   ON T1.skin_colour_id = T3.id
 WHERE
-  T2.gender = 'Female'",challenging,0.00024629998370073736
+  T2.gender = 'Female'",challenging,0.0006127999949967489
 779,superhero,"SELECT
   COUNT(T1.power_id)
 FROM hero_power AS T1
 INNER JOIN superhero AS T2
   ON T1.hero_id = T2.id
 WHERE
-  T2.superhero_name = 'Amazo'",simple,0.0005993999948259443
+  T2.superhero_name = 'Amazo'",simple,0.0015983999983291142
 781,superhero,"SELECT
   T1.height_cm
 FROM superhero AS T1
 INNER JOIN colour AS T2
   ON T1.eye_colour_id = T2.id
 WHERE
-  T2.colour = 'Amber'",simple,0.0001517999917268753
+  T2.colour = 'Amber'",simple,0.0006809999977122061
 782,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
 INNER JOIN colour AS T2
   ON T1.eye_colour_id = T2.id AND T1.hair_colour_id = T2.id
 WHERE
-  T2.colour = 'Black'",moderate,0.0001632000203244388
+  T2.colour = 'Black'",moderate,0.0005411000020103529
 785,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
 INNER JOIN alignment AS T2
   ON T1.alignment_id = T2.id
 WHERE
-  T2.alignment = 'Neutral'",simple,0.00018510001245886087
+  T2.alignment = 'Neutral'",simple,0.0005794000026071444
 786,superhero,"SELECT
   COUNT(T1.hero_id)
 FROM hero_attribute AS T1
@@ -2199,14 +2199,14 @@ WHERE
     SELECT
       MAX(attribute_value)
     FROM hero_attribute
-  )",moderate,0.0004023000074084848
+  )",moderate,0.0011981999996351078
 788,superhero,"SELECT
   CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' AND T3.gender = 'Female' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END)
 FROM superhero AS T1
 INNER JOIN publisher AS T2
   ON T1.publisher_id = T2.id
 INNER JOIN gender AS T3
-  ON T1.gender_id = T3.id",challenging,0.00026679999427869916
+  ON T1.gender_id = T3.id",challenging,0.0007794999983161688
 790,superhero,"SELECT
   (
     SELECT
@@ -2220,10 +2220,10 @@ INNER JOIN gender AS T3
     FROM superhero
     WHERE
       full_name LIKE 'Charles Chandler'
-  ) AS CALCULATE",moderate,7.40000104997307e-05
+  ) AS CALCULATE",moderate,0.00024760000087553635
 791,superhero,"SELECT
   CAST(SUM(height_cm) AS DOUBLE) / COUNT(id)
-FROM superhero",simple,0.00018209998961538076
+FROM superhero",simple,0.0003932999970857054
 792,superhero,"SELECT
   T3.power_name
 FROM superhero AS T1
@@ -2232,7 +2232,7 @@ INNER JOIN hero_power AS T2
 INNER JOIN superpower AS T3
   ON T2.power_id = T3.id
 WHERE
-  T1.superhero_name = 'Abomination'",simple,0.0007361999887507409
+  T1.superhero_name = 'Abomination'",simple,0.0017938000019057654
 796,superhero,"SELECT
   T3.attribute_name,
   T2.attribute_value
@@ -2242,7 +2242,7 @@ INNER JOIN hero_attribute AS T2
 INNER JOIN attribute AS T3
   ON T2.attribute_id = T3.id
 WHERE
-  T1.superhero_name = '3-D Man'",moderate,0.0006661999796051532
+  T1.superhero_name = '3-D Man'",moderate,0.0014118000035523437
 797,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -2251,38 +2251,38 @@ INNER JOIN colour AS T2
 INNER JOIN colour AS T3
   ON T1.hair_colour_id = T3.id
 WHERE
-  T2.colour = 'Blue' AND T3.colour = 'Brown'",moderate,0.00026149998302571476
+  T2.colour = 'Blue' AND T3.colour = 'Brown'",moderate,0.0007416000007651746
 798,superhero,"SELECT
   T2.publisher_name
 FROM superhero AS T1
 INNER JOIN publisher AS T2
   ON T1.publisher_id = T2.id
 WHERE
-  T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')",moderate,0.0002212999970652163
+  T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')",moderate,0.0005367999983718619
 800,superhero,"SELECT
   CAST(COUNT(CASE WHEN T2.colour = 'Blue' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM superhero AS T1
 INNER JOIN colour AS T2
-  ON T1.eye_colour_id = T2.id",moderate,0.0002587999915704131
+  ON T1.eye_colour_id = T2.id",moderate,0.000684200000250712
 801,superhero,"SELECT
   CAST(COUNT(CASE WHEN T2.gender = 'Male' THEN T1.id ELSE NULL END) AS DOUBLE) / COUNT(CASE WHEN T2.gender = 'Female' THEN T1.id ELSE NULL END)
 FROM superhero AS T1
 INNER JOIN gender AS T2
-  ON T1.gender_id = T2.id",moderate,0.0002460000105202198
+  ON T1.gender_id = T2.id",moderate,0.0006579999972018413
 806,superhero,"SELECT
   T2.colour
 FROM superhero AS T1
 INNER JOIN colour AS T2
   ON T1.eye_colour_id = T2.id
 WHERE
-  T1.full_name = 'Karen Beecher-Duncan'",simple,0.000155999994603917
+  T1.full_name = 'Karen Beecher-Duncan'",simple,0.0004528999998001382
 819,superhero,"SELECT
   SUM(CASE WHEN T2.id = 7 THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.id = 1 THEN 1 ELSE 0 END)
 FROM superhero AS T1
 INNER JOIN colour AS T2
   ON T1.eye_colour_id = T2.id
 WHERE
-  T1.weight_kg = 0 OR T1.weight_kg IS NULL",challenging,0.00023090001195669174
+  T1.weight_kg = 0 OR T1.weight_kg IS NULL",challenging,0.0005040999967604876
 822,superhero,"SELECT
   COUNT(T1.id)
 FROM superhero AS T1
@@ -2291,7 +2291,7 @@ INNER JOIN alignment AS T2
 INNER JOIN colour AS T3
   ON T1.skin_colour_id = T3.id
 WHERE
-  T2.alignment = 'Bad' AND T3.colour = 'Green'",moderate,0.0002300000051036477
+  T2.alignment = 'Bad' AND T3.colour = 'Green'",moderate,0.0005340999996406026
 824,superhero,"SELECT
   T1.superhero_name
 FROM superhero AS T1
@@ -2302,7 +2302,7 @@ INNER JOIN superpower AS T3
 WHERE
   T3.power_name = 'Wind Control'
 ORDER BY
-  T1.superhero_name",moderate,0.0012488000211305916
+  T1.superhero_name",moderate,0.0030780000015511177
 825,superhero,"SELECT
   T4.gender
 FROM superhero AS T1
@@ -2313,12 +2313,12 @@ INNER JOIN superpower AS T3
 INNER JOIN gender AS T4
   ON T1.gender_id = T4.id
 WHERE
-  T3.power_name = 'Phoenix Force'",moderate,0.0012428000045474619
+  T3.power_name = 'Phoenix Force'",moderate,0.0030287999979918823
 829,superhero,"SELECT
   SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END)
 FROM superhero AS T1
 INNER JOIN publisher AS T2
-  ON T1.publisher_id = T2.id",challenging,0.0002643000043462962
+  ON T1.publisher_id = T2.id",challenging,0.0006154000002425164
 531,codebase_community,"SELECT
   DisplayName
 FROM users
@@ -2330,68 +2330,68 @@ WHERE
     FROM users
     WHERE
       DisplayName IN ('Harlan', 'Jarrod Dixon')
-  )",simple,0.02173200002289377
+  )",simple,0.07091180000134045
 533,codebase_community,"SELECT
   COUNT(Id)
 FROM users
 WHERE
-  DATE(LastAccessDate) > '2014-09-01'",simple,0.015877199999522418
+  DATE(LastAccessDate) > '2014-09-01'",simple,0.040876499995647464
 539,codebase_community,"SELECT
   T2.DisplayName
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.OwnerUserId = T2.Id
 WHERE
-  T1.Title = 'Eliciting priors from experts'",simple,0.1492599000048358
+  T1.Title = 'Eliciting priors from experts'",simple,0.47017069999856176
 537,codebase_community,"SELECT
   COUNT(T1.id)
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.OwnerUserId = T2.Id
 WHERE
-  T2.DisplayName = 'csgillespie'",simple,0.27953709999565035
+  T2.DisplayName = 'csgillespie'",simple,0.8855709999988903
 544,codebase_community,"SELECT
   T2.DisplayName
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.LastEditorUserId = T2.Id
 WHERE
-  T1.Title = 'Examples for teaching: Correlation does not mean causation'",moderate,0.1434995000017807
+  T1.Title = 'Examples for teaching: Correlation does not mean causation'",moderate,0.48142319999897154
 547,codebase_community,"SELECT
   COUNT(T1.Id)
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.OwnerUserId = T2.Id
 WHERE
-  T1.Score >= 20 AND T2.Age > 65",simple,0.15350230000331067
+  T1.Score >= 20 AND T2.Age > 65",simple,0.44430129999818746
 549,codebase_community,"SELECT
   T2.Body
 FROM tags AS T1
 INNER JOIN posts AS T2
   ON T2.Id = T1.ExcerptPostId
 WHERE
-  T1.TagName = 'bayesian'",simple,0.00030690000858157873
+  T1.TagName = 'bayesian'",simple,0.000570999996853061
 555,codebase_community,"SELECT
   AVG(T1.Score)
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.OwnerUserId = T2.Id
 WHERE
-  T2.DisplayName = 'csgillespie'",simple,0.2852316999924369
+  T2.DisplayName = 'csgillespie'",simple,0.9024771000040346
 557,codebase_community,"SELECT
   CAST(SUM(CASE WHEN T2.Age > 65 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.Id)
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.OwnerUserId = T2.Id
 WHERE
-  T1.Score > 5",moderate,0.15133130000322126
+  T1.Score > 5",moderate,0.5377233999970485
 563,codebase_community,"SELECT
   T1.FavoriteCount
 FROM posts AS T1
 INNER JOIN comments AS T2
   ON T1.Id = T2.PostId
 WHERE
-  T2.CreationDate = '2014-04-23 20:29:39.0' AND T2.UserId = 3025",moderate,0.066843600012362
+  T2.CreationDate = '2014-04-23 20:29:39.0' AND T2.UserId = 3025",moderate,0.2274489999981597
 565,codebase_community,"SELECT
   CASE
     WHEN T2.ClosedDate IS NULL
@@ -2402,45 +2402,45 @@ FROM comments AS T1
 INNER JOIN posts AS T2
   ON T1.PostId = T2.Id
 WHERE
-  T1.UserId = 23853 AND T1.CreationDate = '2013-07-12 09:08:18.0'",moderate,0.060489299998153
+  T1.UserId = 23853 AND T1.CreationDate = '2013-07-12 09:08:18.0'",moderate,0.1890687999984948
 567,codebase_community,"SELECT
   COUNT(T1.Id)
 FROM users AS T1
 INNER JOIN posts AS T2
   ON T1.Id = T2.OwnerUserId
 WHERE
-  T1.DisplayName = 'Tiago Pasqualini'",simple,0.24717879999661818
+  T1.DisplayName = 'Tiago Pasqualini'",simple,0.9071077999979025
 568,codebase_community,"SELECT
   T1.DisplayName
 FROM users AS T1
 INNER JOIN votes AS T2
   ON T1.Id = T2.UserId
 WHERE
-  T2.Id = 6347",simple,8.159998105838895e-05
+  T2.Id = 6347",simple,0.0003266000057919882
 571,codebase_community,"SELECT
   CAST(COUNT(DISTINCT T2.Id) AS DOUBLE) / COUNT(DISTINCT T1.Id)
 FROM votes AS T1
 INNER JOIN posts AS T2
   ON T1.UserId = T2.OwnerUserId
 WHERE
-  T1.UserId = 24",moderate,0.16468519999762066
+  T1.UserId = 24",moderate,0.489938800004893
 572,codebase_community,"SELECT
   ViewCount
 FROM posts
 WHERE
-  Title = 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer'",moderate,0.13376229998539202
+  Title = 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer'",moderate,0.4898466000013286
 573,codebase_community,"SELECT
   Text
 FROM comments
 WHERE
-  Score = 17",simple,0.052245300001231954
+  Score = 17",simple,0.1847014000013587
 576,codebase_community,"SELECT
   T1.DisplayName
 FROM users AS T1
 INNER JOIN comments AS T2
   ON T1.Id = T2.UserId
 WHERE
-  T2.Text = 'thank you user93!'",simple,0.06284310002229176
+  T2.Text = 'thank you user93!'",simple,0.20033899999543792
 578,codebase_community,"SELECT
   T1.DisplayName,
   T1.Reputation
@@ -2448,21 +2448,21 @@ FROM users AS T1
 INNER JOIN posts AS T2
   ON T1.Id = T2.OwnerUserId
 WHERE
-  T2.Title = 'Understanding what Dassault iSight is doing?'",moderate,0.13579629999003373
+  T2.Title = 'Understanding what Dassault iSight is doing?'",moderate,0.48216580000007525
 581,codebase_community,"SELECT
   T2.DisplayName
 FROM posts AS T1
 INNER JOIN users AS T2
   ON T1.OwnerUserId = T2.Id
 WHERE
-  T1.Title = 'Open source tools for visualizing multi-dimensional data?'",moderate,0.14117869999608956
+  T1.Title = 'Open source tools for visualizing multi-dimensional data?'",moderate,0.4834744999971008
 584,codebase_community,"SELECT
   T2.Comment
 FROM posts AS T1
 INNER JOIN postHistory AS T2
   ON T1.Id = T2.PostId
 WHERE
-  T1.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'",moderate,0.5464439999777824
+  T1.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'",moderate,1.3398272999984329
 586,codebase_community,"SELECT
   T3.DisplayName,
   T1.Title
@@ -2472,8 +2472,8 @@ INNER JOIN votes AS T2
 INNER JOIN users AS T3
   ON T3.Id = T2.UserId
 WHERE
-  T2.BountyAmount = 50 AND T1.Title LIKE '%variance%'",challenging,0.0025428000080864877
-587,codebase_community,"SELECT AVG(T2.ViewCount) AS average_view_count, T2.Title, T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T2.Id = T1.PostId WHERE T2.Tags = '<humor>' GROUP BY T2.Title, T1.Text",moderate,0.2885111999930814
+  T2.BountyAmount = 50 AND T1.Title LIKE '%variance%'",challenging,0.003209600006812252
+587,codebase_community,"SELECT AVG(T2.ViewCount) AS average_view_count, T2.Title, T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T2.Id = T1.PostId WHERE T2.Tags = '<humor>' GROUP BY T2.Title, T1.Text",moderate,0.63514999999461
 592,codebase_community,"SELECT
   COUNT(UserId)
 FROM (
@@ -2485,7 +2485,7 @@ FROM (
     UserId
 ) AS T
 WHERE
-  T.num > 5",simple,0.039915200002724305
+  T.num > 5",simple,0.055736999995133374
 595,codebase_community,"SELECT
   T2.UserId
 FROM users AS T1
@@ -2498,7 +2498,7 @@ WHERE
 GROUP BY
   T2.UserId
 HAVING
-  COUNT(DISTINCT T2.PostHistoryTypeId) = 1",moderate,0.6451714999857359
+  COUNT(DISTINCT T2.PostHistoryTypeId) = 1",moderate,0.9547367000050144
 604,codebase_community,"SELECT
   AVG(T1.UpVotes),
   AVG(T1.Age)
@@ -2513,7 +2513,7 @@ INNER JOIN (
   HAVING
     post_count > 10
 ) AS T2
-  ON T1.Id = T2.OwnerUserId",moderate,0.20497420002357103
+  ON T1.Id = T2.OwnerUserId",moderate,0.2291754000034416
 633,codebase_community,"SELECT
   T2.PostId
 FROM users AS T1
@@ -2525,7 +2525,7 @@ WHERE
   T1.DisplayName = 'slashnick'
 ORDER BY
   T3.AnswerCount DESC
-LIMIT 1",moderate,0.4713286000187509
+LIMIT 1",moderate,0.6430670000045211
 634,codebase_community,"SELECT
   T1.DisplayName
 FROM users AS T1
@@ -2539,7 +2539,7 @@ GROUP BY
   T1.DisplayName
 ORDER BY
   SUM(T3.ViewCount) DESC
-LIMIT 1",challenging,0.44260599999688566
+LIMIT 1",challenging,0.6657464000018081
 637,codebase_community,"SELECT
   T3.Tags
 FROM users AS T1
@@ -2548,7 +2548,7 @@ INNER JOIN postHistory AS T2
 INNER JOIN posts AS T3
   ON T3.Id = T2.PostId
 WHERE
-  T1.DisplayName = 'Mark Meckes' AND T3.CommentCount = 0",moderate,0.4606873999873642
+  T1.DisplayName = 'Mark Meckes' AND T3.CommentCount = 0",moderate,0.5351312999991933
 639,codebase_community,"SELECT
   CAST(SUM(CASE WHEN T3.TagName = 'r' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.Id)
 FROM users AS T1
@@ -2557,14 +2557,14 @@ INNER JOIN postHistory AS T2
 INNER JOIN tags AS T3
   ON T3.ExcerptPostId = T2.PostId
 WHERE
-  T1.DisplayName = 'Community'",challenging,0.4611633000022266
+  T1.DisplayName = 'Community'",challenging,0.5836605000004056
 640,codebase_community,"SELECT
   SUM(CASE WHEN T1.DisplayName = 'Mornington' THEN T3.ViewCount ELSE 0 END) - SUM(CASE WHEN T1.DisplayName = 'Amos' THEN T3.ViewCount ELSE 0 END) AS diff
 FROM users AS T1
 INNER JOIN postHistory AS T2
   ON T1.Id = T2.UserId
 INNER JOIN posts AS T3
-  ON T3.Id = T2.PostId",moderate,0.7242085000034422
+  ON T3.Id = T2.PostId",moderate,1.100486399998772
 669,codebase_community,"SELECT
   T2.CreationDate
 FROM users AS T1
@@ -2574,7 +2574,7 @@ WHERE
   T1.DisplayName = 'chl'
 ORDER BY
   T2.CreationDate
-LIMIT 1",simple,0.0035454999888315797
+LIMIT 1",simple,0.0048687000016798265
 671,codebase_community,"SELECT
   T1.DisplayName
 FROM users AS T1
@@ -2584,14 +2584,14 @@ WHERE
   T2.Name = 'Autobiographer'
 ORDER BY
   T2.Date
-LIMIT 1",simple,0.016537299990886822
+LIMIT 1",simple,0.02471019999939017
 672,codebase_community,"SELECT
   COUNT(T1.Id)
 FROM users AS T1
 INNER JOIN posts AS T2
   ON T1.Id = T2.OwnerUserId
 WHERE
-  T1.Location = 'United Kingdom' AND T2.FavoriteCount >= 4",moderate,0.1678012999764178
+  T1.Location = 'United Kingdom' AND T2.FavoriteCount >= 4",moderate,0.17606869999872288
 678,codebase_community,"SELECT
   T2.Id,
   T2.Title
@@ -2602,7 +2602,7 @@ WHERE
   T1.DisplayName = 'Harvey Motulsky'
 ORDER BY
   T2.ViewCount DESC
-LIMIT 1",simple,0.2683138999855146
+LIMIT 1",simple,0.4002579000007245
 685,codebase_community,"SELECT
   T2.ViewCount,
   T3.DisplayName
@@ -2612,7 +2612,7 @@ INNER JOIN posts AS T2
 INNER JOIN users AS T3
   ON T2.LastEditorUserId = T3.Id
 WHERE
-  T1.Text = 'Computer Game Datasets'",moderate,0.28765320000820793
+  T1.Text = 'Computer Game Datasets'",moderate,0.45672010000271257
 687,codebase_community,"SELECT
   COUNT(T2.Id)
 FROM posts AS T1
@@ -2622,7 +2622,7 @@ GROUP BY
   T1.Id
 ORDER BY
   T1.Score DESC
-LIMIT 1",simple,0.3422042000165675
+LIMIT 1",simple,0.47167800000170246
 694,codebase_community,"SELECT
   T3.Text,
   T1.DisplayName
@@ -2635,13 +2635,13 @@ WHERE
   T2.Title = 'Analysing wind data with R'
 ORDER BY
   T1.CreationDate DESC
-LIMIT 10",moderate,0.27271900000050664
+LIMIT 10",moderate,0.39162300000316463
 704,codebase_community,"SELECT
   ExcerptPostId,
   WikiPostId
 FROM tags
 WHERE
-  TagName = 'sample'",simple,0.00016930000856518745
+  TagName = 'sample'",simple,0.0001447000031475909
 705,codebase_community,"SELECT
   T2.Reputation,
   T2.UpVotes
@@ -2649,7 +2649,7 @@ FROM comments AS T1
 INNER JOIN users AS T2
   ON T1.UserId = T2.Id
 WHERE
-  T1.Text = 'fine, you win :)'",simple,0.0646411000052467
+  T1.Text = 'fine, you win :)'",simple,0.08653119999507908
 707,codebase_community,"SELECT
   Text
 FROM comments
@@ -2663,26 +2663,26 @@ WHERE
   )
 ORDER BY
   Score DESC
-LIMIT 1",moderate,0.1792915999831166
+LIMIT 1",moderate,0.2653229999996256
 710,codebase_community,"SELECT
   COUNT(T1.id)
 FROM comments AS T1
 INNER JOIN posts AS T2
   ON T1.PostId = T2.Id
 WHERE
-  T2.CommentCount = 1 AND T2.Score = 0",simple,0.283551600005012
+  T2.CommentCount = 1 AND T2.Score = 0",simple,0.38537039999937406
 716,codebase_community,"SELECT
   CAST(SUM(CASE WHEN T1.UpVotes = 0 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.Id) AS per
 FROM users AS T1
 INNER JOIN comments AS T2
   ON T1.Id = T2.UserId
 WHERE
-  T2.Score BETWEEN 5 AND 10",moderate,0.057752399996388704
+  T2.Score BETWEEN 5 AND 10",moderate,0.08018480000464479
 340,card_games,"SELECT
   id
 FROM cards
 WHERE
-  NOT cardKingdomFoilId IS NULL AND NOT cardKingdomId IS NULL",simple,0.08053370000561699
+  NOT cardKingdomFoilId IS NULL AND NOT cardKingdomId IS NULL",simple,0.10667820000526262
 341,card_games,"SELECT
   id
 FROM cards
@@ -2690,7 +2690,7 @@ WHERE
   borderColor = 'borderless'
   AND (
     cardKingdomId IS NULL OR cardKingdomId IS NULL
-  )",simple,0.07579000000259839
+  )",simple,0.08485230000223964
 344,card_games,"SELECT DISTINCT
   T1.id
 FROM cards AS T1
@@ -2699,14 +2699,14 @@ INNER JOIN legalities AS T2
 WHERE
   T2.format = 'gladiator'
   AND T2.status = 'Banned'
-  AND T1.rarity = 'mythic'",moderate,0.06686840002657846
+  AND T1.rarity = 'mythic'",moderate,0.11728980000043521
 345,card_games,"SELECT DISTINCT
   T2.status
 FROM cards AS T1
 INNER JOIN legalities AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.type = 'Artifact' AND T2.format = 'vintage' AND T1.side IS NULL",moderate,0.34186919999774545
+  T1.type = 'Artifact' AND T2.format = 'vintage' AND T1.side IS NULL",moderate,0.5842082000017399
 346,card_games,"SELECT
   T1.id,
   T1.artist
@@ -2718,7 +2718,7 @@ WHERE
   AND T2.format = 'commander'
   AND (
     T1.power IS NULL OR T1.power = '*'
-  )",moderate,0.3634682999982033
+  )",moderate,0.6774241000020993
 347,card_games,"SELECT
   T1.id,
   T2.text,
@@ -2727,64 +2727,64 @@ FROM cards AS T1
 INNER JOIN rulings AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.artist = 'Stephen Daniele'",moderate,0.2320655999938026
-349,card_games,"SELECT T1.name, T1.artist, T1.isPromo FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE T1.isPromo = 1 AND T1.artist = ( SELECT artist FROM cards WHERE isPromo = 1 GROUP BY artist HAVING COUNT(DISTINCT uuid) = (SELECT MAX(card_counts.max_count) FROM (SELECT COUNT(DISTINCT uuid) AS max_count FROM cards WHERE isPromo = 1 GROUP BY artist) AS card_counts))LIMIT 1",moderate,0.2278099000104703
+  T1.artist = 'Stephen Daniele'",moderate,0.5670310999994399
+349,card_games,"SELECT T1.name, T1.artist, T1.isPromo FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE T1.isPromo = 1 AND T1.artist = ( SELECT artist FROM cards WHERE isPromo = 1 GROUP BY artist HAVING COUNT(DISTINCT uuid) = (SELECT MAX(card_counts.max_count) FROM (SELECT COUNT(DISTINCT uuid) AS max_count FROM cards WHERE isPromo = 1 GROUP BY artist) AS card_counts))LIMIT 1",moderate,0.5767293999961112
 352,card_games,"SELECT
   CAST(SUM(CASE WHEN T2.language = 'Chinese Simplified' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN foreign_data AS T2
-  ON T1.uuid = T2.uuid",moderate,0.30608619999838993
+  ON T1.uuid = T2.uuid",moderate,0.927171699993778
 356,card_games,"SELECT
   COUNT(*)
 FROM cards
 WHERE
-  power = '*'",simple,0.08180780001566745
+  power = '*'",simple,0.21912799999699928
 358,card_games,"SELECT DISTINCT
   borderColor
 FROM cards
 WHERE
-  name = 'Ancestor''s Chosen'",simple,0.06742870001471601
+  name = 'Ancestor''s Chosen'",simple,0.19085089999862248
 366,card_games,"SELECT
   T2.format
 FROM cards AS T1
 INNER JOIN legalities AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.name = 'Benalish Knight'",simple,0.48103749999427237
+  T1.name = 'Benalish Knight'",simple,1.1227166000026045
 368,card_games,"SELECT
   CAST(SUM(CASE WHEN borderColor = 'borderless' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(id)
-FROM cards",simple,0.06692509999265894
+FROM cards",simple,0.16406750000169268
 371,card_games,"SELECT
   CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN foreign_data AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.isStorySpotlight = 1",challenging,0.3786117999989074
+  T1.isStorySpotlight = 1",challenging,0.7402547000019695
 377,card_games,"SELECT
   COUNT(id)
 FROM cards
 WHERE
-  originalType = 'Summon - Angel' AND subtypes <> 'Angel'",simple,0.06723570000031032
+  originalType = 'Summon - Angel' AND subtypes <> 'Angel'",simple,0.18865749999531545
 379,card_games,"SELECT
   id
 FROM cards
 WHERE
-  duelDeck = 'a'",simple,0.061604399990756065
+  duelDeck = 'a'",simple,0.1855792999995174
 383,card_games,"SELECT
   COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN legalities AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T2.status = 'Banned' AND T1.borderColor = 'white'",simple,0.06111199999577366
+  T2.status = 'Banned' AND T1.borderColor = 'white'",simple,0.13710310000169557
 391,card_games,"SELECT DISTINCT
   T1.name
 FROM cards AS T1
 INNER JOIN foreign_data AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.originalType = 'Artifact' AND T1.colors = 'B'",moderate,0.3928085000079591
+  T1.originalType = 'Artifact' AND T1.colors = 'B'",moderate,0.7921003000010387
 397,card_games,"SELECT
   manaCost
 FROM cards
@@ -2792,17 +2792,17 @@ WHERE
   availability = 'mtgo,paper'
   AND borderColor = 'black'
   AND frameVersion = 2003
-  AND layout = 'normal'",moderate,0.08354349998990074
+  AND layout = 'normal'",moderate,0.17397630000050412
 402,card_games,"SELECT
   CAST(SUM(CASE WHEN isTextless = 0  AND isStorySpotlight = 1 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(id)
-FROM cards",moderate,0.07342909998260438
+FROM cards",moderate,0.14883939999708673
 405,card_games,"SELECT
   COUNT(T1.id)
 FROM sets AS T1
 INNER JOIN set_translations AS T2
   ON T1.code = T2.setCode
 WHERE
-  T2.language = 'Portuguese (Brazil)' AND T1.block = 'Commander'",moderate,0.00044490001164376736
+  T2.language = 'Portuguese (Brazil)' AND T1.block = 'Commander'",moderate,0.0010092000011354685
 407,card_games,"SELECT
   T1.subtypes,
   T1.supertypes
@@ -2812,7 +2812,7 @@ INNER JOIN foreign_data AS T2
 WHERE
   T2.language = 'German'
   AND NOT T1.subtypes IS NULL
-  AND NOT T1.supertypes IS NULL",moderate,0.2624778999888804
+  AND NOT T1.supertypes IS NULL",moderate,0.6917814999978873
 408,card_games,"SELECT
   Count(DISTINCT T1.id) 
 FROM cards AS T1
@@ -2822,7 +2822,7 @@ WHERE
   (
     T1.power IS NULL OR T1.power = '*'
   )
-  AND T2.text LIKE '%triggered ability%'",moderate,0.11399070001789369
+  AND T2.text LIKE '%triggered ability%'",moderate,0.2571075999949244
 409,card_games,"SELECT
   COUNT(T1.id)
 FROM cards AS T1
@@ -2833,7 +2833,7 @@ INNER JOIN rulings AS T3
 WHERE
   T2.format = 'premodern'
   AND T3.text = 'This is a triggered mana ability.'
-  AND T1.Side IS NULL",moderate,0.1993032000027597
+  AND T1.Side IS NULL",moderate,0.47289140000066254
 412,card_games,"SELECT
   name
 FROM foreign_data
@@ -2848,48 +2848,48 @@ WHERE
       AND borderColor = 'black'
       AND artist = 'Matthew D. Wilson'
   )
-  AND language = 'French'",moderate,0.20988070001476444
+  AND language = 'French'",moderate,0.4863798999940627
 414,card_games,"SELECT
   T2.language
 FROM sets AS T1
 INNER JOIN set_translations AS T2
   ON T1.code = T2.setCode
 WHERE
-  T1.block = 'Ravnica' AND T1.baseSetSize = 180",simple,0.0006933999829925597
+  T1.block = 'Ravnica' AND T1.baseSetSize = 180",simple,0.000556200000573881
 415,card_games,"SELECT
   CAST(SUM(CASE WHEN T1.hasContentWarning = 0 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN legalities AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T2.format = 'commander' AND T2.status = 'Legal'",challenging,0.32277610001619905
+  T2.format = 'commander' AND T2.status = 'Legal'",challenging,0.7587088000000222
 416,card_games,"SELECT
   CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN foreign_data AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.power IS NULL OR T1.power = '*'",challenging,0.420205900009023
+  T1.power IS NULL OR T1.power = '*'",challenging,0.8343226999932085
 422,card_games,"SELECT
   language
 FROM foreign_data
 WHERE
-  multiverseid = 149934",simple,0.09248409999418072
+  multiverseid = 149934",simple,0.22345550000318326
 424,card_games,"SELECT
   CAST(SUM(CASE WHEN isTextless = 1 AND layout = 'normal' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(*)
-FROM cards",simple,0.08246180001879111
+FROM cards",simple,0.19363469999370864
 427,card_games,"SELECT
   T2.language
 FROM sets AS T1
 INNER JOIN set_translations AS T2
   ON T1.code = T2.setCode
 WHERE
-  T1.mcmName = 'Archenemy' AND T2.setCode = 'ARC'",moderate,0.00023849998251534998
+  T1.mcmName = 'Archenemy' AND T2.setCode = 'ARC'",moderate,0.00036779999936698005
 440,card_games,"SELECT DISTINCT
   language
 FROM foreign_data
 WHERE
-  name = 'A Pedra Fellwar'",simple,0.09519419999560341
+  name = 'A Pedra Fellwar'",simple,0.23070690000167815
 459,card_games,"SELECT
   name
 FROM cards
@@ -2897,7 +2897,7 @@ WHERE
   name IN ('Serra Angel', 'Shrine Keeper')
 ORDER BY
   convertedManaCost DESC
-LIMIT 1",moderate,0.07439850000082515
+LIMIT 1",moderate,0.14461470000242116
 462,card_games,"SELECT
   translation
 FROM set_translations
@@ -2909,7 +2909,7 @@ WHERE
     WHERE
       name = 'Ancestor''s Chosen'
   )
-  AND language = 'Italian'",moderate,0.07658630001242273
+  AND language = 'Italian'",moderate,0.13297400000010384
 465,card_games,"SELECT
   CASE
     WHEN SUM(
@@ -2926,28 +2926,28 @@ FROM cards AS T1
 INNER JOIN set_translations AS T2
   ON T2.setCode = T1.setCode
 WHERE
-  T1.name = 'Ancestor''s Chosen'",moderate,0.06751839999924414
+  T1.name = 'Ancestor''s Chosen'",moderate,0.16312920000200393
 466,card_games,"SELECT
   COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN set_translations AS T2
   ON T2.setCode = T1.setCode
 WHERE
-  T2.translation = 'Hauptset Zehnte Edition' AND T1.artist = 'Adam Rex'",moderate,0.0665914999844972
+  T2.translation = 'Hauptset Zehnte Edition' AND T1.artist = 'Adam Rex'",moderate,0.16847590000543278
 468,card_games,"SELECT
   T2.translation
 FROM sets AS T1
 INNER JOIN set_translations AS T2
   ON T2.setCode = T1.code
 WHERE
-  T1.name = 'Eighth Edition' AND T2.language = 'Chinese Simplified'",moderate,0.000513700011651963
+  T1.name = 'Eighth Edition' AND T2.language = 'Chinese Simplified'",moderate,0.0014602000010199845
 469,card_games,"SELECT
   CASE WHEN NOT T2.mtgoCode IS NULL THEN 'YES' ELSE 'NO' END
 FROM cards AS T1
 INNER JOIN sets AS T2
   ON T2.code = T1.setCode
 WHERE
-  T1.name = 'Angel of Mercy'",moderate,0.07933459998457693
+  T1.name = 'Angel of Mercy'",moderate,0.3099743999991915
 472,card_games,"SELECT
   COUNT(DISTINCT T1.id)
 FROM sets AS T1
@@ -2956,14 +2956,14 @@ INNER JOIN set_translations AS T2
 WHERE
   T1.block = 'Ice Age'
   AND T2.language = 'Italian'
-  AND NOT T2.translation IS NULL",moderate,0.0003829000052064657
+  AND NOT T2.translation IS NULL",moderate,0.000741399999242276
 473,card_games,"SELECT
   CASE WHEN isForeignOnly = 1 THEN 'YES' ELSE 'NO' END
 FROM cards AS T1
 INNER JOIN sets AS T2
   ON T2.code = T1.setCode
 WHERE
-  T1.name = 'Adarkar Valkyrie'",moderate,0.06960859999526292
+  T1.name = 'Adarkar Valkyrie'",moderate,0.1945384999999078
 474,card_games,"SELECT
   COUNT(T1.id)
 FROM sets AS T1
@@ -2972,7 +2972,7 @@ INNER JOIN set_translations AS T2
 WHERE
   NOT T2.translation IS NULL
   AND T1.baseSetSize < 100
-  AND T2.language = 'Italian'",moderate,0.00032140000257641077
+  AND T2.language = 'Italian'",moderate,0.0007686999961151741
 477,card_games,"SELECT
   T1.artist
 FROM cards AS T1
@@ -2989,21 +2989,21 @@ WHERE
     T2.name = 'Coldsnap' AND T1.artist = 'Jeremy Jarvis'
   )
 GROUP BY
-  T1.artist",challenging,0.08079850001377054
+  T1.artist",challenging,0.22282629999972414
 479,card_games,"SELECT
   SUM(CASE WHEN T1.power = '*' OR T1.power IS NULL THEN 1 ELSE 0 END)
 FROM cards AS T1
 INNER JOIN sets AS T2
   ON T2.code = T1.setCode
 WHERE
-  T2.name = 'Coldsnap' AND T1.convertedManaCost > 5",moderate,0.07419639997533523
+  T2.name = 'Coldsnap' AND T1.convertedManaCost > 5",moderate,0.1641858000002685
 480,card_games,"SELECT
   T2.flavorText
 FROM cards AS T1
 INNER JOIN foreign_data AS T2
   ON T2.uuid = T1.uuid
 WHERE
-  T1.name = 'Ancestor''s Chosen' AND T2.language = 'Italian'",moderate,0.2531979999912437
+  T1.name = 'Ancestor''s Chosen' AND T2.language = 'Italian'",moderate,0.6828460000033374
 483,card_games,"SELECT DISTINCT
   T1.text
 FROM foreign_data AS T1
@@ -3012,7 +3012,7 @@ INNER JOIN cards AS T2
 INNER JOIN sets AS T3
   ON T3.code = T2.setCode
 WHERE
-  T3.name = 'Coldsnap' AND T1.language = 'Italian'",moderate,0.2679141999979038
+  T3.name = 'Coldsnap' AND T1.language = 'Italian'",moderate,0.8273352999967756
 484,card_games,"SELECT
   T2.name
 FROM foreign_data AS T1
@@ -3023,14 +3023,14 @@ INNER JOIN sets AS T3
 WHERE
   T3.name = 'Coldsnap' AND T1.language = 'Italian'
 ORDER BY
-  T2.convertedManaCost DESC",moderate,0.30240019998745993
+  T2.convertedManaCost DESC",moderate,0.7645381000038469
 486,card_games,"SELECT
   CAST(SUM(CASE WHEN T1.convertedManaCost = 7 THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.id)
 FROM cards AS T1
 INNER JOIN sets AS T2
   ON T2.code = T1.setCode
 WHERE
-  T2.name = 'Coldsnap'",moderate,0.10007499999483116
+  T2.name = 'Coldsnap'",moderate,0.19986030000291066
 487,card_games,"SELECT
   CAST(SUM(
     CASE
@@ -3043,7 +3043,7 @@ FROM cards AS T1
 INNER JOIN sets AS T2
   ON T2.code = T1.setCode
 WHERE
-  T2.name = 'Coldsnap'",challenging,0.10077000001911074
+  T2.name = 'Coldsnap'",challenging,0.25276499999745283
 522,card_games,"SELECT
   T1.name,
   T2.format
@@ -3054,7 +3054,7 @@ WHERE
   T1.edhrecRank = 1 AND T2.status = 'Banned'
 GROUP BY
   T1.name,
-  T2.format",moderate,0.0658854000212159
+  T2.format",moderate,0.13093490000028396
 528,card_games,"SELECT DISTINCT
   T2.name,
   CASE WHEN T1.status = 'Legal' THEN T1.format ELSE NULL END
@@ -3068,7 +3068,7 @@ WHERE
     FROM sets
     WHERE
       name = 'Hour of Devastation'
-  )",challenging,0.5498888999863993
+  )",challenging,1.264455700002145
 529,card_games,"SELECT
   name
 FROM sets
@@ -3079,7 +3079,7 @@ WHERE
     FROM set_translations
     WHERE
       language = 'Korean' AND NOT language LIKE '%Japanese%'
-  )",moderate,0.00037300001713447273
+  )",moderate,0.0008482999983243644
 530,card_games,"SELECT DISTINCT
   T1.frameVersion,
   T1.name,
@@ -3088,7 +3088,7 @@ FROM cards AS T1
 INNER JOIN legalities AS T2
   ON T1.uuid = T2.uuid
 WHERE
-  T1.artist = 'Allen Williams'",moderate,0.4637333000137005
+  T1.artist = 'Allen Williams'",moderate,1.0515121999997064
 195,toxicology,"SELECT
   T.bond_type
 FROM (
@@ -3101,7 +3101,7 @@ FROM (
   ORDER BY
     COUNT(bond_id) DESC
   LIMIT 1
-) AS T",simple,0.002137700008461252
+) AS T",simple,0.00841779999609571
 197,toxicology,"SELECT
   AVG(oxygen_count)
 FROM (
@@ -3115,7 +3115,7 @@ FROM (
     T2.bond_type = '-' AND T1.element = 'o'
   GROUP BY
     T1.molecule_id
-) AS oxygen_counts",moderate,0.00891630002297461
+) AS oxygen_counts",moderate,0.023696099997323472
 198,toxicology,"SELECT
   AVG(single_bond_count)
 FROM (
@@ -3131,28 +3131,28 @@ FROM (
     T1.bond_type = '-' AND T3.label = '+'
   GROUP BY
     T3.molecule_id
-) AS subquery",challenging,0.11226590001024306
+) AS subquery",challenging,0.18146739999792771
 200,toxicology,"SELECT DISTINCT
   T2.molecule_id
 FROM bond AS T1
 INNER JOIN molecule AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  T1.bond_type = '#' AND T2.label = '+'",simple,0.0010684000153560191
+  T1.bond_type = '#' AND T2.label = '+'",simple,0.0013490999990608543
 201,toxicology,"SELECT
   CAST(COUNT(DISTINCT CASE WHEN T1.element = 'c' THEN T1.atom_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(DISTINCT T1.atom_id)
 FROM atom AS T1
 INNER JOIN bond AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  T2.bond_type = '='",moderate,0.02439289999892935
+  T2.bond_type = '='",moderate,0.04394920000049751
 206,toxicology,"SELECT DISTINCT
   T1.element
 FROM atom AS T1
 INNER JOIN connected AS T2
   ON T1.atom_id = T2.atom_id
 WHERE
-  T2.bond_id = 'TR004_8_9'",challenging,0.0015542999899480492
+  T2.bond_id = 'TR004_8_9'",challenging,0.006904099995153956
 207,toxicology,"SELECT DISTINCT
   T1.element
 FROM atom AS T1
@@ -3161,7 +3161,7 @@ INNER JOIN bond AS T2
 INNER JOIN connected AS T3
   ON T1.atom_id = T3.atom_id
 WHERE
-  T2.bond_type = '='",challenging,0.02354550000745803
+  T2.bond_type = '='",challenging,0.03517899999860674
 208,toxicology,"SELECT
   T.label
 FROM (
@@ -3178,7 +3178,7 @@ FROM (
   ORDER BY
     COUNT(T2.molecule_id) DESC
   LIMIT 1
-) AS t",moderate,0.0021044999884907156
+) AS t",moderate,0.0030547999995178543
 212,toxicology,"SELECT
   T.element
 FROM (
@@ -3195,7 +3195,7 @@ FROM (
   ORDER BY
     COUNT(DISTINCT T1.molecule_id) ASC
   LIMIT 1
-) AS t",challenging,0.003424700000323355
+) AS t",challenging,0.004764799996337388
 213,toxicology,"SELECT
   T1.bond_type
 FROM bond AS T1
@@ -3205,7 +3205,7 @@ WHERE
   T2.atom_id = 'TR004_8'
   AND T2.atom_id2 = 'TR004_20'
   OR T2.atom_id2 = 'TR004_8'
-  AND T2.atom_id = 'TR004_20'",moderate,9.049999061971903e-05
+  AND T2.atom_id = 'TR004_20'",moderate,0.00013130000297678635
 215,toxicology,"SELECT
   COUNT(DISTINCT CASE WHEN T1.element = 'i' THEN T1.atom_id ELSE NULL END) AS iodine_nums,
   COUNT(DISTINCT CASE WHEN T1.element = 's' THEN T1.atom_id ELSE NULL END) AS sulfur_nums
@@ -3215,14 +3215,14 @@ INNER JOIN connected AS T2
 INNER JOIN bond AS T3
   ON T2.bond_id = T3.bond_id
 WHERE
-  T3.bond_type = '-'",challenging,0.018161000014515594
+  T3.bond_type = '-'",challenging,0.02609459999803221
 218,toxicology,"SELECT
   CAST(COUNT(DISTINCT CASE WHEN T1.element <> 'f' THEN T2.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(DISTINCT T2.molecule_id)
 FROM atom AS T1
 INNER JOIN molecule AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  T2.label = '+'",challenging,0.0024800999963190407
+  T2.label = '+'",challenging,0.006022100002155639
 219,toxicology,"SELECT
   CAST(COUNT(DISTINCT CASE WHEN T2.label = '+' THEN T2.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(DISTINCT T2.molecule_id)
 FROM atom AS T1
@@ -3231,7 +3231,7 @@ INNER JOIN molecule AS T2
 INNER JOIN bond AS T3
   ON T2.molecule_id = T3.molecule_id
 WHERE
-  T3.bond_type = '#'",challenging,0.0038246999902185053
+  T3.bond_type = '#'",challenging,0.005302600002323743
 220,toxicology,"SELECT DISTINCT
   T.element
 FROM atom AS T
@@ -3239,7 +3239,7 @@ WHERE
   T.molecule_id = 'TR000'
 ORDER BY
   T.element
-LIMIT 3",challenging,0.0006475000118371099
+LIMIT 3",challenging,0.0014597999979741871
 226,toxicology,"SELECT
   ROUND(
     CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.bond_id),
@@ -3247,13 +3247,13 @@ LIMIT 3",challenging,0.0006475000118371099
   )
 FROM bond AS T
 WHERE
-  T.molecule_id = 'TR008'",moderate,0.0008488000021316111
+  T.molecule_id = 'TR008'",moderate,0.0009374000001116656
 227,toxicology,"SELECT
   ROUND(
     CAST(COUNT(CASE WHEN T.label = '+' THEN T.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.molecule_id),
     3
   )
-FROM molecule AS t",simple,0.0001247999898623675
+FROM molecule AS t",simple,0.00014370000280905515
 228,toxicology,"SELECT
   ROUND(
     CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.atom_id),
@@ -3261,7 +3261,7 @@ FROM molecule AS t",simple,0.0001247999898623675
   )
 FROM atom AS T
 WHERE
-  T.molecule_id = 'TR206'",moderate,0.0008699999889358878
+  T.molecule_id = 'TR206'",moderate,0.0010070999996969476
 230,toxicology,"SELECT DISTINCT
   T1.element,
   T2.label
@@ -3269,7 +3269,7 @@ FROM atom AS T1
 INNER JOIN molecule AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  T2.molecule_id = 'TR060'",challenging,0.0009956999856512994
+  T2.molecule_id = 'TR060'",challenging,0.0013293999945744872
 231,toxicology,"SELECT
   T.bond_type
 FROM (
@@ -3284,7 +3284,7 @@ FROM (
   ORDER BY
     COUNT(T1.molecule_id) DESC
   LIMIT 1
-) AS T",challenging,0.0009034999820869416
+) AS T",challenging,0.0012354999998933636
 232,toxicology,"SELECT DISTINCT
   T2.molecule_id
 FROM bond AS T1
@@ -3294,7 +3294,7 @@ WHERE
   T1.bond_type = '-' AND T2.label = '-'
 ORDER BY
   T2.molecule_id
-LIMIT 3",moderate,0.0037521999911405146
+LIMIT 3",moderate,0.004593400000885595
 234,toxicology,"SELECT
   COUNT(T2.bond_id)
 FROM bond AS T1
@@ -3303,7 +3303,7 @@ INNER JOIN connected AS T2
 WHERE
   T1.molecule_id = 'TR009'
   AND T2.atom_id = CONCAT(T1.molecule_id, '_1')
-  OR T2.atom_id2 = CONCAT(T1.molecule_id, '_2')",moderate,0.014205899991793558
+  OR T2.atom_id2 = CONCAT(T1.molecule_id, '_2')",moderate,0.019231599995691795
 236,toxicology,"SELECT
   T1.bond_type,
   T2.atom_id,
@@ -3312,24 +3312,24 @@ FROM bond AS T1
 INNER JOIN connected AS T2
   ON T1.bond_id = T2.bond_id
 WHERE
-  T2.bond_id = 'TR001_6_9'",moderate,0.002101799997035414
+  T2.bond_id = 'TR001_6_9'",moderate,0.0027839999966090545
 239,toxicology,"SELECT
   COUNT(T.bond_id)
 FROM connected AS T
 WHERE
-  SUBSTR(T.atom_id, -2) = '19'",simple,0.0030054999806452543
+  SUBSTR(T.atom_id, -2) = '19'",simple,0.005732300000090618
 240,toxicology,"SELECT DISTINCT
   T.element
 FROM atom AS T
 WHERE
-  T.molecule_id = 'TR004'",challenging,0.0009138000023085624
+  T.molecule_id = 'TR004'",challenging,0.0011845999979414046
 242,toxicology,"SELECT DISTINCT
   T2.molecule_id
 FROM atom AS T1
 INNER JOIN molecule AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  SUBSTR(T1.atom_id, -2) BETWEEN '21' AND '25' AND T2.label = '+'",moderate,0.0019848999800160527
+  SUBSTR(T1.atom_id, -2) BETWEEN '21' AND '25' AND T2.label = '+'",moderate,0.0018607000019983388
 243,toxicology,"SELECT
   T2.bond_id
 FROM atom AS T1
@@ -3345,7 +3345,7 @@ WHERE
     WHERE
       T4.element = 'p'
   )
-  AND T1.element = 'n'",moderate,0.0037111999990884215
+  AND T1.element = 'n'",moderate,0.007188200004748069
 244,toxicology,"SELECT
   T1.label
 FROM molecule AS T1
@@ -3362,14 +3362,14 @@ INNER JOIN (
     COUNT(T.bond_type) DESC
   LIMIT 1
 ) AS T2
-  ON T1.molecule_id = T2.molecule_id",moderate,0.0009989000100176781
+  ON T1.molecule_id = T2.molecule_id",moderate,0.0015464000025531277
 245,toxicology,"SELECT
   CAST(COUNT(T2.bond_id) AS DOUBLE) / COUNT(T1.atom_id)
 FROM atom AS T1
 INNER JOIN connected AS T2
   ON T1.atom_id = T2.atom_id
 WHERE
-  T1.element = 'i'",moderate,0.000612899981206283
+  T1.element = 'i'",moderate,0.0010407000008854084
 247,toxicology,"SELECT DISTINCT
   T.element
 FROM atom AS T
@@ -3380,7 +3380,7 @@ WHERE
     FROM atom AS T1
     INNER JOIN connected AS T2
       ON T1.atom_id = T2.atom_id
-  )",challenging,0.00878440000815317
+  )",challenging,0.01452380000409903
 248,toxicology,"SELECT
   T2.atom_id,
   T2.atom_id2
@@ -3390,14 +3390,14 @@ INNER JOIN connected AS T2
 INNER JOIN bond AS T3
   ON T2.bond_id = T3.bond_id
 WHERE
-  T3.bond_type = '#' AND T3.molecule_id = 'TR041'",simple,0.006863399990834296
+  T3.bond_type = '#' AND T3.molecule_id = 'TR041'",simple,0.01357819999975618
 249,toxicology,"SELECT
   T2.element
 FROM connected AS T1
 INNER JOIN atom AS T2
   ON T1.atom_id = T2.atom_id
 WHERE
-  T1.bond_id = 'TR144_8_19'",challenging,0.0015651000139769167
+  T1.bond_id = 'TR144_8_19'",challenging,0.0041988000011770055
 253,toxicology,"SELECT DISTINCT
   T3.element
 FROM bond AS T1
@@ -3406,7 +3406,7 @@ INNER JOIN connected AS T2
 INNER JOIN atom AS T3
   ON T2.atom_id = T3.atom_id
 WHERE
-  T1.bond_type = '#'",challenging,0.007102899980964139
+  T1.bond_type = '#'",challenging,0.0124190999995335
 255,toxicology,"SELECT
   ROUND(
     CAST(COUNT(CASE WHEN T2.label = '+' THEN T1.bond_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.bond_id),
@@ -3416,7 +3416,7 @@ FROM bond AS T1
 INNER JOIN molecule AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  T1.bond_type = '-'",moderate,0.0022225000138860196
+  T1.bond_type = '-'",moderate,0.005380999995395541
 260,toxicology,"SELECT
   COUNT(T1.atom_id)
 FROM atom AS T1
@@ -3425,7 +3425,7 @@ INNER JOIN molecule AS T2
 INNER JOIN bond AS T3
   ON T2.molecule_id = T3.molecule_id
 WHERE
-  T3.bond_type = '#' AND T1.element IN ('p', 'br')",moderate,0.0013728000049013644
+  T3.bond_type = '#' AND T1.element IN ('p', 'br')",moderate,0.0020921999966958538
 263,toxicology,"SELECT
   CAST(COUNT(CASE WHEN T.element = 'cl' THEN T.atom_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.atom_id)
 FROM (
@@ -3439,21 +3439,21 @@ FROM (
     ON T2.molecule_id = T3.molecule_id
   WHERE
     T3.bond_type = '-'
-) AS T",challenging,0.03722349999588914
+) AS T",challenging,0.06491690000257222
 268,toxicology,"SELECT
   T2.element
 FROM connected AS T1
 INNER JOIN atom AS T2
   ON T1.atom_id = T2.atom_id
 WHERE
-  T1.bond_id = 'TR001_10_11'",challenging,0.0015468999918084592
+  T1.bond_id = 'TR001_10_11'",challenging,0.0032376999952248298
 273,toxicology,"SELECT
   CAST(COUNT(CASE WHEN T1.element = 'cl' THEN T1.element ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.element)
 FROM atom AS T1
 INNER JOIN molecule AS T2
   ON T1.molecule_id = T2.molecule_id
 WHERE
-  T2.label = '+'",moderate,0.0022009999956935644
+  T2.label = '+'",moderate,0.00389290000020992
 281,toxicology,"SELECT DISTINCT
   T1.element
 FROM atom AS T1
@@ -3462,8 +3462,8 @@ INNER JOIN molecule AS T2
 WHERE
   T2.label = '+'
   AND SUBSTR(T1.atom_id, -1) = '4'
-  AND LENGTH(T1.atom_id) = 7",challenging,0.001077399996574968
-282,toxicology,"WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT CAST(COUNT(CASE WHEN element = 'h' THEN atom_id ELSE NULL END) AS DECIMAL(10,2)) / NULLIF(COUNT(atom_id), 0) AS ratio, label FROM SubQuery GROUP BY label",challenging,0.0014303000061772764
+  AND LENGTH(T1.atom_id) = 7",challenging,0.0036598000006051734
+282,toxicology,"WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT CAST(COUNT(CASE WHEN element = 'h' THEN atom_id ELSE NULL END) AS DECIMAL(10,2)) / NULLIF(COUNT(atom_id), 0) AS ratio, label FROM SubQuery GROUP BY label",challenging,0.001986600000236649
 327,toxicology,"SELECT
   T.molecule_id
 FROM (
@@ -3479,8 +3479,8 @@ FROM (
     T1.molecule_id
   HAVING
     COUNT(T2.atom_id) > 5
-) AS t",moderate,0.004548400000203401
-5,california_schools,SELECT  COUNT(DISTINCT T2.School) FROM satscores AS T1 INNER JOIN schools AS T2  ON T1.cds = T2.CDSCode WHERE  T2.Virtual = 'F' AND T1.AvgScrMath > 400,simple,0.012266799982171506
+) AS t",moderate,0.005025400001613889
+5,california_schools,SELECT  COUNT(DISTINCT T2.School) FROM satscores AS T1 INNER JOIN schools AS T2  ON T1.cds = T2.CDSCode WHERE  T2.Virtual = 'F' AND T1.AvgScrMath > 400,simple,0.02597300000343239
 17,california_schools,"SELECT
   CharterNum,
   AvgScrWrite,
@@ -3489,7 +3489,7 @@ FROM schools AS T1
 INNER JOIN satscores AS T2
   ON T1.CDSCode = T2.cds
 WHERE
-  T2.AvgScrWrite > 499 AND NOT CharterNum IS NULL",simple,0.009373299981234595
+  T2.AvgScrWrite > 499 AND NOT CharterNum IS NULL",simple,0.018497700002626516
 37,california_schools,"SELECT
   T2.Street,
   T2.City,
@@ -3500,7 +3500,7 @@ INNER JOIN schools AS T2
   ON T1.cds = T2.CDSCode
 ORDER BY
   CAST(T1.NumGE1500 AS DOUBLE) / T1.NumTstTakr ASC
-LIMIT 1",moderate,0.0016748000052757561
+LIMIT 1",moderate,0.005466200003866106
 36,california_schools,"SELECT
   T2.AdmFName1,
   T2.AdmLName1,
@@ -3513,7 +3513,7 @@ INNER JOIN schools AS T2
   ON T1.cds = T2.CDSCode
 ORDER BY
   T1.NumGE1500 DESC
-LIMIT 1",challenging,0.0020007999846711755
+LIMIT 1",challenging,0.0038072000024840236
 40,california_schools,"SELECT
   T2.Phone
 FROM satscores AS T1
@@ -3523,8 +3523,8 @@ WHERE
   T2.District = 'Fresno Unified' AND NOT T1.AvgScrRead IS NULL
 ORDER BY
   T1.AvgScrRead ASC
-LIMIT 1",moderate,0.008786299993516877
-41,california_schools,"SELECT  School FROM ( SELECT T2.School, T1.AvgScrRead, RANK() OVER (PARTITION BY T2.County ORDER BY T1.AvgScrRead DESC) AS rnk FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.Virtual = 'F') ranked_schools WHERE rnk <= 5",simple,0.011793800018494949
+LIMIT 1",moderate,0.02616239999770187
+41,california_schools,"SELECT  School FROM ( SELECT T2.School, T1.AvgScrRead, RANK() OVER (PARTITION BY T2.County ORDER BY T1.AvgScrRead DESC) AS rnk FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.Virtual = 'F') ranked_schools WHERE rnk <= 5",simple,0.023641799998586066
 45,california_schools,"SELECT
   T2.School,
   T1.AvgScrWrite
@@ -3532,12 +3532,12 @@ FROM satscores AS T1
 INNER JOIN schools AS T2
   ON T1.cds = T2.CDSCode
 WHERE
-  T2.AdmFName1 = 'Ricci' AND T2.AdmLName1 = 'Ulrich'",moderate,0.008954299992183223
+  T2.AdmFName1 = 'Ricci' AND T2.AdmLName1 = 'Ulrich'",moderate,0.022942200004763436
 48,california_schools,"SELECT
   CAST(SUM(CASE WHEN DOC = 54 THEN 1 ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN DOC = 52 THEN 1 ELSE 0 END)
 FROM schools
 WHERE
-  StatusType = 'Merged' AND County = 'Orange'",moderate,0.007900099997641519
+  StatusType = 'Merged' AND County = 'Orange'",moderate,0.02088999999978114
 50,california_schools,"SELECT
   T2.MailStreet,
   T2.School
@@ -3547,7 +3547,7 @@ INNER JOIN schools AS T2
 ORDER BY
   T1.AvgScrMath DESC
 LIMIT 1
-OFFSET 6",simple,0.0016096000035759062
+OFFSET 6",simple,0.003572199995687697
 79,california_schools,"SELECT
   County,
   COUNT(Virtual)
@@ -3560,34 +3560,34 @@ GROUP BY
   County
 ORDER BY
   COUNT(Virtual) DESC
-LIMIT 1",moderate,0.009269900008803234
+LIMIT 1",moderate,0.019545700000890065
 82,california_schools,"SELECT
   GSoffered
 FROM schools
 ORDER BY
   ABS(longitude) DESC
-LIMIT 1",simple,0.01085719998809509
+LIMIT 1",simple,0.01696490000176709
 89,financial,"SELECT
   COUNT(T2.account_id)
 FROM district AS T1
 INNER JOIN account AS T2
   ON T1.district_id = T2.district_id
 WHERE
-  T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'",moderate,0.0004197999951429665
+  T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'",moderate,0.00208569999813335
 92,financial,"SELECT
   COUNT(DISTINCT T2.district_id)
 FROM client AS T1
 INNER JOIN district AS T2
   ON T1.district_id = T2.district_id
 WHERE
-  T1.gender = 'F' AND T2.A11 BETWEEN 6000 AND 10000",simple,0.0009384000150021166
+  T1.gender = 'F' AND T2.A11 BETWEEN 6000 AND 10000",simple,0.0037121999994269572
 93,financial,"SELECT
   COUNT(T1.client_id)
 FROM client AS T1
 INNER JOIN district AS T2
   ON T1.district_id = T2.district_id
 WHERE
-  T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000",moderate,0.00107709999429062
+  T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000",moderate,0.0031153000018093735
 94,financial,"SELECT
   T1.account_id,
   (
@@ -3615,7 +3615,7 @@ WHERE
   )
 ORDER BY
   T2.A11 DESC
-LIMIT 1",challenging,0.0008428999863099307
+LIMIT 1",challenging,0.002453699999023229
 95,financial,"SELECT
   T1.account_id
 FROM account AS T1
@@ -3636,14 +3636,14 @@ WHERE
   )
 GROUP BY
   T4.A11,
-  T1.account_id",moderate,0.0011517000093590468
+  T1.account_id",moderate,0.004150799999479204
 112,financial,"SELECT
   T1.A2
 FROM district AS T1
 INNER JOIN client AS T2
   ON T1.district_id = T2.district_id
 WHERE
-  T2.birth_date = '1976-01-29' AND T2.gender = 'F'",simple,0.000530099991010502
+  T2.birth_date = '1976-01-29' AND T2.gender = 'F'",simple,0.002191100000345614
 115,financial,"SELECT
   CAST(SUM(T1.gender = 'M') AS DOUBLE) * 100 / COUNT(T1.client_id)
 FROM client AS T1
@@ -3655,7 +3655,7 @@ GROUP BY
   T2.A4
 ORDER BY
   T2.A4 DESC
-LIMIT 1",challenging,0.0009742000256665051
+LIMIT 1",challenging,0.004993100003048312
 116,financial,"SELECT
   CAST((
     SUM(CASE WHEN T3.date = '1998-12-27' THEN T3.balance ELSE 0 END) - SUM(CASE WHEN T3.date = '1993-03-22' THEN T3.balance ELSE 0 END)
@@ -3666,17 +3666,17 @@ INNER JOIN account AS T2
 INNER JOIN trans AS T3
   ON T3.account_id = T2.account_id
 WHERE
-  T1.date = '1993-07-05'",challenging,1.0054669999808539
+  T1.date = '1993-07-05'",challenging,2.024600400000054
 117,financial,"SELECT
   (
     CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS DOUBLE) * 100
   ) / SUM(amount)
-FROM loan",moderate,0.00011759999324567616
+FROM loan",moderate,0.00017210000078193843
 118,financial,"SELECT
   CAST(SUM(status = 'C') AS DOUBLE) * 100 / COUNT(account_id)
 FROM loan
 WHERE
-  amount < 100000",moderate,0.0001109000004362315
+  amount < 100000",moderate,0.00017610000213608146
 125,financial,"SELECT
   CAST((
     T3.A13 - T3.A12
@@ -3687,7 +3687,7 @@ INNER JOIN account AS T2
 INNER JOIN district AS T3
   ON T2.district_id = T3.district_id
 WHERE
-  T1.status = 'D'",challenging,0.00020779998158104718
+  T1.status = 'D'",challenging,0.00035660000139614567
 128,financial,"SELECT
   T2.A2,
   COUNT(T1.client_id)
@@ -3701,7 +3701,7 @@ GROUP BY
   T2.A2
 ORDER BY
   COUNT(T1.client_id) DESC
-LIMIT 9",moderate,0.001571400003740564
+LIMIT 9",moderate,0.002648300003784243
 136,financial,"SELECT
   COUNT(T1.account_id)
 FROM account AS T1
@@ -3710,7 +3710,7 @@ INNER JOIN loan AS T2
 WHERE
   T2.date BETWEEN '1995-01-01' AND '1997-12-31'
   AND T1.frequency = 'POPLATEK MESICNE'
-  AND T2.amount >= 250000",moderate,0.00026279999292455614
+  AND T2.amount >= 250000",moderate,0.00040379999700235203
 137,financial,"SELECT
   COUNT(T1.account_id)
 FROM account AS T1
@@ -3721,7 +3721,7 @@ INNER JOIN loan AS T3
 WHERE
   T1.district_id = 1 AND (
     T3.status = 'C' OR T3.status = 'D'
-  )",moderate,0.0002993999805767089
+  )",moderate,0.0004504000025917776
 138,financial,"SELECT
   COUNT(T1.client_id)
 FROM client AS T1
@@ -3737,7 +3737,7 @@ WHERE
       T3.A15 DESC
     LIMIT 1
     OFFSET 1
-  )",moderate,0.0008277999877464026
+  )",moderate,0.001204100000904873
 129,financial,"SELECT DISTINCT
   T1.A2
 FROM district AS T1
@@ -3749,7 +3749,7 @@ WHERE
   T3.type = 'VYDAJ' AND T3.date LIKE '1996-01%'
 ORDER BY
   A2 ASC
-LIMIT 10",moderate,0.12263580001308583
+LIMIT 10",moderate,0.19524939999973867
 149,financial,"SELECT
   T3.type
 FROM district AS T1
@@ -3758,7 +3758,7 @@ INNER JOIN account AS T2
 INNER JOIN disp AS T3
   ON T2.account_id = T3.account_id
 WHERE
-  T3.type <> 'OWNER' AND T1.A11 BETWEEN 8000 AND 9000",challenging,0.0013966999831609428
+  T3.type <> 'OWNER' AND T1.A11 BETWEEN 8000 AND 9000",challenging,0.0012777000010828488
 159,financial,"SELECT
   T4.trans_id
 FROM client AS T1
@@ -3769,14 +3769,14 @@ INNER JOIN account AS T3
 INNER JOIN trans AS T4
   ON T3.account_id = T4.account_id
 WHERE
-  T1.client_id = 3356 AND T4.operation = 'VYBER'",simple,0.28363970000646077
+  T1.client_id = 3356 AND T4.operation = 'VYBER'",simple,0.420251499999722
 168,financial,"SELECT
   CAST(SUM(T2.gender = 'F') AS DOUBLE) * 100 / COUNT(T2.client_id)
 FROM district AS T1
 INNER JOIN client AS T2
   ON T1.district_id = T2.district_id
 WHERE
-  T1.A11 > 10000",moderate,0.0009598000033292919
+  T1.A11 > 10000",moderate,0.0015181999988271855
 186,financial,"SELECT
   CAST(SUM(T1.gender = 'M') AS DOUBLE) * 100 / COUNT(T1.client_id)
 FROM client AS T1
@@ -3787,7 +3787,7 @@ INNER JOIN account AS T2
 INNER JOIN disp AS T4
   ON T1.client_id = T4.client_id AND T2.account_id = T4.account_id
 WHERE
-  T2.frequency = 'POPLATEK TYDNE'",moderate,0.0011068999883718789
+  T2.frequency = 'POPLATEK TYDNE'",moderate,0.0017301000043516979
 189,financial,"SELECT
   T3.account_id
 FROM client AS T1
@@ -3802,11 +3802,11 @@ WHERE
 ORDER BY
   T1.birth_date ASC,
   T2.A11 ASC
-LIMIT 1",moderate,0.0016861000040080398
+LIMIT 1",moderate,0.002496399996744003
 192,financial,"SELECT
   AVG(T2.amount)
 FROM account AS T1
 INNER JOIN loan AS T2
   ON T1.account_id = T2.account_id
 WHERE
-  T2.status IN ('C', 'D') AND T1.frequency = 'POPLATEK PO OBRATU'",moderate,0.0003039000148419291
+  T2.status IN ('C', 'D') AND T1.frequency = 'POPLATEK PO OBRATU'",moderate,0.0005107000033603981

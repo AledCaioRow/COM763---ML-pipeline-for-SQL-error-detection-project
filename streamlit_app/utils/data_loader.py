@@ -135,6 +135,12 @@ def check_artifacts(root: str) -> Dict[str, bool]:
         "per_diff": os.path.join(root, "reports", "per_difficulty_results.csv"),
         "model_joblib": os.path.join(root, "artifacts", "best_model.joblib"),
         "config_py": os.path.join(root, "config.py"),
+        "runtime_checkpoint": os.path.join(
+            root, "sql_runtime_predictor", "artifacts", "runtime_predictor.pt"
+        ),
+        "runtime_cutoffs": os.path.join(
+            root, "sql_runtime_predictor", "artifacts", "runtime_tier_cutoffs.json"
+        ),
     }
     return {k: os.path.isfile(p) for k, p in paths.items()}
 
@@ -147,4 +153,31 @@ def artifact_paths(root: str) -> Dict[str, str]:
         "per_db": os.path.join(root, "reports", "per_database_results.csv"),
         "per_diff": os.path.join(root, "reports", "per_difficulty_results.csv"),
         "model_joblib": os.path.join(root, "artifacts", "best_model.joblib"),
+        "runtime_checkpoint": os.path.join(
+            root, "sql_runtime_predictor", "artifacts", "runtime_predictor.pt"
+        ),
+        "runtime_cutoffs": os.path.join(
+            root, "sql_runtime_predictor", "artifacts", "runtime_tier_cutoffs.json"
+        ),
+        "split_summary": os.path.join(root, "reports", "split_summary.csv"),
+        "all_models_test_comparison": os.path.join(
+            root, "reports", "all_models_test_comparison.csv"
+        ),
+        "classification_report": os.path.join(root, "reports", "classification_report.csv"),
+        "cv_fold_scores": os.path.join(root, "reports", "cv_fold_scores.csv"),
+        "confusion_matrix": os.path.join(root, "reports", "confusion_matrix.csv"),
+        "confusion_matrix_png": os.path.join(root, "reports", "confusion_matrix.png"),
+        "confusion_matrix_normalised_png": os.path.join(
+            root, "reports", "confusion_matrix_normalised.png"
+        ),
+        "roc_curve_png": os.path.join(root, "reports", "roc_curve.png"),
+        "pr_curve_png": os.path.join(root, "reports", "pr_curve.png"),
+        "feature_importance_csv": os.path.join(root, "reports", "feature_importance.csv"),
+        "feature_importance_png": os.path.join(root, "reports", "feature_importance.png"),
+        "class_distribution_csv": os.path.join(root, "reports", "class_distribution.csv"),
+        "class_distribution_png": os.path.join(root, "reports", "class_distribution.png"),
+        "runtime_distribution_png": os.path.join(root, "reports", "runtime_distribution.png"),
+        "cv_boxplot_png": os.path.join(root, "reports", "cv_boxplot.png"),
+        "learning_curve_png": os.path.join(root, "reports", "learning_curve.png"),
+        "error_analysis_csv": os.path.join(root, "reports", "error_analysis.csv"),
     }

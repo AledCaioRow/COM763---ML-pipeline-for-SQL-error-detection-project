@@ -1,8 +1,17 @@
 """Resolve SQPP project root and artifact paths."""
 
 import os
+import sys
 
 _ENV_ROOT = "SQPP_PROJECT_ROOT"
+
+
+def ensure_project_root_on_path(root: str) -> None:
+    """Prepend resolved project root to sys.path so `src.*` imports work from Streamlit."""
+    r = os.path.normpath(os.path.abspath(root))
+    existing = {os.path.normcase(os.path.normpath(os.path.abspath(p))) for p in sys.path if p}
+    if os.path.normcase(r) not in existing:
+        sys.path.insert(0, r)
 
 
 def get_project_root() -> str:
