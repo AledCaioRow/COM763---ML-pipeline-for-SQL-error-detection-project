@@ -1,7 +1,7 @@
 db_id,difficulty,n_errors
-formula_1,moderate,10
-financial,moderate,4
-formula_1,simple,4
+financial,moderate,12
+formula_1,simple,8
+formula_1,moderate,5
+financial,challenging,4
 formula_1,challenging,4
-financial,challenging,2
-financial,simple,1
+financial,simple,2

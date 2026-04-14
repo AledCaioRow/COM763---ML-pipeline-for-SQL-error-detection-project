@@ -13,6 +13,14 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 ARTIFACTS_DIR = os.path.join(BASE_DIR, "artifacts")
 REPORTS_DIR = os.path.join(BASE_DIR, "reports")
 
+
+def _pick_first_existing(candidates, fallback):
+    """Return first existing path from candidates, else fallback."""
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    return fallback
+
 # --------------- BIRD dataset paths ---------------
 _BIRD_DIR_CANDIDATES = [
     os.path.join(DATA_DIR, "bird", "mini_dev_data"),
@@ -24,8 +32,20 @@ BIRD_DATA_DIR = next(
     (p for p in _BIRD_DIR_CANDIDATES if os.path.isdir(p)),
     _BIRD_DIR_CANDIDATES[0],
 )
-BIRD_SQLITE_JSON = os.path.join(BIRD_DATA_DIR, "mini_dev_sqlite.json")
-BIRD_MYSQL_JSON = os.path.join(BIRD_DATA_DIR, "mini_dev_mysql.json")
+BIRD_SQLITE_JSON = _pick_first_existing(
+    [
+        os.path.join(BIRD_DATA_DIR, "mini_dev_sqlite.json"),
+        os.path.join(BIRD_DATA_DIR, "data", "mini_dev_sqlite-00000-of-00001.json"),
+    ],
+    os.path.join(BIRD_DATA_DIR, "mini_dev_sqlite.json"),
+)
+BIRD_MYSQL_JSON = _pick_first_existing(
+    [
+        os.path.join(BIRD_DATA_DIR, "mini_dev_mysql.json"),
+        os.path.join(BIRD_DATA_DIR, "data", "mini_dev_mysql-00000-of-00001.json"),
+    ],
+    os.path.join(BIRD_DATA_DIR, "mini_dev_mysql.json"),
+)
 BIRD_DB_DIR = os.path.join(BIRD_DATA_DIR, "dev_databases")
 
 # --------------- query timing ---------------
@@ -44,6 +64,12 @@ TEST_SIZE = 0.20
 
 # --------------- reproducibility ---------------
 RANDOM_SEED = 42
+
+# --------------- evaluation runtime guardrails ---------------
+# Set to False to skip heavy learning-curve fitting and keep reports fast/reliable.
+EVAL_ENABLE_LEARNING_CURVE = False
+EVAL_LEARNING_CURVE_CV_FOLDS = 3
+EVAL_LEARNING_CURVE_TRAIN_SIZES = [0.2, 0.4, 0.6, 0.8, 1.0]
 
 # --------------- features (parsed from SQL text) ---------------
 FEATURE_COLS = [

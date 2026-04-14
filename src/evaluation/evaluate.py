@@ -22,7 +22,15 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import StratifiedKFold, learning_curve
 
-from config import FEATURE_COLS, HOLDOUT_DATABASES, REPORTS_DIR, SPLIT_METHOD
+from config import (
+    EVAL_ENABLE_LEARNING_CURVE,
+    EVAL_LEARNING_CURVE_CV_FOLDS,
+    EVAL_LEARNING_CURVE_TRAIN_SIZES,
+    FEATURE_COLS,
+    HOLDOUT_DATABASES,
+    REPORTS_DIR,
+    SPLIT_METHOD,
+)
 
 try:
     from scipy.stats import wilcoxon
@@ -341,25 +349,38 @@ def evaluate_models_on_test(
         )
         summary.to_csv(os.path.join(REPORTS_DIR, "error_analysis.csv"), index=False)
 
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    train_sizes, train_scores, val_scores = learning_curve(
-        fitted_models[best_name],
-        X_train,
-        y_train,
-        cv=cv,
-        scoring="f1",
-        train_sizes=np.linspace(0.1, 1.0, 10),
-    )
-    plt.figure(figsize=(7, 5), dpi=180)
-    plt.plot(train_sizes, train_scores.mean(axis=1), marker="o", label="Train F1")
-    plt.plot(train_sizes, val_scores.mean(axis=1), marker="o", label="Validation F1")
-    plt.xlabel("Training samples")
-    plt.ylabel("F1")
-    plt.title("Learning Curve")
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(REPORTS_DIR, "learning_curve.png"))
-    plt.close()
+    if EVAL_ENABLE_LEARNING_CURVE:
+        try:
+            n_splits = max(2, int(EVAL_LEARNING_CURVE_CV_FOLDS))
+            cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
+            train_sizes_cfg = np.asarray(EVAL_LEARNING_CURVE_TRAIN_SIZES, dtype=float)
+            train_sizes_cfg = np.clip(train_sizes_cfg, 0.05, 1.0)
+            train_sizes_cfg = np.unique(train_sizes_cfg)
+
+            train_sizes, train_scores, val_scores = learning_curve(
+                fitted_models[best_name],
+                X_train,
+                y_train,
+                cv=cv,
+                scoring="f1",
+                train_sizes=train_sizes_cfg,
+            )
+            plt.figure(figsize=(7, 5), dpi=180)
+            plt.plot(train_sizes, train_scores.mean(axis=1), marker="o", label="Train F1")
+            plt.plot(train_sizes, val_scores.mean(axis=1), marker="o", label="Validation F1")
+            plt.xlabel("Training samples")
+            plt.ylabel("F1")
+            plt.title("Learning Curve")
+            plt.legend()
+            plt.tight_layout()
+            plt.savefig(os.path.join(REPORTS_DIR, "learning_curve.png"))
+            plt.close()
+        except KeyboardInterrupt:
+            print("  Learning curve interrupted; continuing without learning_curve.png.")
+        except Exception as exc:
+            print(f"  Learning curve failed ({exc}); continuing without learning_curve.png.")
+    else:
+        print("  Learning curve skipped (EVAL_ENABLE_LEARNING_CURVE=False).")
 
     significance_note = "Wilcoxon test unavailable."
     if wilcoxon and len(cv_results) >= 2:
