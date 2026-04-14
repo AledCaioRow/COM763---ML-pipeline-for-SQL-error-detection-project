@@ -1,81 +1,141 @@
-# Results Across Attempts (Narrative Progression)
+# Results Across Attempts (Explained in Plain English)
 
-This is the story of how the project changed over time, with stats used as evidence rather than just decoration. I only use the core milestones here:
+This version focuses on meaning, not just numbers: what changed between commits, why those changes were made, which model/data versions were used, and what the scores mean in practical terms.
 
-`1a537e0` -> `061f0ff` -> `018ac87`
+Core commits compared:
+
+- `1a537e0` (baseline)
+- `061f0ff` (pipeline maturity update)
+- `018ac87` (larger MiniDev snapshot)
+
+## 1) What changed between commits (and why)
+
+### `1a537e0` (baseline)
+
+- Built the first full working pipeline end-to-end.
+- Purpose: establish a clean reference point for all later comparisons.
+
+### `061f0ff` (modeling/evaluation maturity)
+
+- Same dataset size as baseline, but stronger training/evaluation flow.
+- Purpose: improve quality by better modeling/process choices, not by adding data.
+- Why important: if scores change here, it means process/model choices matter.
+
+### `018ac87` (more data snapshot)
+
+- Increased dataset size (raw and labelled rows grew).
+- Purpose: test whether more data alone improves unseen-database transfer.
+- Why important: if unseen transfer still struggles, quantity alone is not enough.
+
+## 2) Data progression
 
 
-## Quick snapshot of the three core checkpoints
+| Commit    | Raw rows | Labelled rows | Fast | Slow |
+| --------- | -------- | ------------- | ---- | ---- |
+| `1a537e0` | 425      | 320           | 213  | 107  |
+| `061f0ff` | 425      | 320           | 213  | 107  |
+| `018ac87` | 498      | 374           | 249  | 125  |
 
-| Commit | What stage this represents | Data size (raw / labelled) | CV winner | XGBoost held-out (F1 / ROC-AUC / Acc) | Best model on test set |
-|---|---|---|---|---|---|
-| `1a537e0` | First stable baseline on `main` | `425 / 320` (`fast=213`, `slow=107`) | XGBoost | `0.1765 / 0.5442 / 0.49` | Logistic Regression (`0.4211`) [recomputed] |
-| `061f0ff` | Reporting + evaluation expansion checkpoint | `425 / 320` (`fast=213`, `slow=107`) | XGBoost | `0.2222 / 0.5519 / 0.59` | Logistic Regression (`0.5333`) |
-| `018ac87` | MiniDev-refreshed final snapshot | `498 / 374` (`fast=249`, `slow=125`) | XGBoost | `0.1860 / 0.4610 / 0.52` | Logistic Regression (`0.3200`) |
-
-## What changed, why we changed it, and what happened to the stats
-
-### Baseline commit: `1a537e0` (main)
-
-This is the point where the project became a complete working baseline: data loading, feature extraction, training, evaluation, and dashboard all existed together.
-
-Why this matters:
-- It gives a clean reference point for every later claim.
-- It already uses a hard split strategy (`formula_1` and `financial` held out), so the low score is actually honest.
-
-What the numbers say:
-- XGBoost is best in CV, but held-out test is weak (`F1 0.1765`, `ROC-AUC 0.5442`).
-- This already hints that the project problem is not "pick a fancier model", but "generalise across unseen schemas."
-
-### Expansion checkpoint: `061f0ff`
-
-This commit is important because it upgrades the evidence layer: more evaluation outputs, all-model comparisons, more artifacts saved, and better reporting depth.
-
-Why this change was made:
-- To move from "single headline metric" to a defensible experimental narrative.
-- To make it easier to debug where models fail, not just whether they fail.
-
-What changed in stats versus baseline:
-- XGBoost held-out F1: `0.1765 -> 0.2222` (+0.0457)
-- XGBoost ROC-AUC: `0.5442 -> 0.5519` (+0.0077)
-- XGBoost Accuracy: `0.49 -> 0.59` (+0.10)
-- Slow-class F1 (XGBoost): `0.18 -> 0.22`
-- Best-on-test Logistic Regression also improves: `0.4211 -> 0.5333`
 
 Interpretation:
-- Data size did not change, so this looks like a quality-of-process gain (training/eval setup and rerun discipline), not a "more data fixed everything" effect.
 
-### Final refreshed snapshot: `018ac87`
+- `1a537e0 -> 061f0ff`: quality/process change, not data-size change.
+- `061f0ff -> 018ac87`: data-size increase test.
 
-This commit brings in the larger MiniDev-based snapshot and refreshed outputs.
+## 3) Seen-DB vs Unseen-DB (main classifier)
 
-Why this change was made:
-- To move to a larger, fresher dataset and keep the project state aligned with actual current artifacts.
-- To lock in the submission-facing snapshot.
+Settings used:
 
-What changed in stats versus `061f0ff`:
-- XGBoost held-out F1: `0.2222 -> 0.1860` (-0.0362)
-- XGBoost ROC-AUC: `0.5519 -> 0.4610` (-0.0909)
-- XGBoost Accuracy: `0.59 -> 0.52` (-0.07)
-- Slow-class precision/recall/F1 shifts from `0.14/0.50/0.22` to `0.11/0.57/0.19`
-- Best-on-test Logistic Regression drops from `0.5333` to `0.3200`
+- Unseen-DB: hold out `financial`, `formula_1`.
+- Seen-DB: within-db unseen-query split.
+- Same seed (`42`) and same model registry.
 
-Interpretation:
-- Bigger data helped coverage but did not automatically improve unseen-schema generalisation.
-- The recall increase with precision drop shows the model is catching more slow queries but with more false alarms; net F1 still falls.
-- This is exactly why the report should focus on trade-offs and generalisation, not just one score.
 
-## Why the choices were sensible overall
+| Commit    | Unseen-DB best model + F1 / ROC / Acc | Seen-DB best model | Seen-DB F1 / ROC / Acc     |
+| --------- | ------------------------------------- | ------------------ | -------------------------- |
+| `1a537e0` | `XGBoost: 0.1765 / 0.5442 / 0.4909`   | Random Forest      | `0.5000 / 0.6863 / 0.6765` |
+| `061f0ff` | `XGBoost: 0.2069 / 0.5148 / 0.5490`   | XGBoost            | `0.4444 / 0.6701 / 0.6377` |
+| `018ac87` | `XGBoost: 0.1739 / 0.4567 / 0.4795`   | Random Forest      | `0.3913 / 0.6400 / 0.6410` |
 
-- Keeping database-aware holdout was the right call even though it hurts metrics, because it prevents leakage and gives realistic deployment behavior.
-- Expanding evaluation artifacts was necessary for scientific reporting quality.
-- Refreshing to the larger MiniDev snapshot was also reasonable, even though scores dropped, because it reflects a more current and broader data state.
 
-## Main-branch history note
+What this says:
 
-`main` has only one commit (`1a537e0`) in this repo history, so progression comes from branch milestones, then mapped back into one coherent narrative.
+- Seen-db performance is always much better than unseen-db.
+- Main weakness is still schema transfer (new DBs), not same-schema query variation.
 
-## Limits and how they were handled
+## 4) SQL features: without tree vs with tree
 
-- `1a537e0` had no committed `reports/all_models_test_comparison.csv`, so that missing part was recomputed from committed data/config (same holdout and model family) to keep comparison fair.
-- `reports/quick_experiments_summary.csv` is untracked in the current working tree and absent from older commits, so cross-commit Exp1/Exp2 history cannot be audited from git alone.
+Two SQL feature versions were tested:
+
+- **Global-only (without tree)**: no node-tree embedding.
+- **Tree+Global (with tree)**: adds plan-tree node structure to global features.
+
+Evidence (`reports/tree_ablation_commit_metrics.csv`):
+
+
+| Commit    | Extracted rows | Global-only seen F1 / unseen F1 | Tree+Global seen F1 / unseen F1 | Global-only seen ROC / unseen ROC | Tree+Global seen ROC / unseen ROC |
+| --------- | -------------- | ------------------------------- | ------------------------------- | --------------------------------- | --------------------------------- |
+| `1a537e0` | 211            | `0.6667 / 0.4286`               | `0.8000 / 0.4615`               | `0.9444 / 0.9320`                 | `0.9524 / 0.9252`                 |
+| `061f0ff` | 210            | `0.8571 / 0.5455`               | `0.6667 / 0.5455`               | `0.9939 / 0.9370`                 | `1.0000 / 0.9259`                 |
+| `018ac87` | 244            | `1.0000 / 0.4615`               | `0.8571 / 0.5000`               | `1.0000 / 0.9091`                 | `1.0000 / 0.8918`                 |
+
+
+Which variant was better?
+
+- Unseen F1: tree+global is only slightly better in 2 commits and tied in 1 commit.
+- Unseen ROC-AUC: tree+global is worse in all 3 commits.
+- Best unseen F1 among SQL variants: `0.5455` at `061f0ff` (tie).
+- Best unseen ROC-AUC among SQL variants: global-only `0.9370` at `061f0ff`.
+
+Practical meaning:
+
+- Adding tree features did **not** give a clear, stable transfer win in this setup.
+
+## 5) What does 0.8 vs 0.9 mean?
+
+These are not tiny differences.
+
+- **F1 (slow class)**:
+  - `0.90`: very reliable slow-query detection.
+  - `0.80`: strong, but noticeably more misses/false alarms than `0.90`.
+  - `0.50`: moderate only.
+  - `0.20`: weak in practice.
+- **ROC-AUC**:
+  - `0.50` = random,
+  - `0.60` = weak,
+  - `0.70` = fair/usable,
+  - `0.80+` = strong,
+  - `0.90+` = excellent separation.
+
+So yes, `0.8` vs `0.9` is a meaningful quality jump.
+
+## 6) Summary stats with interpretation
+
+Across commits:
+
+- average seen-vs-unseen absolute F1 gap = `0.2595`
+- average relative F1 drop when moving to unseen DB = `57.90%`
+
+Meaning:
+
+- about **58%** of useful slow-class performance is lost when schemas are unseen.
+- this is the central technical finding.
+
+## 7) Final takeaway
+
+- The project result is valid and meaningful: the pipeline learns useful patterns on familiar schemas.
+- The core unsolved problem is cross-schema transfer to unseen databases.
+- More data alone did not reliably fix this.
+- Tree+global features were not consistently better than global-only features in this rerun.
+
+## Evidence files
+
+- `reports/commit_rerun_metrics.csv`
+- `reports/tree_ablation_commit_metrics.csv`
+- `reports/model_results.txt`
+
+## Limits
+
+- Seen-db values come from deterministic within-db reruns and may differ from older historical scripts.
+- Tree-ablation row counts are lower than full labelled counts because some SQLs fail `EXPLAIN QUERY PLAN` and are dropped.
+
