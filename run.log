@@ -1,0 +1,176 @@
+nohup: ignoring input
+=== SQPP Codespaces Runner ===
+Started: Mon Apr 13 23:50:11 UTC 2026
+
+[1/3] Installing dependencies...
+[2/3] Checking BIRD databases...
+  Found BIRD at: Mini Dev/MINIDEV/
+[3/3] Running rerun_full_stats.py...
+
+============================================================
+  RERUN FULL STATS — Root Legacy Pipeline
+============================================================
+
+[Step 0] Purging old artifacts...
+  purged artifacts/best_model.joblib
+  purged data/query_dataset_raw.csv
+  purged data/query_dataset_features.csv
+  purged reports/model_results.txt
+  purged reports/per_database_results.csv
+  purged reports/per_difficulty_results.csv
+  purged reports/learning_curve.png
+  purged reports/roc_curve.png
+  purged reports/confusion_matrix.png
+  purged reports/confusion_matrix_normalised.png
+  purged reports/feature_importance.png
+  purged reports/class_distribution.png
+  purged reports/cv_boxplot.png
+  purged reports/calibration_curve.png
+  purged reports/pr_curve.png
+  purged reports/runtime_distribution.png
+
+[Step 0b] Ensuring data exists...
+  running main.py to generate data...
+============================================================
+SQL Query Performance Predictor — Full Pipeline
+============================================================
+[STAGE 1] Loading BIRD queries from MySQL JSON (with conversion): /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/Mini Dev/MINIDEV/mini_dev_mysql.json
+  Timed 50/500 queries...
+  Timed 200/500 queries...
+  Timed 250/500 queries...
+  Timed 400/500 queries...
+[STAGE 1] Timed 288/500 queries successfully
+  Failed: 212
+  Failure breakdown:
+    missing database file: 152
+    syntax error: 31
+    other: 26
+    missing object: 3
+
+  Per-database counts:
+    california_schools        11/ 30
+    card_games                 0/ 52
+    codebase_community         0/ 49
+    debit_card_specializing   29/ 30
+    european_football_2        0/ 51
+    financial                 22/ 32
+    formula_1                 60/ 66
+    student_club              48/ 48
+    superhero                 51/ 52
+    thrombosis_prediction     27/ 50
+    toxicology                40/ 40
+
+  Sample failures (up to 10):
+    db=debit_card_specializing, question_id=1509, error=other: no such function: DATE_FORMAT
+    db=thrombosis_prediction, question_id=1150, error=other: no such function: DATE_FORMAT
+    db=thrombosis_prediction, question_id=1156, error=syntax error: near "(": syntax error
+    db=thrombosis_prediction, question_id=1162, error=other: no such function: DATE_FORMAT
+    db=thrombosis_prediction, question_id=1164, error=syntax error: near "Date": syntax error
+    db=thrombosis_prediction, question_id=1168, error=syntax error: near "Date": syntax error
+    db=thrombosis_prediction, question_id=1171, error=syntax error: near "Date": syntax error
+    db=thrombosis_prediction, question_id=1175, error=other: no such function: DATE_FORMAT
+    db=thrombosis_prediction, question_id=1179, error=syntax error: near "Date": syntax error
+    db=thrombosis_prediction, question_id=1185, error=missing object: no such column: T2.T
+  Saved raw dataset -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/data/query_dataset_raw.csv
+[STAGE 4] Extracted 25 features from SQL text
+  Preserved metadata columns: db_id, difficulty
+[STAGE 5] Quantile labelling: dropped 72 'mid' queries
+  Label distribution: {'fast': np.int64(144), 'slow': np.int64(72)}
+  Saved to /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/data/query_dataset_features.csv
+
+[STAGE 6a] Split method: database_aware (leave-databases-out)
+  holdout databases: ['financial', 'formula_1']
+  train: 164, test: 52
+  databases in train (6): ['california_schools', 'debit_card_specializing', 'student_club', 'superhero', 'thrombosis_prediction', 'toxicology']
+  databases in test  (2): ['financial', 'formula_1']
+  train label balance: {'fast': 113, 'slow': 51}
+  test label balance : {'fast': 31, 'slow': 21}
+[STAGE 6b] Cross-validation on 164 training samples, 25 features
+  Class balance: slow=51, fast=113
+  Logistic Regression        F1 = 0.5527 +/- 0.1144
+  Random Forest              F1 = 0.5438 +/- 0.0676
+  Gradient Boosting          F1 = 0.5114 +/- 0.0683
+  XGBoost                    F1 = 0.5847 +/- 0.0512
+
+  Best model (by CV F1): XGBoost
+  Saved model artifact -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/artifacts/logistic_regression_model.joblib
+  Saved model artifact -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/artifacts/random_forest_model.joblib
+  Saved model artifact -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/artifacts/gradient_boosting_model.joblib
+  Saved model artifact -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/artifacts/xgboost_model.joblib
+  Best model copy saved -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/artifacts/best_model.joblib
+
+[STAGE 7] Test-set evaluation (52 samples)
+  Best model: XGBoost
+  F1 Score : 0.2424
+  ROC-AUC  : 0.5438
+  Wilcoxon XGBoost vs Logistic Regression: stat=6.0000, p=0.8125
+  Report saved -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/model_results.txt
+  Per-database CSV saved -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/per_database_results.csv
+  Per-difficulty CSV saved -> /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/per_difficulty_results.csv
+
+============================================================
+DONE.  Generated artefacts:
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/data/query_dataset_raw.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/data/query_dataset_features.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/artifacts/best_model.joblib
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/model_results.txt
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/per_database_results.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/per_difficulty_results.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/all_models_test_comparison.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/classification_report.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/cv_fold_scores.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/confusion_matrix.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/confusion_matrix.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/confusion_matrix_normalised.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/roc_curve.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/pr_curve.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/feature_importance.csv
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/feature_importance.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/class_distribution.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/runtime_distribution.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/cv_boxplot.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/learning_curve.png
+  OK  /workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/reports/split_summary.csv
+============================================================
+
+[Loading] Data + split...
+Traceback (most recent call last):
+  File "/workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/rerun_full_stats.py", line 580, in <module>
+    main()
+  File "/workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/rerun_full_stats.py", line 547, in main
+    df, train_df, test_df, X_train, y_train, X_test, y_test, feat_names, label_col = load_and_split()
+                                                                                     ^^^^^^^^^^^^^^^^
+  File "/workspaces/COM763---ML-pipeline-for-SQL-error-detection-project/rerun_full_stats.py", line 116, in load_and_split
+    df[label_col] = df[label_col].astype(int)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/generic.py", line 6541, in astype
+    new_data = self._mgr.astype(dtype=dtype, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/internals/managers.py", line 611, in astype
+    return self.apply("astype", dtype=dtype, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/internals/managers.py", line 442, in apply
+    applied = getattr(b, f)(**kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/internals/blocks.py", line 607, in astype
+    new_values = astype_array_safe(values, dtype, errors=errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/dtypes/astype.py", line 240, in astype_array_safe
+    new_values = astype_array(values, dtype, copy=copy)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/dtypes/astype.py", line 182, in astype_array
+    values = values.astype(dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/arrays/string_.py", line 944, in astype
+    return super().astype(dtype, copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/arrays/numpy_.py", line 280, in astype
+    result = astype_array(self._ndarray, dtype=dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/dtypes/astype.py", line 185, in astype_array
+    values = _astype_nansafe(values, dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/pandas/core/dtypes/astype.py", line 134, in _astype_nansafe
+    return arr.astype(dtype, copy=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'slow'
