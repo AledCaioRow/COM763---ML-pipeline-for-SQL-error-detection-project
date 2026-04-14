@@ -1,8 +1,6 @@
 # SQPP Streamlit dashboard
 
-Read-only UI for the **repository root legacy classifier** pipeline: explore timed BIRD queries, inspect training/evaluation reports, and run **fast vs slow** predictions using `artifacts/best_model.joblib`.
-
-This app does **not** load or visualize `sql_runtime_predictor/` (PyTorch plan-tree runtime regression). For that workflow, see `sql_runtime_predictor/README.md`.
+Read-only UI for the repository-root SQPP workflows: explore timed BIRD queries, inspect classifier training/evaluation reports, run **fast vs slow** predictions from `artifacts/best_model.joblib`, and (when artifacts exist) run runtime regression inference from `sql_runtime_predictor/`.
 
 ## What the app does
 
@@ -10,7 +8,8 @@ This app does **not** load or visualize `sql_runtime_predictor/` (PyTorch plan-t
 |------|---------|
 | **Data** | Reads CSVs produced by `main.py` (`query_dataset_raw`, `query_dataset_features`). |
 | **Reports** | Parses `reports/model_results.txt` and shows per-database / per-difficulty tables. |
-| **Model** | Loads sklearn `best_model.joblib` for metrics charts, importances, and **Predict**. |
+| **Classifier model** | Loads sklearn `best_model.joblib` for metrics charts, importances, and classifier prediction tabs. |
+| **Runtime model (optional)** | Uses `sql_runtime_predictor/artifacts/runtime_predictor.pt` (+ optional tier cutoffs JSON) for runtime prediction and tier display. |
 | **Config** | Imports root `config.py` for `FEATURE_COLS`, split mode, timing, and label settings (shown in the sidebar). |
 
 On startup, the app resolves the **project root** (parent of `streamlit_app/`) unless `SQPP_PROJECT_ROOT` points elsewhere, then loads files **once** at import time. Missing paths are listed in the sidebar.
@@ -67,7 +66,7 @@ If `config.py` is missing or `FEATURE_COLS` is empty, feature names are inferred
 - **`utils/paths.py`** — `get_project_root()`, optional `SQPP_PROJECT_ROOT`.
 - **`utils/data_loader.py`** — Safe CSV reads, regex parse of `model_results.txt` (CV F1 lines, test metrics, class metrics, optional top-features block).
 - **`utils/model_loader.py`** — Load joblib model; feature importances when the estimator exposes them.
-- **`utils/predictor.py`** — `predict_from_features`: builds one-row `DataFrame`, `predict` / optional `predict_proba` → label and **P(slow)**.
+- **`utils/predictor.py`** — Classifier prediction helper plus runtime inference/tier mapping utilities used by Predict and Live Compare flows.
 
 ## Pages (current behavior)
 
@@ -88,26 +87,28 @@ Requires both raw and feature CSVs.
 
 ### 3. Model Results
 
-- CV model F1 bar chart (from parsed report).
-- Per-class precision/recall/F1 bars when available.
-- Test F1 by difficulty (from `per_difficulty_results.csv` when `f1` column exists).
-- Feature importance: from the loaded sklearn model if supported; else top features from the report text if parsed.
-- Side-by-side dataframes: per-database and per-difficulty CSVs.
-- Expander with full raw `model_results.txt` text.
+- Displays generated evaluation artifacts directly from `reports/` (tables + images).
+- Includes model-comparison CSV, CV boxplot, confusion matrices, ROC/PR curves, feature-importance outputs, class metrics, and optional learning curve.
+- Shows expanded error-analysis table when available.
 
 ### 4. Predict
 
-Requires `best_model.joblib` and a non-empty `FEATURE_COLS`.
+- Classifier tabs require `best_model.joblib` and a non-empty `FEATURE_COLS`.
+- **Manual features** — Form: binary `has_*` checkboxes; numeric features as sliders (range from dataset min/max when available, else a safe default). Submit runs `predict_from_features`; shows label, **P(slow)** if available, and optional contribution-style chart.
+- **From SQL** — Text area; **Extract features & predict** calls `src.features.extract_features.extract_features(sql)` from the project root and then predicts with the classifier.
+- **Runtime (hybrid)** — Available when runtime checkpoint exists; predicts runtime seconds and optional tier labels (from cutoff JSON artifact when present).
 
-- **Manual features** — Form: binary `has_*` checkboxes; numeric features as sliders (range from dataset min/max when available, else a safe default). Submit runs `predict_from_features`; shows label, **P(slow)** if available, and an optional contribution-style bar chart (feature values × importances).
-- **From SQL** — Text area; **Extract features & predict** temporarily adds project root to `sys.path` and calls `src.features.extract_features.extract_features(sql)`. Missing or failed import shows a warning (ensure root `src/` package matches the trained feature schema).
+### 5. Live Compare
+
+- Executes SQL against selected SQLite databases, measures observed runtime, and compares measured tier vs predicted tier in the UI.
 
 ## Troubleshooting
 
 - **Sidebar lists missing files** — Run the root pipeline from project root; confirm paths are under the same root Streamlit uses (`SQPP_PROJECT_ROOT` if set).
 - **Predict → SQL fails** — Root must contain `src/features/extract_features.py` and the SQL must be parseable by that module; feature names must align with `FEATURE_COLS` / training.
+- **Runtime prediction unavailable** — Generate runtime artifacts: `sql_runtime_predictor/artifacts/runtime_predictor.pt` (and optionally `runtime_tier_cutoffs.json`) via the runtime predictor training/evaluation workflow.
 - **Charts empty on Model Results** — Regenerate `reports/model_results.txt` with `main.py`; encoding quirks in the report are tolerated via UTF-8 replace when reading.
 
 ## Scope note
 
-The dashboard is intentionally scoped to the **binary fast/slow classifier** and its artifacts. Continuous runtime prediction (q-error, Spearman, etc.) lives under `sql_runtime_predictor/` and is not wired into this UI.
+The dashboard is centered on the binary fast/slow classifier artifacts and now also exposes runtime-model inference surfaces when runtime artifacts are present. Full runtime-model development/evaluation details remain under `sql_runtime_predictor/`.

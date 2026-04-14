@@ -1,0 +1,4 @@
+Experiment,Threshold,F1_slow,Precision_slow,Recall_slow,ROC_AUC
+"Baseline (best_model.joblib, threshold=0.5)",0.5,0.186,0.1111,0.5714,0.461
+Exp1 Weighted Logistic Regression (class_weight=balanced),0.5,0.2632,0.1613,0.7143,0.6602
+Exp2 Weighted Logistic + tuned threshold (0.38),0.38,0.1587,0.0893,0.7143,0.6602

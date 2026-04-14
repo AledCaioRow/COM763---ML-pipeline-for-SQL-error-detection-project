@@ -1,0 +1,133 @@
+# SQPP Codebase Audit: 2026-04-14
+
+## File inventory
+- `config.py` — Root configuration for paths, split strategy, feature schema, timing, and evaluation flags. **MODIFIED**
+- `main.py` — End-to-end legacy classifier pipeline orchestrator (`load` -> `features` -> `train` -> `evaluate`). **MODIFIED**
+- `setup_bird.py` — Setup validator for Mini-Dev JSON/SQLite presence and expected database IDs.
+- `requirements.txt` — Root dependency list for the legacy classifier pipeline.
+- `rerun_full_stats.py` — Utility script for rerunning reporting/statistics generation. **NEW**
+- `run_codespaces.sh` — Shell helper script for environment setup/run flow. **NEW**
+- `run.log` — Pipeline runtime log output file. **NEW**
+- `new.md` — Ad-hoc markdown note file. **NEW**
+- `data/query_dataset_raw.csv` — Timed query dataset (`question_id`, `db_id`, `sql`, `difficulty`, `runtime_s`). **MODIFIED**
+- `data/query_dataset_features.csv` — Feature matrix + labels used for model training/evaluation. **MODIFIED**
+- `data/tpch_lite.sqlite` — Additional SQLite database asset outside baseline layout. **NEW**
+- `artifacts/best_model.joblib` — Persisted copy of selected best classifier. **MODIFIED**
+- `artifacts/logistic_regression_model.joblib` — Persisted Logistic Regression model. **MODIFIED**
+- `artifacts/random_forest_model.joblib` — Persisted Random Forest model. **MODIFIED**
+- `artifacts/gradient_boosting_model.joblib` — Persisted Gradient Boosting model. **MODIFIED**
+- `artifacts/xgboost_model.joblib` — Persisted XGBoost model. **MODIFIED**
+- `reports/model_results.txt` — Human-readable experiment summary and held-out metrics. **MODIFIED**
+- `reports/per_database_results.csv` — Held-out metrics grouped by `db_id`. **MODIFIED**
+- `reports/per_difficulty_results.csv` — Held-out metrics grouped by query difficulty. **MODIFIED**
+- `reports/all_models_test_comparison.csv` — Test metrics comparison across all trained models. **MODIFIED**
+- `reports/classification_report.csv` — Sklearn classification report persisted as CSV. **MODIFIED**
+- `reports/confusion_matrix.csv` — Raw confusion matrix counts (fast/slow). **MODIFIED**
+- `reports/confusion_matrix.png` — Confusion matrix plot image. **MODIFIED**
+- `reports/confusion_matrix_normalised.png` — Normalized confusion matrix plot image. **MODIFIED**
+- `reports/roc_curve.png` — ROC plot over test predictions. **MODIFIED**
+- `reports/pr_curve.png` — Precision-Recall plot for best model. **MODIFIED**
+- `reports/calibration_curve.png` — Probability calibration curve plot. **MODIFIED**
+- `reports/cv_fold_scores.csv` — Per-fold CV metrics and timing. **MODIFIED**
+- `reports/cv_boxplot.png` — CV F1 fold distribution plot. **MODIFIED**
+- `reports/feature_importance.csv` — Feature importance table for best model. **MODIFIED**
+- `reports/feature_importance.png` — Feature importance chart. **MODIFIED**
+- `reports/class_distribution.csv` — Quantile-label class counts and percentages. **MODIFIED**
+- `reports/class_distribution.png` — Class distribution chart. **MODIFIED**
+- `reports/runtime_distribution.png` — Runtime histogram with quantile markers. **MODIFIED**
+- `reports/split_summary.csv` — Train/test counts and database composition. **MODIFIED**
+- `reports/error_analysis.csv` — Misclassification counts grouped by database+difficulty. **MODIFIED**
+- `reports/learning_curve.png` — Learning-curve artifact (present in tree). **NEW**
+- `reports/quick_experiments_summary.csv` — Quick-iteration experiment table for additional runs. **NEW**
+- `reports/quick_experiments_summary.md` — Narrative summary for quick-iteration experiments. **NEW**
+- `src/data/load_bird.py` — Query loading/timing with conversion fallback, error categorization, per-DB diagnostics. **MODIFIED**
+- `src/features/extract_features.py` — SQL structural feature extraction + quantile/median labeling.
+- `src/models/train.py` — Split logic, model registry, CV scoring, artifact persistence (all models + best). **MODIFIED**
+- `src/models/predict.py` — Single-query and batch inference helpers against persisted model.
+- `src/evaluation/evaluate.py` — Expanded evaluation/reporting pipeline (plots, fold stats, error analysis, significance test). **MODIFIED**
+- `src/__init__.py`, `src/data/__init__.py`, `src/features/__init__.py`, `src/models/__init__.py`, `src/evaluation/__init__.py` — Package markers.
+- `streamlit_app/app.py` — Multi-page dashboard with legacy-classifier + runtime prediction UI. **MODIFIED**
+- `streamlit_app/README.md` — Dashboard documentation. **MODIFIED**
+- `streamlit_app/requirements.txt` — Streamlit app dependencies. **NEW**
+- `streamlit_app/_debug_streamlit_env.py` — Streamlit environment/debug helper. **NEW**
+- `streamlit_app/components/charts.py` — Plotly chart builders used by pages. **NEW**
+- `streamlit_app/components/sidebar.py` — Sidebar renderer and artifact status panel. **NEW**
+- `streamlit_app/components/metrics.py` — Shared metric-layout helper functions. **NEW**
+- `streamlit_app/components/live_compare.py` — Live measured-vs-predicted runtime/tier comparator. **NEW**
+- `streamlit_app/utils/paths.py` — Project-root resolution/path utilities. **NEW**
+- `streamlit_app/utils/data_loader.py` — Safe artifact loading and report parsing utilities. **NEW**
+- `streamlit_app/utils/model_loader.py` — Safe model loader and feature-importance extraction. **NEW**
+- `streamlit_app/utils/predictor.py` — Prediction helpers (legacy classifier + runtime predictor subprocess). **NEW**
+- `sql_runtime_predictor/` subtree (`README`, `configs`, `notebooks`, `src/*`) — Separate runtime-regression pipeline (query generation, timing, plan-tree features, PyTorch training/eval). **NEW**
+- `markdowns/` subtree — Project documentation/audit/support materials (`AI_CONTEXT`, `PROJECT_OVERVIEW`, `SDD`, briefs, etc.). **NEW**
+- `markdowns/SUBMISSION_READY_NOTES.md` — Submission-focused notes for packaging/checklist. **NEW**
+- `Mini Dev/MINIDEV/` subtree — BIRD Mini-Dev assets: query JSONs, DB files, schema-description CSVs, metadata, and zip payload. **NEW**
+- `rerun_quick_improvements.py` — Script for rerunning quick model-improvement experiments. **NEW**
+- `.gitignore` — Git ignore rules.
+
+## New or changed features
+- `FEATURE_COLS` in `config.py` still contains 25 fields; no added/removed root-classifier features were found:
+  - `n_tokens`, `query_length`, `n_joins`, `n_tables_approx`, `n_where_predicates`, `has_group_by`, `has_order_by`, `has_having`, `has_distinct`, `has_limit`, `has_union`, `n_subqueries`, `has_subquery`, `max_nesting_depth`, `n_aggregations`, `n_count`, `n_sum`, `n_avg`, `n_max`, `n_min`, `has_between`, `has_in_clause`, `has_like`, `has_exists`, `has_correlated_subquery`.
+- `extract_features.py` logic remains structural-text based (no template metadata dependency), including parenthesis depth, aggregation counts, and correlated-subquery heuristic.
+- Labeling behavior is configurable in `config.py` via `LABEL_METHOD` (`"quantile"` default or `"median"`), with quantile mode still dropping the middle band.
+
+## Pipeline changes
+- `config.py` now includes path-fallback helpers (`_pick_first_existing`, `_BIRD_DIR_CANDIDATES`) and split/eval controls beyond baseline:
+  - `LABEL_METHOD = "quantile"`
+  - `EVAL_ENABLE_LEARNING_CURVE = False`
+  - `EVAL_LEARNING_CURVE_CV_FOLDS = 3`
+  - `EVAL_LEARNING_CURVE_TRAIN_SIZES = [0.2, 0.4, 0.6, 0.8, 1.0]`
+- Data loading (`src/data/load_bird.py`) keeps baseline SQLite/MySQL fallback and median-of-3 timing, but now adds:
+  - `_categorize_error()` bucketing
+  - per-database success counters
+  - sample failure logging.
+- Training (`src/models/train.py`) keeps 4-model registry and 5-fold stratified CV, but now computes broader CV metrics (`accuracy`, `precision`, `recall`, `roc_auc`) via `cross_validate()` and persists each fitted model artifact, not just best.
+- Evaluation (`src/evaluation/evaluate.py`) has major expansion beyond baseline:
+  - all-model test comparison CSV
+  - CV fold scores + boxplot
+  - calibration curve
+  - class/runtime distribution plots
+  - split summary CSV
+  - error analysis CSV
+  - optional learning curve path
+  - Wilcoxon significance note for top CV models (if SciPy available).
+- Dataset currently observed:
+  - `data/query_dataset_raw.csv`: 498 rows
+  - `data/query_dataset_features.csv`: 374 rows
+  - feature-label counts: `{'fast': 249, 'slow': 125}`.
+- Additional pipeline introduced: `sql_runtime_predictor/` implements a separate runtime regression stack (PyTorch + plan-tree features), which is outside the original baseline classifier flow.
+
+## Current metrics
+- Source files: `reports/model_results.txt`, `reports/all_models_test_comparison.csv`, `reports/per_database_results.csv`, `reports/per_difficulty_results.csv`.
+- Cross-validation F1 (mean ± std):
+  - `XGBoost`: `0.5359 ± 0.0406`
+  - `Random Forest`: `0.5106 ± 0.0556`
+  - `Gradient Boosting`: `0.4741 ± 0.0237`
+  - `Logistic Regression`: `0.2694 ± 0.0856`
+- Held-out test (best model `XGBoost`):
+  - Test F1: `0.1860` (exact CSV: `0.18604651162790697`)
+  - ROC-AUC: `0.4610` (exact CSV: `0.461038961038961`)
+  - Accuracy: `0.52` (exact CSV: `0.5205479452054794`)
+- Per-database F1:
+  - `financial`: `0.18181818181818182` (support `32`)
+  - `formula_1`: `0.19047619047619047` (support `41`)
+- Per-difficulty F1:
+  - `challenging`: `0.2` (support `13`)
+  - `moderate`: `0.2608695652173913` (support `33`)
+  - `simple`: `0.0` (support `27`)
+
+## Streamlit app state
+- Page set in `streamlit_app/app.py` is `["Overview", "Data Explorer", "Model Results", "Predict", "Live Compare"]`.
+- App reads real pipeline outputs from root paths (`data/*.csv`, `reports/*.csv|*.txt`, `artifacts/best_model.joblib`) via `streamlit_app/utils/data_loader.py`; this is not demo-only wiring.
+- Predict surface now has three operational modes:
+  - manual feature-vector classifier prediction
+  - SQL->feature extraction classifier prediction
+  - runtime prediction/tier mapping using `sql_runtime_predictor/artifacts/runtime_predictor.pt` when available.
+- `Live Compare` page (`streamlit_app/components/live_compare.py`) executes SQL against real SQLite DBs, measures runtime, then compares measured tiers vs predicted tiers.
+- Documentation mismatch: `streamlit_app/README.md` says runtime-regression is not wired into the UI, but current code does integrate runtime-model inference paths. **[CHECK]**
+
+## Code quality notes
+- Hardcoded UI constant in `streamlit_app/app.py`: `s4.metric("Features used", 25)` duplicates configuration instead of deriving from `FEATURE_COLS`.
+- `main.py` always prints `reports/learning_curve.png` in output checklist even when learning-curve generation is disabled (`EVAL_ENABLE_LEARNING_CURVE=False`), which can show expected `MISSING`.
+- Legacy classifier and runtime-regression pipelines coexist with overlapping script names (`train.py`, `evaluate.py`), increasing cognitive load for contributors.
+- No actionable `TODO`/`FIXME` markers were found in core code files during this audit pass.

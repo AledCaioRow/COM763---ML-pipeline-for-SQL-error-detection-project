@@ -213,7 +213,7 @@ def page_overview():
     s1.metric("Total queries", total_queries)
     s2.metric("Train / test size", f"{train_n} / {test_n}")
     s3.metric("Best model (test F1)", f"{best_model_name} ({best_model_f1})")
-    s4.metric("Features used", 25)
+    s4.metric("Features used", n_features)
 
     st.subheader("Pipeline")
     steps = [

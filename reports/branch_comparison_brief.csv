@@ -1,0 +1,6 @@
+Branch,Commit,Date,BestModel,TestF1,TestROC_AUC,TestAccuracy,ChosenExperiment,F1_slow,Precision_slow,Recall_slow,Brief
+main,1a537e0,2026-04-11,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,No committed report artifacts found on this branch.
+NewBranch,1d9a3b4,2026-04-14,Gradient Boosting,0.4117647058823529,0.5161290322580645,0.6153846153846154,N/A,N/A,N/A,N/A,Best model selected from test comparison table.
+snapshot/2026-04-14-ml-pipeline,018ac87,2026-04-14,Logistic Regression,0.32,0.6536796536796536,0.7671232876712328,N/A,N/A,N/A,N/A,Best model selected from test comparison table.
+work/2026-04-14-next,018ac87,2026-04-14,Logistic Regression,0.32,0.6536796536796536,0.7671232876712328,N/A,N/A,N/A,N/A,Best model selected from test comparison table.
+origin/backup/pre-codespace-2026-04-14,061f0ff,2026-04-14,Logistic Regression,0.5333333333333333,0.7703703703703704,0.8627450980392157,N/A,N/A,N/A,N/A,Best model selected from test comparison table.

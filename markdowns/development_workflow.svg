@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="980" viewBox="0 0 1900 980">
+  <defs>
+    <style>
+      .title { font: 700 26px Arial, sans-serif; fill: #1f2937; }
+      .phase { font: 700 16px Arial, sans-serif; fill: #111827; }
+      .nodeText { font: 14px Arial, sans-serif; fill: #111827; }
+      .small { font: 12px Arial, sans-serif; fill: #1f2937; }
+      .arrow { stroke: #374151; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+      .edgeLabel { font: 12px Arial, sans-serif; fill: #374151; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#374151" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="980" fill="#f8fafc" />
+  <text x="40" y="50" class="title">SQPP Development Workflow, TPC-H Start to Current State</text>
+
+  <!-- Legend -->
+  <rect x="40" y="70" width="1820" height="70" rx="10" ry="10" fill="#ffffff" stroke="#e5e7eb" />
+  <rect x="60" y="93" width="20" height="20" fill="#d1d5db" stroke="#9ca3af" />
+  <text x="88" y="108" class="small">Gray: abandoned work</text>
+  <rect x="295" y="93" width="20" height="20" fill="#fecaca" stroke="#ef4444" />
+  <text x="323" y="108" class="small">Red: problems identified</text>
+  <rect x="560" y="93" width="20" height="20" fill="#ddd6fe" stroke="#7c3aed" />
+  <text x="588" y="108" class="small">Purple: pipeline stages</text>
+  <rect x="835" y="93" width="20" height="20" fill="#99f6e4" stroke="#0d9488" />
+  <text x="863" y="108" class="small">Teal: improvement steps</text>
+  <rect x="1085" y="93" width="20" height="20" fill="#fde68a" stroke="#d97706" />
+  <text x="1113" y="108" class="small">Amber: current results</text>
+
+  <!-- Phase labels -->
+  <text x="60" y="185" class="phase">Phase 1: Initial approach (TPC-H, abandoned)</text>
+  <text x="400" y="185" class="phase">Phase 2: Pivot to BIRD Mini-Dev</text>
+  <text x="710" y="185" class="phase">Phase 3: Baseline pipeline build</text>
+  <text x="1230" y="185" class="phase">Phase 4: Baseline results</text>
+  <text x="60" y="525" class="phase">Phase 5: Improvements applied</text>
+  <text x="1270" y="525" class="phase">Phase 6: Current results</text>
+
+  <!-- Phase 1 nodes -->
+  <rect x="60" y="220" width="260" height="120" rx="12" ry="12" fill="#d1d5db" stroke="#9ca3af" stroke-width="2"/>
+  <text x="80" y="250" class="nodeText">TPC-H centric start</text>
+  <text x="80" y="275" class="small">Initial data direction</text>
+  <text x="80" y="295" class="small">Later abandoned for better fit</text>
+
+  <rect x="60" y="360" width="260" height="120" rx="12" ry="12" fill="#fecaca" stroke="#ef4444" stroke-width="2"/>
+  <text x="80" y="390" class="nodeText">Problem identified</text>
+  <text x="80" y="415" class="small">Limited alignment with target</text>
+  <text x="80" y="435" class="small">evaluation scenario</text>
+
+  <!-- Phase 2 node -->
+  <rect x="390" y="290" width="260" height="140" rx="12" ry="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="410" y="320" class="nodeText">Pivot to BIRD Mini-Dev</text>
+  <text x="410" y="345" class="small">Use executable query JSON + DBs</text>
+  <text x="410" y="365" class="small">Database-aware holdout preserved</text>
+  <text x="410" y="385" class="small">for schema-shift integrity</text>
+
+  <!-- Phase 3 pipeline nodes -->
+  <rect x="700" y="210" width="220" height="90" rx="10" ry="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="720" y="245" class="nodeText">Load + time queries</text>
+  <text x="720" y="265" class="small">median of 3 timings</text>
+
+  <rect x="700" y="320" width="220" height="90" rx="10" ry="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="720" y="355" class="nodeText">Extract 25 SQL features</text>
+  <text x="720" y="375" class="small">structural complexity signals</text>
+
+  <rect x="700" y="430" width="220" height="90" rx="10" ry="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="720" y="465" class="nodeText">Label and split</text>
+  <text x="720" y="485" class="small">quantile labels, DB-aware holdout</text>
+
+  <rect x="960" y="265" width="220" height="90" rx="10" ry="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="980" y="300" class="nodeText">Train 4 models</text>
+  <text x="980" y="320" class="small">LR, RF, GB, XGBoost</text>
+
+  <rect x="960" y="375" width="220" height="90" rx="10" ry="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="980" y="410" class="nodeText">Evaluate baseline</text>
+  <text x="980" y="430" class="small">CV + held-out test outputs</text>
+
+  <!-- Phase 4 baseline results -->
+  <rect x="1220" y="285" width="320" height="180" rx="12" ry="12" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+  <text x="1240" y="320" class="nodeText">Baseline result snapshot</text>
+  <text x="1240" y="345" class="small">Best model: XGBoost</text>
+  <text x="1240" y="365" class="small">CV F1: 0.5359 ± 0.0406</text>
+  <text x="1240" y="385" class="small">Test F1: 0.1860</text>
+  <text x="1240" y="405" class="small">ROC-AUC: 0.4610, Accuracy: 0.5205</text>
+  <text x="1240" y="425" class="small">Per-DB F1: financial 0.1818, formula_1 0.1905</text>
+  <text x="1240" y="445" class="small">Per-difficulty F1: simple 0.0000</text>
+
+  <!-- Phase 5 improvements -->
+  <rect x="60" y="560" width="300" height="120" rx="12" ry="12" fill="#99f6e4" stroke="#0d9488" stroke-width="2"/>
+  <text x="80" y="590" class="nodeText">Improvement 1: Data growth</text>
+  <text x="80" y="615" class="small">Raw rows 425 -> 498</text>
+  <text x="80" y="635" class="small">Labelled rows 320 -> 374</text>
+
+  <rect x="390" y="560" width="340" height="120" rx="12" ry="12" fill="#99f6e4" stroke="#0d9488" stroke-width="2"/>
+  <text x="410" y="590" class="nodeText">Improvement 2: Evaluation expansion</text>
+  <text x="410" y="615" class="small">Added all-model comparison, ROC/PR, calibration,</text>
+  <text x="410" y="635" class="small">fold stats, class/runtime distributions, error analysis</text>
+
+  <rect x="760" y="560" width="320" height="120" rx="12" ry="12" fill="#99f6e4" stroke="#0d9488" stroke-width="2"/>
+  <text x="780" y="590" class="nodeText">Improvement 3: Artifact persistence</text>
+  <text x="780" y="615" class="small">Persist all 4 fitted models plus best copy</text>
+  <text x="780" y="635" class="small">for reproducible comparisons</text>
+
+  <rect x="1110" y="560" width="360" height="120" rx="12" ry="12" fill="#99f6e4" stroke="#0d9488" stroke-width="2"/>
+  <text x="1130" y="590" class="nodeText">Improvement 4: Quick experiments</text>
+  <text x="1130" y="615" class="small">`rerun_quick_improvements.py` + summary outputs</text>
+  <text x="1130" y="635" class="small">Baseline vs Exp1 vs Exp2 recorded</text>
+
+  <!-- Phase 6 current results -->
+  <rect x="1500" y="540" width="360" height="210" rx="12" ry="12" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+  <text x="1520" y="575" class="nodeText">Current result state</text>
+  <text x="1520" y="600" class="small">Baseline model still XGBoost on CV ranking</text>
+  <text x="1520" y="620" class="small">Exp1 weighted logistic improves slow-class metrics:</text>
+  <text x="1520" y="640" class="small">F1_slow 0.2632 vs 0.1860 baseline</text>
+  <text x="1520" y="660" class="small">Precision_slow 0.1613 vs 0.1111</text>
+  <text x="1520" y="680" class="small">Recall_slow 0.7143 vs 0.5714</text>
+  <text x="1520" y="700" class="small">ROC-AUC 0.6602 vs 0.4610</text>
+  <text x="1520" y="720" class="small">Exp2 threshold 0.38, lower F1_slow 0.1587</text>
+
+  <!-- Connectors -->
+  <path class="arrow" d="M320 280 C350 280, 355 320, 390 340" />
+  <path class="arrow" d="M650 340 C675 340, 680 255, 700 255" />
+  <path class="arrow" d="M810 300 L810 320" />
+  <path class="arrow" d="M810 410 L810 430" />
+  <path class="arrow" d="M920 475 C940 475, 945 420, 960 420" />
+  <path class="arrow" d="M1180 420 C1200 420, 1205 375, 1220 375" />
+  <path class="arrow" d="M1380 465 C1200 520, 900 520, 720 560" />
+  <path class="arrow" d="M360 620 L390 620" />
+  <path class="arrow" d="M730 620 L760 620" />
+  <path class="arrow" d="M1080 620 L1110 620" />
+  <path class="arrow" d="M1470 620 L1500 620" />
+
+  <text x="1260" y="500" class="edgeLabel">iterate and diagnose</text>
+</svg>
