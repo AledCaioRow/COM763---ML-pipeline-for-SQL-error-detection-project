@@ -1,0 +1,232 @@
+bundle_key,iteration,value,source_file,source_field,notes
+bundle_generated_at,meta,2026-04-16T11:46:00Z,build_report_evidence_bundle.py,,
+iter1_split_train_n,1,310,reports/split_summary.csv,n_queries,Train (CV)
+iter1_split_train_fast,1,194,reports/split_summary.csv,fast,Train (CV)
+iter1_split_train_slow,1,116,reports/split_summary.csv,slow,Train (CV)
+iter1_split_test_n,1,64,reports/split_summary.csv,n_queries,Test
+iter1_split_test_fast,1,55,reports/split_summary.csv,fast,Test
+iter1_split_test_slow,1,9,reports/split_summary.csv,slow,Test
+iter1_holdout_dbs,1,"financial, formula_1",reports/split_summary.csv,databases,Test
+iter1_best_model,1,Logistic Regression,reports/all_models_test_comparison.csv,Model,by max Test F1
+iter1_best_test_f1,1,0.5217391304347826,reports/all_models_test_comparison.csv,Test F1,
+iter1_best_test_roc_auc,1,0.6444444444444444,reports/all_models_test_comparison.csv,Test ROC-AUC,
+iter1_best_test_acc,1,0.828125,reports/all_models_test_comparison.csv,Test Accuracy,
+iter1_perdb_financial_f1,1,0.125,reports/per_database_results.csv,f1,financial
+iter1_perdb_financial_support,1,30,reports/per_database_results.csv,support,financial
+iter1_perdb_formula_1_f1,1,0.3809523809523809,reports/per_database_results.csv,f1,formula_1
+iter1_perdb_formula_1_support,1,34,reports/per_database_results.csv,support,formula_1
+geometry_raw_rows,1_and_2,498,reports/classifier_geometries_summary.csv,raw_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_labelled_rows,1_and_2,374,reports/classifier_geometries_summary.csv,labelled_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_fast_rows,1_and_2,249,reports/classifier_geometries_summary.csv,fast_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_slow_rows,1_and_2,125,reports/classifier_geometries_summary.csv,slow_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_unseen_train_rows,1_and_2,310,reports/classifier_geometries_summary.csv,unseen_train_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_unseen_test_rows,1_and_2,64,reports/classifier_geometries_summary.csv,unseen_test_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_seen_train_rows,1_and_2,294,reports/classifier_geometries_summary.csv,seen_train_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_seen_test_rows,1_and_2,80,reports/classifier_geometries_summary.csv,seen_test_rows,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_unseen_best_model,1_and_2,Random Forest,reports/classifier_geometries_summary.csv,unseen_best_model,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_unseen_f1,1_and_2,0.2702702702702703,reports/classifier_geometries_summary.csv,unseen_f1,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_unseen_roc_auc,1_and_2,0.5686868686868687,reports/classifier_geometries_summary.csv,unseen_roc_auc,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_unseen_accuracy,1_and_2,0.578125,reports/classifier_geometries_summary.csv,unseen_accuracy,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_seen_best_model,1_and_2,Gradient Boosting,reports/classifier_geometries_summary.csv,seen_best_model,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_seen_f1,1_and_2,0.2553191489361702,reports/classifier_geometries_summary.csv,seen_f1,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_seen_roc_auc,1_and_2,0.4567272727272727,reports/classifier_geometries_summary.csv,seen_roc_auc,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+geometry_seen_accuracy,1_and_2,0.5625,reports/classifier_geometries_summary.csv,seen_accuracy,"current worktree; unseen≈iter1 geometry, seen≈iter2"
+commit_1a537e0_raw_rows,2_multi_commit,425,reports/commit_rerun_metrics.csv,raw_rows,1a537e0
+commit_1a537e0_labelled_rows,2_multi_commit,320,reports/commit_rerun_metrics.csv,labelled_rows,1a537e0
+commit_1a537e0_fast_rows,2_multi_commit,213,reports/commit_rerun_metrics.csv,fast_rows,1a537e0
+commit_1a537e0_slow_rows,2_multi_commit,107,reports/commit_rerun_metrics.csv,slow_rows,1a537e0
+commit_1a537e0_unseen_train_rows,2_multi_commit,265,reports/commit_rerun_metrics.csv,unseen_train_rows,1a537e0
+commit_1a537e0_unseen_test_rows,2_multi_commit,55,reports/commit_rerun_metrics.csv,unseen_test_rows,1a537e0
+commit_1a537e0_seen_train_rows,2_multi_commit,252,reports/commit_rerun_metrics.csv,seen_train_rows,1a537e0
+commit_1a537e0_seen_test_rows,2_multi_commit,68,reports/commit_rerun_metrics.csv,seen_test_rows,1a537e0
+commit_1a537e0_unseen_best_model,2_multi_commit,XGBoost,reports/commit_rerun_metrics.csv,unseen_best_model,1a537e0
+commit_1a537e0_unseen_f1,2_multi_commit,0.1764705882352941,reports/commit_rerun_metrics.csv,unseen_f1,1a537e0
+commit_1a537e0_unseen_roc_auc,2_multi_commit,0.54421768707483,reports/commit_rerun_metrics.csv,unseen_roc_auc,1a537e0
+commit_1a537e0_unseen_accuracy,2_multi_commit,0.4909090909090909,reports/commit_rerun_metrics.csv,unseen_accuracy,1a537e0
+commit_1a537e0_seen_best_model,2_multi_commit,Random Forest,reports/commit_rerun_metrics.csv,seen_best_model,1a537e0
+commit_1a537e0_seen_f1,2_multi_commit,0.5,reports/commit_rerun_metrics.csv,seen_f1,1a537e0
+commit_1a537e0_seen_roc_auc,2_multi_commit,0.6862648221343873,reports/commit_rerun_metrics.csv,seen_roc_auc,1a537e0
+commit_1a537e0_seen_accuracy,2_multi_commit,0.6764705882352942,reports/commit_rerun_metrics.csv,seen_accuracy,1a537e0
+commit_061f0ff_raw_rows,2_multi_commit,425,reports/commit_rerun_metrics.csv,raw_rows,061f0ff
+commit_061f0ff_labelled_rows,2_multi_commit,320,reports/commit_rerun_metrics.csv,labelled_rows,061f0ff
+commit_061f0ff_fast_rows,2_multi_commit,213,reports/commit_rerun_metrics.csv,fast_rows,061f0ff
+commit_061f0ff_slow_rows,2_multi_commit,107,reports/commit_rerun_metrics.csv,slow_rows,061f0ff
+commit_061f0ff_unseen_train_rows,2_multi_commit,269,reports/commit_rerun_metrics.csv,unseen_train_rows,061f0ff
+commit_061f0ff_unseen_test_rows,2_multi_commit,51,reports/commit_rerun_metrics.csv,unseen_test_rows,061f0ff
+commit_061f0ff_seen_train_rows,2_multi_commit,251,reports/commit_rerun_metrics.csv,seen_train_rows,061f0ff
+commit_061f0ff_seen_test_rows,2_multi_commit,69,reports/commit_rerun_metrics.csv,seen_test_rows,061f0ff
+commit_061f0ff_unseen_best_model,2_multi_commit,XGBoost,reports/commit_rerun_metrics.csv,unseen_best_model,061f0ff
+commit_061f0ff_unseen_f1,2_multi_commit,0.2068965517241379,reports/commit_rerun_metrics.csv,unseen_f1,061f0ff
+commit_061f0ff_unseen_roc_auc,2_multi_commit,0.5148148148148148,reports/commit_rerun_metrics.csv,unseen_roc_auc,061f0ff
+commit_061f0ff_unseen_accuracy,2_multi_commit,0.5490196078431373,reports/commit_rerun_metrics.csv,unseen_accuracy,061f0ff
+commit_061f0ff_seen_best_model,2_multi_commit,XGBoost,reports/commit_rerun_metrics.csv,seen_best_model,061f0ff
+commit_061f0ff_seen_f1,2_multi_commit,0.4444444444444444,reports/commit_rerun_metrics.csv,seen_f1,061f0ff
+commit_061f0ff_seen_roc_auc,2_multi_commit,0.6701323251417769,reports/commit_rerun_metrics.csv,seen_roc_auc,061f0ff
+commit_061f0ff_seen_accuracy,2_multi_commit,0.6376811594202898,reports/commit_rerun_metrics.csv,seen_accuracy,061f0ff
+commit_018ac87_raw_rows,2_multi_commit,498,reports/commit_rerun_metrics.csv,raw_rows,018ac87
+commit_018ac87_labelled_rows,2_multi_commit,374,reports/commit_rerun_metrics.csv,labelled_rows,018ac87
+commit_018ac87_fast_rows,2_multi_commit,249,reports/commit_rerun_metrics.csv,fast_rows,018ac87
+commit_018ac87_slow_rows,2_multi_commit,125,reports/commit_rerun_metrics.csv,slow_rows,018ac87
+commit_018ac87_unseen_train_rows,2_multi_commit,301,reports/commit_rerun_metrics.csv,unseen_train_rows,018ac87
+commit_018ac87_unseen_test_rows,2_multi_commit,73,reports/commit_rerun_metrics.csv,unseen_test_rows,018ac87
+commit_018ac87_seen_train_rows,2_multi_commit,296,reports/commit_rerun_metrics.csv,seen_train_rows,018ac87
+commit_018ac87_seen_test_rows,2_multi_commit,78,reports/commit_rerun_metrics.csv,seen_test_rows,018ac87
+commit_018ac87_unseen_best_model,2_multi_commit,XGBoost,reports/commit_rerun_metrics.csv,unseen_best_model,018ac87
+commit_018ac87_unseen_f1,2_multi_commit,0.1739130434782608,reports/commit_rerun_metrics.csv,unseen_f1,018ac87
+commit_018ac87_unseen_roc_auc,2_multi_commit,0.4567099567099567,reports/commit_rerun_metrics.csv,unseen_roc_auc,018ac87
+commit_018ac87_unseen_accuracy,2_multi_commit,0.4794520547945205,reports/commit_rerun_metrics.csv,unseen_accuracy,018ac87
+commit_018ac87_seen_best_model,2_multi_commit,Random Forest,reports/commit_rerun_metrics.csv,seen_best_model,018ac87
+commit_018ac87_seen_f1,2_multi_commit,0.391304347826087,reports/commit_rerun_metrics.csv,seen_f1,018ac87
+commit_018ac87_seen_roc_auc,2_multi_commit,0.64,reports/commit_rerun_metrics.csv,seen_roc_auc,018ac87
+commit_018ac87_seen_accuracy,2_multi_commit,0.6410256410256411,reports/commit_rerun_metrics.csv,seen_accuracy,018ac87
+iter3_db_california_schools_n,3,3,reports/within_db_logistic_metrics.csv,n,california_schools
+iter3_db_california_schools_n_train,3,,reports/within_db_logistic_metrics.csv,n_train,california_schools
+iter3_db_california_schools_n_test,3,,reports/within_db_logistic_metrics.csv,n_test,california_schools
+iter3_db_california_schools_slow_pct,3,0,reports/within_db_logistic_metrics.csv,slow_pct,california_schools
+iter3_db_california_schools_f1_slow,3,,reports/within_db_logistic_metrics.csv,f1_slow,california_schools
+iter3_db_california_schools_roc_auc,3,,reports/within_db_logistic_metrics.csv,roc_auc,california_schools
+iter3_db_california_schools_accuracy,3,,reports/within_db_logistic_metrics.csv,accuracy,california_schools
+iter3_db_california_schools_status,3,skipped_small,reports/within_db_logistic_metrics.csv,status,california_schools
+iter3_db_card_games_n,3,46,reports/within_db_logistic_metrics.csv,n,card_games
+iter3_db_card_games_n_train,3,36.0,reports/within_db_logistic_metrics.csv,n_train,card_games
+iter3_db_card_games_n_test,3,10.0,reports/within_db_logistic_metrics.csv,n_test,card_games
+iter3_db_card_games_slow_pct,3,85,reports/within_db_logistic_metrics.csv,slow_pct,card_games
+iter3_db_card_games_f1_slow,3,0.888889,reports/within_db_logistic_metrics.csv,f1_slow,card_games
+iter3_db_card_games_roc_auc,3,0.3125,reports/within_db_logistic_metrics.csv,roc_auc,card_games
+iter3_db_card_games_accuracy,3,0.8,reports/within_db_logistic_metrics.csv,accuracy,card_games
+iter3_db_card_games_status,3,ok,reports/within_db_logistic_metrics.csv,status,card_games
+iter3_db_codebase_community_n,3,37,reports/within_db_logistic_metrics.csv,n,codebase_community
+iter3_db_codebase_community_n_train,3,29.0,reports/within_db_logistic_metrics.csv,n_train,codebase_community
+iter3_db_codebase_community_n_test,3,8.0,reports/within_db_logistic_metrics.csv,n_test,codebase_community
+iter3_db_codebase_community_slow_pct,3,92,reports/within_db_logistic_metrics.csv,slow_pct,codebase_community
+iter3_db_codebase_community_f1_slow,3,0.933333,reports/within_db_logistic_metrics.csv,f1_slow,codebase_community
+iter3_db_codebase_community_roc_auc,3,1.0,reports/within_db_logistic_metrics.csv,roc_auc,codebase_community
+iter3_db_codebase_community_accuracy,3,0.875,reports/within_db_logistic_metrics.csv,accuracy,codebase_community
+iter3_db_codebase_community_status,3,ok,reports/within_db_logistic_metrics.csv,status,codebase_community
+iter3_db_debit_card_specializing_n,3,20,reports/within_db_logistic_metrics.csv,n,debit_card_specializing
+iter3_db_debit_card_specializing_n_train,3,16.0,reports/within_db_logistic_metrics.csv,n_train,debit_card_specializing
+iter3_db_debit_card_specializing_n_test,3,4.0,reports/within_db_logistic_metrics.csv,n_test,debit_card_specializing
+iter3_db_debit_card_specializing_slow_pct,3,35,reports/within_db_logistic_metrics.csv,slow_pct,debit_card_specializing
+iter3_db_debit_card_specializing_f1_slow,3,0.0,reports/within_db_logistic_metrics.csv,f1_slow,debit_card_specializing
+iter3_db_debit_card_specializing_roc_auc,3,0.666667,reports/within_db_logistic_metrics.csv,roc_auc,debit_card_specializing
+iter3_db_debit_card_specializing_accuracy,3,0.75,reports/within_db_logistic_metrics.csv,accuracy,debit_card_specializing
+iter3_db_debit_card_specializing_status,3,ok,reports/within_db_logistic_metrics.csv,status,debit_card_specializing
+iter3_db_european_football_2_n,3,41,reports/within_db_logistic_metrics.csv,n,european_football_2
+iter3_db_european_football_2_n_train,3,32.0,reports/within_db_logistic_metrics.csv,n_train,european_football_2
+iter3_db_european_football_2_n_test,3,9.0,reports/within_db_logistic_metrics.csv,n_test,european_football_2
+iter3_db_european_football_2_slow_pct,3,80,reports/within_db_logistic_metrics.csv,slow_pct,european_football_2
+iter3_db_european_football_2_f1_slow,3,0.769231,reports/within_db_logistic_metrics.csv,f1_slow,european_football_2
+iter3_db_european_football_2_roc_auc,3,0.642857,reports/within_db_logistic_metrics.csv,roc_auc,european_football_2
+iter3_db_european_football_2_accuracy,3,0.666667,reports/within_db_logistic_metrics.csv,accuracy,european_football_2
+iter3_db_european_football_2_status,3,ok,reports/within_db_logistic_metrics.csv,status,european_football_2
+iter3_db_financial_n,3,30,reports/within_db_logistic_metrics.csv,n,financial
+iter3_db_financial_n_train,3,24.0,reports/within_db_logistic_metrics.csv,n_train,financial
+iter3_db_financial_n_test,3,6.0,reports/within_db_logistic_metrics.csv,n_test,financial
+iter3_db_financial_slow_pct,3,13,reports/within_db_logistic_metrics.csv,slow_pct,financial
+iter3_db_financial_f1_slow,3,0.0,reports/within_db_logistic_metrics.csv,f1_slow,financial
+iter3_db_financial_roc_auc,3,0.0,reports/within_db_logistic_metrics.csv,roc_auc,financial
+iter3_db_financial_accuracy,3,0.833333,reports/within_db_logistic_metrics.csv,accuracy,financial
+iter3_db_financial_status,3,ok,reports/within_db_logistic_metrics.csv,status,financial
+iter3_db_formula_1_n,3,34,reports/within_db_logistic_metrics.csv,n,formula_1
+iter3_db_formula_1_n_train,3,27.0,reports/within_db_logistic_metrics.csv,n_train,formula_1
+iter3_db_formula_1_n_test,3,7.0,reports/within_db_logistic_metrics.csv,n_test,formula_1
+iter3_db_formula_1_slow_pct,3,15,reports/within_db_logistic_metrics.csv,slow_pct,formula_1
+iter3_db_formula_1_f1_slow,3,0.0,reports/within_db_logistic_metrics.csv,f1_slow,formula_1
+iter3_db_formula_1_roc_auc,3,1.0,reports/within_db_logistic_metrics.csv,roc_auc,formula_1
+iter3_db_formula_1_accuracy,3,0.857143,reports/within_db_logistic_metrics.csv,accuracy,formula_1
+iter3_db_formula_1_status,3,ok,reports/within_db_logistic_metrics.csv,status,formula_1
+iter3_db_student_club_n,3,47,reports/within_db_logistic_metrics.csv,n,student_club
+iter3_db_student_club_n_train,3,37.0,reports/within_db_logistic_metrics.csv,n_train,student_club
+iter3_db_student_club_n_test,3,10.0,reports/within_db_logistic_metrics.csv,n_test,student_club
+iter3_db_student_club_slow_pct,3,0,reports/within_db_logistic_metrics.csv,slow_pct,student_club
+iter3_db_student_club_f1_slow,3,,reports/within_db_logistic_metrics.csv,f1_slow,student_club
+iter3_db_student_club_roc_auc,3,,reports/within_db_logistic_metrics.csv,roc_auc,student_club
+iter3_db_student_club_accuracy,3,,reports/within_db_logistic_metrics.csv,accuracy,student_club
+iter3_db_student_club_status,3,degenerate_train,reports/within_db_logistic_metrics.csv,status,student_club
+iter3_db_superhero_n,3,52,reports/within_db_logistic_metrics.csv,n,superhero
+iter3_db_superhero_n_train,3,41.0,reports/within_db_logistic_metrics.csv,n_train,superhero
+iter3_db_superhero_n_test,3,11.0,reports/within_db_logistic_metrics.csv,n_test,superhero
+iter3_db_superhero_slow_pct,3,4,reports/within_db_logistic_metrics.csv,slow_pct,superhero
+iter3_db_superhero_f1_slow,3,,reports/within_db_logistic_metrics.csv,f1_slow,superhero
+iter3_db_superhero_roc_auc,3,,reports/within_db_logistic_metrics.csv,roc_auc,superhero
+iter3_db_superhero_accuracy,3,,reports/within_db_logistic_metrics.csv,accuracy,superhero
+iter3_db_superhero_status,3,degenerate_test,reports/within_db_logistic_metrics.csv,status,superhero
+iter3_db_thrombosis_prediction_n,3,38,reports/within_db_logistic_metrics.csv,n,thrombosis_prediction
+iter3_db_thrombosis_prediction_n_train,3,30.0,reports/within_db_logistic_metrics.csv,n_train,thrombosis_prediction
+iter3_db_thrombosis_prediction_n_test,3,8.0,reports/within_db_logistic_metrics.csv,n_test,thrombosis_prediction
+iter3_db_thrombosis_prediction_slow_pct,3,0,reports/within_db_logistic_metrics.csv,slow_pct,thrombosis_prediction
+iter3_db_thrombosis_prediction_f1_slow,3,,reports/within_db_logistic_metrics.csv,f1_slow,thrombosis_prediction
+iter3_db_thrombosis_prediction_roc_auc,3,,reports/within_db_logistic_metrics.csv,roc_auc,thrombosis_prediction
+iter3_db_thrombosis_prediction_accuracy,3,,reports/within_db_logistic_metrics.csv,accuracy,thrombosis_prediction
+iter3_db_thrombosis_prediction_status,3,degenerate_train,reports/within_db_logistic_metrics.csv,status,thrombosis_prediction
+iter3_db_toxicology_n,3,26,reports/within_db_logistic_metrics.csv,n,toxicology
+iter3_db_toxicology_n_train,3,20.0,reports/within_db_logistic_metrics.csv,n_train,toxicology
+iter3_db_toxicology_n_test,3,6.0,reports/within_db_logistic_metrics.csv,n_test,toxicology
+iter3_db_toxicology_slow_pct,3,4,reports/within_db_logistic_metrics.csv,slow_pct,toxicology
+iter3_db_toxicology_f1_slow,3,,reports/within_db_logistic_metrics.csv,f1_slow,toxicology
+iter3_db_toxicology_roc_auc,3,,reports/within_db_logistic_metrics.csv,roc_auc,toxicology
+iter3_db_toxicology_accuracy,3,,reports/within_db_logistic_metrics.csv,accuracy,toxicology
+iter3_db_toxicology_status,3,degenerate_train,reports/within_db_logistic_metrics.csv,status,toxicology
+iter4_db_card_games_best_model,4,RF,reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_card_games_r2_log,4,0.1889,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_card_games_mae_s,4,0.209816,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_card_games_index_coverage,4,0.2857142857142857,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_codebase_community_best_model,4,Ridge(a=10),reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_codebase_community_r2_log,4,-5.9499,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_codebase_community_mae_s,4,0.761348,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_codebase_community_index_coverage,4,0.375,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_debit_card_specializing_best_model,4,Ridge(a=10),reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_debit_card_specializing_r2_log,4,0.2777,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_debit_card_specializing_mae_s,4,0.275529,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_debit_card_specializing_index_coverage,4,0.6666666666666666,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_european_football_2_best_model,4,Ridge(a=10),reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_european_football_2_r2_log,4,-0.6733,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_european_football_2_mae_s,4,0.324076,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_european_football_2_index_coverage,4,0.625,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_financial_best_model,4,RF,reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_financial_r2_log,4,0.0247,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_financial_mae_s,4,0.512498,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_financial_index_coverage,4,0.0,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_formula_1_best_model,4,GBM,reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_formula_1_r2_log,4,0.7197,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_formula_1_mae_s,4,0.032734,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_formula_1_index_coverage,4,0.5,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_student_club_best_model,4,Ridge(a=1),reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_student_club_r2_log,4,0.6307,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_student_club_mae_s,4,5.7e-05,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_student_club_index_coverage,4,0.875,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_superhero_best_model,4,GBM,reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_superhero_r2_log,4,0.3756,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_superhero_mae_s,4,0.000624,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_superhero_index_coverage,4,0.0,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_thrombosis_prediction_best_model,4,Ridge(a=10),reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_thrombosis_prediction_r2_log,4,-0.7107,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_thrombosis_prediction_mae_s,4,0.002268,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_thrombosis_prediction_index_coverage,4,0.3333333333333333,reports/within_db_schema_metrics.csv,index_coverage,
+iter4_db_toxicology_best_model,4,RF,reports/within_db_schema_metrics.csv,model,max r2_log
+iter4_db_toxicology_r2_log,4,-0.0528,reports/within_db_schema_metrics.csv,r2_log,
+iter4_db_toxicology_mae_s,4,0.118109,reports/within_db_schema_metrics.csv,mae_s,
+iter4_db_toxicology_index_coverage,4,1.0,reports/within_db_schema_metrics.csv,index_coverage,
+bridge_cross_schema_log_excerpt,bridge,"Train: 310 rows from 9 databases
+Test:  64 rows  | fast=55 slow=9
+Test runtime range: 0.0001s - 4.1456s  mean=0.2300s
+
+=== REGRESSION: all seen DBs -> unseen (financial + formula_1) ===
+  Linear Regression: MAE(log)=2.9160  RMSE(log)=3.8583  R2(log)=-1.2795  |  MAE(s)=36756.0998  RMSE(s)=283461.1723  R2(s)=-137347871362.8284
+  Ridge (alpha=1): MAE(log)=2.8807  RMSE(log)=3.7565  R2(log)=-1.1608  |  MAE(s)=17633.8931  RMSE(s)=135028.8421  R2(s)=-31166487685.9291
+  Ridge (alpha=10): MAE(log)=2.6737  RMSE(log)=3.2220  R2(log)=-0.5896  |  MAE(s)=255.5448  RMSE(s)=1865.3697  R2(s)=-5947912.1784
+  Lasso: MAE(log)=2.7063  RMSE(log)=3.2940  R2(log)=-0.6615  |  MAE(s)=528.1449  RMSE(s)=3956.3163  R2(s)=-26755727.7622
+
+=== PER-DB (Ridge alpha=1) ===
+  financial: n=30 fast=26 slow=4 | runtime 0.0003s-3.0621s mean=0.2202s
+    MAE(log)=2.7661  R2(log)=-1.3506  |  MAE(s)=26.1392  R2(s)=-44616.5697
+  formula_1: n=34 fast=29 slow=5 | runtime 0.0001s-4.1456s mean=0.2387s
+    MAE(log)=2.9818  R2(log)=-1.0616  |  MAE(s)=33170.1466  R2(s)=-48825647922.5095
+
+=== SEEN DB baseline (within-DB split, Ridge alpha=1) for comparison ===
+  Seen-DB (Ridge alpha=1): MAE(log)=3.2667  R2(log)=-0.4048  |  MAE(s)=0.8354  R2(s)=-147.5524
+DONE
+",reports/cross_schema_regression_log.txt,,truncate 8k; full file in reports/
+iter2_eda_class_fast_count,2_eda,249,reports/class_distribution.csv,count,fast
+iter2_eda_class_mid_count,2_eda,124,reports/class_distribution.csv,count,mid
+iter2_eda_class_slow_count,2_eda,125,reports/class_distribution.csv,count,slow

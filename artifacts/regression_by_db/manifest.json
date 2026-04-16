@@ -1,0 +1,124 @@
+{
+  "feature_order": [
+    "n_tokens",
+    "query_length",
+    "n_joins",
+    "n_tables_approx",
+    "n_where_predicates",
+    "has_group_by",
+    "has_order_by",
+    "has_having",
+    "has_distinct",
+    "has_limit",
+    "has_union",
+    "n_subqueries",
+    "has_subquery",
+    "max_nesting_depth",
+    "n_count",
+    "n_sum",
+    "n_avg",
+    "n_max",
+    "n_min",
+    "n_aggregations",
+    "has_between",
+    "has_in_clause",
+    "has_like",
+    "has_exists",
+    "has_correlated_subquery",
+    "schema_n_tables",
+    "schema_total_rows",
+    "schema_max_table_rows",
+    "schema_total_indexes",
+    "schema_index_coverage",
+    "schema_log_total_rows"
+  ],
+  "sql_features": [
+    "n_tokens",
+    "query_length",
+    "n_joins",
+    "n_tables_approx",
+    "n_where_predicates",
+    "has_group_by",
+    "has_order_by",
+    "has_having",
+    "has_distinct",
+    "has_limit",
+    "has_union",
+    "n_subqueries",
+    "has_subquery",
+    "max_nesting_depth",
+    "n_count",
+    "n_sum",
+    "n_avg",
+    "n_max",
+    "n_min",
+    "n_aggregations",
+    "has_between",
+    "has_in_clause",
+    "has_like",
+    "has_exists",
+    "has_correlated_subquery"
+  ],
+  "schema_features": [
+    "schema_n_tables",
+    "schema_total_rows",
+    "schema_max_table_rows",
+    "schema_total_indexes",
+    "schema_index_coverage",
+    "schema_log_total_rows"
+  ],
+  "target": "log_runtime",
+  "notes": "Predict log_runtime; convert to seconds via exp(pred).",
+  "databases": {
+    "card_games": {
+      "best_model": "RF",
+      "r2_log": 0.18893370802904275,
+      "n_train": 46
+    },
+    "codebase_community": {
+      "best_model": "Ridge(a=10)",
+      "r2_log": -5.94988983835483,
+      "n_train": 37
+    },
+    "debit_card_specializing": {
+      "best_model": "Ridge(a=10)",
+      "r2_log": 0.2776619293004222,
+      "n_train": 20
+    },
+    "european_football_2": {
+      "best_model": "Ridge(a=10)",
+      "r2_log": -0.6732916753738671,
+      "n_train": 41
+    },
+    "financial": {
+      "best_model": "RF",
+      "r2_log": 0.024745928713753362,
+      "n_train": 30
+    },
+    "formula_1": {
+      "best_model": "GBM",
+      "r2_log": 0.7196800822022478,
+      "n_train": 34
+    },
+    "student_club": {
+      "best_model": "Ridge(a=1)",
+      "r2_log": 0.6306745982960676,
+      "n_train": 47
+    },
+    "superhero": {
+      "best_model": "GBM",
+      "r2_log": 0.375604915305787,
+      "n_train": 52
+    },
+    "thrombosis_prediction": {
+      "best_model": "Ridge(a=10)",
+      "r2_log": -0.7107459420976403,
+      "n_train": 38
+    },
+    "toxicology": {
+      "best_model": "RF",
+      "r2_log": -0.05276303971578322,
+      "n_train": 26
+    }
+  }
+}
