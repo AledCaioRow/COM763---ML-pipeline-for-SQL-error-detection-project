@@ -1,55 +1,55 @@
 COM 763 — SQL Query Performance Predictor
 ============================================================
 
-Train set : 301 queries
-Test  set : 73 queries
+Train set : 310 queries
+Test  set : 64 queries
 
 Cross-Validation Results (on training set)
 --------------------------------------------------
-  XGBoost                    F1 = 0.5359 ± 0.0406
-  Random Forest              F1 = 0.5106 ± 0.0556
-  Gradient Boosting          F1 = 0.4741 ± 0.0237
-  Logistic Regression        F1 = 0.2694 ± 0.0856
+  Random Forest              F1 = 0.5217 ± 0.0902
+  XGBoost                    F1 = 0.5083 ± 0.0344
+  Gradient Boosting          F1 = 0.4799 ± 0.0199
+  Logistic Regression        F1 = 0.3407 ± 0.0489
 
-Best model: XGBoost
+Best model: Random Forest
 
 Held-Out Test Set Evaluation
 --------------------------------------------------
-  F1 Score : 0.1860
-  ROC-AUC  : 0.4610
+  F1 Score : 0.2703
+  ROC-AUC  : 0.5687
 
               precision    recall  f1-score   support
 
-        fast       0.92      0.52      0.66        66
-        slow       0.11      0.57      0.19         7
+        fast       0.89      0.58      0.70        55
+        slow       0.18      0.56      0.27         9
 
-    accuracy                           0.52        73
-   macro avg       0.52      0.54      0.42        73
-weighted avg       0.84      0.52      0.61        73
+    accuracy                           0.58        64
+   macro avg       0.53      0.57      0.49        64
+weighted avg       0.79      0.58      0.64        64
 
 Top 10 Features
 --------------------------------------------------
-  has_limit                      0.0874
-  max_nesting_depth              0.0848
-  n_subqueries                   0.0759
-  n_sum                          0.0738
-  n_joins                        0.0710
-  has_group_by                   0.0677
-  n_max                          0.0652
-  n_count                        0.0593
-  n_avg                          0.0576
-  has_between                    0.0455
+  query_length                   0.3019
+  n_tokens                       0.2113
+  n_where_predicates             0.0732
+  max_nesting_depth              0.0584
+  n_sum                          0.0435
+  n_aggregations                 0.0360
+  n_count                        0.0349
+  n_joins                        0.0330
+  n_tables_approx                0.0298
+  has_distinct                   0.0283
 
 === Per-Database Breakdown ===
 Database                     N    Acc     F1    Prec  Recall
-financial                   32   0.44   0.18    0.11    0.50
-formula_1                   41   0.59   0.19    0.11    0.67
+financial                   30   0.53   0.12    0.08    0.25
+formula_1                   34   0.62   0.38    0.25    0.80
 
 === Per-Difficulty Breakdown ===
 Difficulty                   N    Acc     F1
-challenging                 13   0.38   0.20
-moderate                    33   0.48   0.26
-simple                      27   0.63   0.00
+challenging                 14   0.50   0.53
+moderate                    28   0.57   0.14
+simple                      22   0.64   0.00
 
-Wilcoxon XGBoost vs Random Forest: stat=3.0000, p=0.6250
+Wilcoxon Random Forest vs XGBoost: stat=7.0000, p=1.0000
 Note: database-aware split was used. The following databases were held out and never seen during training: formula_1, financial.

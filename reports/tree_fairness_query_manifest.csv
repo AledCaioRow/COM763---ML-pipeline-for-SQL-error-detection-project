@@ -1,0 +1,4113 @@
+commit,query_key,question_id,db_id,label_binary,sql
+1a537e0,debit_card_specializing::qid::1476,1476,debit_card_specializing,1,"SELECT
+  SUM(CASE WHEN T1.Currency = 'CZK' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Currency = 'EUR' THEN T2.Consumption ELSE 0 END)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  SUBSTR(T2.Date, 1, 4) = '2012'"
+1a537e0,debit_card_specializing::qid::1479,1479,debit_card_specializing,1,"SELECT
+  SUBSTR(T2.Date, 1, 4)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Currency = 'CZK'
+GROUP BY
+  SUBSTR(T2.Date, 1, 4)
+ORDER BY
+  SUM(T2.Consumption) DESC
+LIMIT 1"
+1a537e0,debit_card_specializing::qid::1480,1480,debit_card_specializing,1,"SELECT
+  SUBSTR(T2.Date, 5, 2)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'
+GROUP BY
+  SUBSTR(T2.Date, 5, 2)
+ORDER BY
+  SUM(T2.Consumption) DESC
+LIMIT 1"
+1a537e0,debit_card_specializing::qid::1481,1481,debit_card_specializing,1,"SELECT
+  CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID),
+  CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID),
+  CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Currency = 'CZK'
+  AND T2.Consumption = (
+    SELECT
+      MIN(Consumption)
+    FROM yearmonth
+  )
+  AND T2.Date BETWEEN 201301 AND 201312"
+1a537e0,debit_card_specializing::qid::1482,1482,debit_card_specializing,1,"SELECT
+  CAST((
+    SUM(
+      CASE
+        WHEN T1.Segment = 'SME' AND T2.Date LIKE '2013%'
+        THEN T2.Consumption
+        ELSE 0
+      END
+    ) - SUM(
+      CASE
+        WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%'
+        THEN T2.Consumption
+        ELSE 0
+      END
+    )
+  ) AS DOUBLE) * 100 / SUM(
+    CASE
+      WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ),
+  CAST(SUM(
+    CASE
+      WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2013%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) - SUM(
+    CASE
+      WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) AS DOUBLE) * 100 / SUM(
+    CASE
+      WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ),
+  CAST(SUM(
+    CASE
+      WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2013%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) - SUM(
+    CASE
+      WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) AS DOUBLE) * 100 / SUM(
+    CASE
+      WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  )
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID"
+1a537e0,debit_card_specializing::qid::1484,1484,debit_card_specializing,0,"SELECT
+  SUM(CASE WHEN Country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END)
+FROM gasstations
+WHERE
+  Segment = 'Discount'"
+1a537e0,debit_card_specializing::qid::1498,1498,debit_card_specializing,1,"SELECT
+  SUM(Consumption)
+FROM yearmonth
+WHERE
+  SUBSTR(Date, 1, 4) = '2012'
+GROUP BY
+  SUBSTR(Date, 5, 2)
+ORDER BY
+  SUM(Consumption) DESC
+LIMIT 1"
+1a537e0,debit_card_specializing::qid::1501,1501,debit_card_specializing,0,"SELECT DISTINCT
+  T2.Country
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+INNER JOIN yearmonth AS T3
+  ON T1.CustomerID = T3.CustomerID
+WHERE
+  T3.Date = '201306'"
+1a537e0,debit_card_specializing::qid::1506,1506,debit_card_specializing,0,"SELECT DISTINCT
+  T3.Description
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+INNER JOIN products AS T3
+  ON T1.ProductID = T3.ProductID
+WHERE
+  T2.Country = 'CZE'"
+1a537e0,debit_card_specializing::qid::1507,1507,debit_card_specializing,0,"SELECT DISTINCT
+  T1.Time
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+WHERE
+  T2.ChainID = 11"
+1a537e0,debit_card_specializing::qid::1514,1514,debit_card_specializing,0,"SELECT DISTINCT
+  T3.Currency
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+INNER JOIN customers AS T3
+  ON T1.CustomerID = T3.CustomerID
+WHERE
+  T1.Date = '2012-08-24' AND T1.Time = '16:25:00'"
+1a537e0,debit_card_specializing::qid::1515,1515,debit_card_specializing,0,"SELECT
+  T2.Segment
+FROM transactions_1k AS T1
+INNER JOIN customers AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.date = '2012-08-23' AND T1.time = '21:20:00'"
+1a537e0,debit_card_specializing::qid::1521,1521,debit_card_specializing,0,"SELECT
+  COUNT(T1.TransactionID)
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+WHERE
+  T1.Date = '2012-08-26'
+  AND T1.Time BETWEEN '08:00:00' AND '09:00:00'
+  AND T2.Country = 'CZE'"
+1a537e0,debit_card_specializing::qid::1524,1524,debit_card_specializing,0,"SELECT
+  T2.Country
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+WHERE
+  T1.Date = '2012-08-24' AND  T1.Price = 548.4"
+1a537e0,debit_card_specializing::qid::1525,1525,debit_card_specializing,0,"SELECT
+  CAST(SUM(CASE WHEN T2.Currency = 'EUR' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.CustomerID)
+FROM transactions_1k AS T1
+INNER JOIN customers AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Date = '2012-08-25'"
+1a537e0,debit_card_specializing::qid::1528,1528,debit_card_specializing,0,"SELECT
+  CAST(SUM(CASE WHEN Country = 'SVK' AND Segment = 'Premium' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END)
+FROM gasstations"
+1a537e0,debit_card_specializing::qid::1533,1533,debit_card_specializing,0,"SELECT
+  T2.Consumption
+FROM transactions_1k AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Price / T1.Amount > 29.00
+  AND T1.ProductID = 5
+  AND T2.Date = '201208'"
+1a537e0,student_club::qid::1312,1312,student_club,0,"SELECT
+  T2.major_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.first_name = 'Angela' AND T1.last_name = 'Sanders'"
+1a537e0,student_club::qid::1317,1317,student_club,0,"SELECT
+  COUNT(T1.event_id)
+FROM event AS T1
+INNER JOIN attendance AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN member AS T3
+  ON T2.link_to_member = T3.member_id
+WHERE
+  T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'"
+1a537e0,student_club::qid::1322,1322,student_club,0,SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10
+1a537e0,student_club::qid::1323,1323,student_club,0,SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 AND NOT EXISTS (SELECT 1 FROM event AS E WHERE E.event_id = T1.event_id AND E.type = 'Fundraiser')
+1a537e0,student_club::qid::1331,1331,student_club,0,"SELECT
+  T2.amount
+FROM member AS T1
+INNER JOIN income AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.position = 'Vice President'"
+1a537e0,student_club::qid::1334,1334,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name
+FROM member AS T1
+INNER JOIN zip_code AS T2
+  ON T1.zip = T2.zip_code
+WHERE
+  T2.state = 'Illinois'"
+1a537e0,student_club::qid::1338,1338,student_club,0,"SELECT
+  T3.approved
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+WHERE
+  T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'"
+1a537e0,student_club::qid::1339,1339,student_club,0,"SELECT
+  AVG(T2.cost)
+FROM member AS T1
+INNER JOIN expense AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.last_name = 'Allen'
+  AND T1.first_name = 'Elijah'
+  AND (
+    SUBSTR(T2.expense_date, 6, 2) = '09'
+    OR SUBSTR(T2.expense_date, 6, 2) = '10'
+  )"
+1a537e0,student_club::qid::1340,1340,student_club,0,"SELECT
+  SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event"
+1a537e0,student_club::qid::1344,1344,student_club,0,"SELECT
+  notes
+FROM income
+WHERE
+  source = 'Fundraising' AND date_received = '2019-09-14'"
+1a537e0,student_club::qid::1346,1346,student_club,0,"SELECT
+  phone
+FROM member
+WHERE
+  first_name = 'Carlo' AND last_name = 'Jacobs'"
+1a537e0,student_club::qid::1350,1350,student_club,0,"SELECT
+  T1.event_status
+FROM budget AS T1
+INNER JOIN expense AS T2
+  ON T1.budget_id = T2.link_to_budget
+WHERE
+  T2.expense_description = 'Post Cards, Posters'
+  AND T2.expense_date = '2019-08-20'"
+1a537e0,student_club::qid::1351,1351,student_club,0,"SELECT
+  T2.major_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.first_name = 'Brent' AND T1.last_name = 'Thomason'"
+1a537e0,student_club::qid::1352,1352,student_club,0,"SELECT
+  COUNT(T1.member_id)
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'"
+1a537e0,student_club::qid::1356,1356,student_club,0,"SELECT
+  T2.department
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.position = 'President'"
+1a537e0,student_club::qid::1357,1357,student_club,0,"SELECT
+  T2.date_received
+FROM member AS T1
+INNER JOIN income AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.first_name = 'Connor'
+  AND T1.last_name = 'Hilton'
+  AND T2.source = 'Dues'"
+1a537e0,student_club::qid::1359,1359,student_club,0,"SELECT
+  CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END)
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T1.link_to_event = T2.event_id
+WHERE
+  T1.category = 'Advertisement' AND T2.type = 'Meeting'"
+1a537e0,student_club::qid::1361,1361,student_club,0,"SELECT
+  SUM(cost)
+FROM expense
+WHERE
+  expense_description = 'Pizza'"
+1a537e0,student_club::qid::1368,1368,student_club,0,"SELECT
+  T2.major_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.phone = '809-555-3360'"
+1a537e0,student_club::qid::1371,1371,student_club,0,"SELECT
+  COUNT(T2.link_to_member)
+FROM event AS T1
+INNER JOIN attendance AS T2
+  ON T1.event_id = T2.link_to_event
+WHERE
+  T1.event_name = 'Women''s Soccer'"
+1a537e0,student_club::qid::1375,1375,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T2.department = 'School of Applied Sciences, Technology and Education'"
+1a537e0,student_club::qid::1376,1376,student_club,0,"SELECT
+  T2.event_name
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T1.link_to_event = T2.event_id
+WHERE
+  T2.status = 'Closed'
+ORDER BY
+  T1.spent / T1.amount DESC
+LIMIT 1"
+1a537e0,student_club::qid::1378,1378,student_club,0,"SELECT
+  MAX(spent)
+FROM budget"
+1a537e0,student_club::qid::1380,1380,student_club,0,SELECT SUM(spent) FROM budget WHERE category = 'Food'
+1a537e0,student_club::qid::1381,1381,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name
+FROM member AS T1
+INNER JOIN attendance AS T2
+  ON T1.member_id = T2.link_to_member
+GROUP BY
+  T2.link_to_member
+HAVING
+  COUNT(T2.link_to_event) > 7"
+1a537e0,student_club::qid::1387,1387,student_club,0,"SELECT
+  T4.first_name,
+  T4.last_name
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+INNER JOIN member AS T4
+  ON T3.link_to_member = T4.member_id
+WHERE
+  T1.event_name = 'Yearly Kickoff'"
+1a537e0,student_club::qid::1389,1389,student_club,0,"SELECT
+  T1.event_name
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+ORDER BY
+  T3.cost
+LIMIT 1"
+1a537e0,student_club::qid::1390,1390,student_club,0,"SELECT
+  CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS DOUBLE) * 100 / SUM(T3.cost)
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget"
+1a537e0,student_club::qid::1392,1392,student_club,0,"SELECT
+  source
+FROM income
+WHERE
+  date_received BETWEEN '2019-09-01' AND '2019-09-30'
+ORDER BY
+  source DESC
+LIMIT 1"
+1a537e0,student_club::qid::1394,1394,student_club,0,"SELECT
+  COUNT(T2.member_id)
+FROM major AS T1
+INNER JOIN member AS T2
+  ON T1.major_id = T2.link_to_major
+WHERE
+  T1.major_name = 'Physics Teaching'"
+1a537e0,student_club::qid::1398,1398,student_club,0,"SELECT
+  T2.event_name
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T1.link_to_event = T2.event_id
+WHERE
+  T1.category = 'Advertisement'
+ORDER BY
+  T1.spent DESC
+LIMIT 1"
+1a537e0,student_club::qid::1399,1399,student_club,0,"SELECT
+  CASE WHEN T3.event_name = 'Women''s Soccer' THEN 'YES' END AS result
+FROM member AS T1
+INNER JOIN attendance AS T2
+  ON T1.member_id = T2.link_to_member
+INNER JOIN event AS T3
+  ON T2.link_to_event = T3.event_id
+WHERE
+  T1.first_name = 'Maya' AND T1.last_name = 'Mclean'"
+1a537e0,student_club::qid::1401,1401,student_club,0,"SELECT
+  T3.cost
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+WHERE
+  T1.event_name = 'September Speaker'
+  AND T3.expense_description = 'Posters'"
+1a537e0,student_club::qid::1403,1403,student_club,0,"SELECT
+  T2.event_name
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T2.event_id = T1.link_to_event
+WHERE
+  T1.event_status = 'Closed' AND T1.remaining < 0
+ORDER BY
+  T1.remaining
+LIMIT 1"
+1a537e0,student_club::qid::1404,1404,student_club,0,"SELECT T1.type, SUM(T3.cost) AS total_cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' GROUP BY T1.type"
+1a537e0,student_club::qid::1405,1405,student_club,0,"SELECT T2.category, SUM(T2.amount) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC"
+1a537e0,student_club::qid::1409,1409,student_club,0,"SELECT
+  SUM(cost)
+FROM expense
+WHERE
+  expense_date = '2019-08-20'"
+1a537e0,student_club::qid::1410,1410,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name,
+  SUM(T2.cost)
+FROM member AS T1
+INNER JOIN expense AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.member_id = 'rec4BLdZHS2Blfp4v'"
+1a537e0,student_club::qid::1411,1411,student_club,0,"SELECT
+  T2.expense_description
+FROM member AS T1
+INNER JOIN expense AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'"
+1a537e0,student_club::qid::1422,1422,student_club,0,"SELECT DISTINCT
+  T2.category
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+WHERE
+  T1.location = 'MU 215'"
+1a537e0,student_club::qid::1426,1426,student_club,0,"SELECT
+  T2.last_name,
+  T1.department,
+  T1.college
+FROM major AS T1
+INNER JOIN member AS T2
+  ON T1.major_id = T2.link_to_major
+WHERE
+  T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'"
+1a537e0,student_club::qid::1427,1427,student_club,0,"SELECT DISTINCT
+  T2.category,
+  T1.type
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+WHERE
+  T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'"
+1a537e0,student_club::qid::1432,1432,student_club,0,"SELECT
+  CAST(SUM(CASE WHEN T2.amount = 50 THEN 1.0 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T2.income_id)
+FROM member AS T1
+INNER JOIN income AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.position = 'Member' AND T1.t_shirt_size = 'Medium'"
+1a537e0,student_club::qid::1435,1435,student_club,0,"SELECT DISTINCT
+  event_name
+FROM event
+WHERE
+  type = 'Game'
+  AND DATE(SUBSTR(event_date, 1, 10)) BETWEEN '2019-03-15' AND '2020-03-20'
+  AND status = 'Closed'"
+1a537e0,student_club::qid::1457,1457,student_club,0,"SELECT DISTINCT
+  T3.first_name,
+  T3.last_name,
+  T3.phone
+FROM expense AS T1
+INNER JOIN budget AS T2
+  ON T1.link_to_budget = T2.budget_id
+INNER JOIN member AS T3
+  ON T3.member_id = T1.link_to_member
+WHERE
+  T1.cost > (
+    SELECT
+      AVG(T1.cost)
+    FROM expense AS T1
+    INNER JOIN budget AS T2
+      ON T1.link_to_budget = T2.budget_id
+    INNER JOIN member AS T3
+      ON T3.member_id = T1.link_to_member
+  )"
+1a537e0,student_club::qid::1460,1460,student_club,0,"SELECT
+  T2.first_name,
+  T2.last_name,
+  T1.cost
+FROM expense AS T1
+INNER JOIN member AS T2
+  ON T1.link_to_member = T2.member_id
+WHERE
+  T1.expense_description = 'Water, Veggie tray, supplies'"
+1a537e0,student_club::qid::1464,1464,student_club,0,"SELECT DISTINCT
+  T3.first_name,
+  T3.last_name,
+  T4.amount
+FROM event AS T1
+INNER JOIN attendance AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN member AS T3
+  ON T3.member_id = T2.link_to_member
+INNER JOIN income AS T4
+  ON T4.link_to_member = T3.member_id
+WHERE
+  T4.date_received = '2019-09-09'"
+1a537e0,thrombosis_prediction::qid::1149,1149,thrombosis_prediction,0,"SELECT
+  CAST(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
+FROM Patient
+WHERE
+  SEX = 'M'"
+1a537e0,thrombosis_prediction::qid::1152,1152,thrombosis_prediction,0,"SELECT
+  SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
+FROM Patient
+WHERE
+  Diagnosis = 'SLE'"
+1a537e0,thrombosis_prediction::qid::1153,1153,thrombosis_prediction,0,"SELECT
+  T1.Diagnosis,
+  T2.Date
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T1.ID = 30609"
+1a537e0,thrombosis_prediction::qid::1157,1157,thrombosis_prediction,0,"SELECT DISTINCT
+  T1.ID,
+  T1.SEX,
+  T1.Diagnosis
+FROM Patient AS T1
+INNER JOIN Examination AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.Thrombosis = 2"
+1a537e0,thrombosis_prediction::qid::1166,1166,thrombosis_prediction,0,"SELECT
+  T2.Symptoms,
+  T1.Diagnosis
+FROM Patient AS T1
+INNER JOIN Examination AS T2
+  ON T1.ID = T2.ID
+WHERE
+  NOT T2.Symptoms IS NULL
+ORDER BY
+  T1.Birthday DESC
+LIMIT 1"
+1a537e0,thrombosis_prediction::qid::1195,1195,thrombosis_prediction,0,"SELECT
+  AVG(T2.ALB)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.PLT > 400 AND T1.Diagnosis = 'SLE' AND T1.SEX = 'F'"
+1a537e0,thrombosis_prediction::qid::1198,1198,thrombosis_prediction,0,"SELECT
+  COUNT(ID)
+FROM Patient
+WHERE
+  SEX = 'F' AND Diagnosis = 'APS'"
+1a537e0,thrombosis_prediction::qid::1205,1205,thrombosis_prediction,0,"SELECT
+  CASE
+    WHEN (
+      T1.SEX = 'F' AND T2.UA > 6.5
+    )
+    OR (
+      T1.SEX = 'M' AND T2.UA > 8.0
+    )
+    THEN TRUE
+    ELSE FALSE
+  END
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T1.ID = 57266"
+1a537e0,thrombosis_prediction::qid::1208,1208,thrombosis_prediction,0,"SELECT DISTINCT
+  T1.ID
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T1.SEX = 'M' AND T2.GPT >= 60"
+1a537e0,thrombosis_prediction::qid::1252,1252,thrombosis_prediction,0,"SELECT
+  COUNT(T1.ID)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+INNER JOIN Examination AS T3
+  ON T3.ID = T2.ID
+WHERE
+  T2.IGG BETWEEN 900 AND 2000 AND NOT T3.Symptoms IS NULL"
+1a537e0,thrombosis_prediction::qid::1267,1267,thrombosis_prediction,0,"SELECT
+  COUNT(T1.ID)
+FROM Examination AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.SM IN ('negative', '0') AND T1.Thrombosis = 0"
+1a537e0,thrombosis_prediction::qid::1275,1275,thrombosis_prediction,0,"SELECT
+  COUNT(DISTINCT T1.ID)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.CENTROMEA IN ('negative', '0')
+  AND T2.SSB IN ('negative', '0')
+  AND T1.SEX = 'M'"
+1a537e0,thrombosis_prediction::qid::1302,1302,thrombosis_prediction,0,"SELECT
+  COUNT(T1.ID)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+INNER JOIN Examination AS T3
+  ON T1.ID = T3.ID
+WHERE
+  T2.CPK < 250
+  AND (
+    T3.KCT = '+' OR T3.RVVT = '+' OR T3.LAC = '+'
+  )"
+1a537e0,formula_1::qid::846,846,formula_1,0,"SELECT
+  T2.driverRef
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 20
+ORDER BY
+  T1.q1 DESC
+LIMIT 5"
+1a537e0,formula_1::qid::847,847,formula_1,0,"SELECT
+  T2.surname
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 19
+ORDER BY
+  T1.q2 ASC
+LIMIT 1"
+1a537e0,formula_1::qid::850,850,formula_1,0,"SELECT DISTINCT
+  T2.name
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T1.country = 'Germany'"
+1a537e0,formula_1::qid::854,854,formula_1,0,"SELECT DISTINCT
+  T1.lat,
+  T1.lng
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'Australian Grand Prix'"
+1a537e0,formula_1::qid::857,857,formula_1,0,"SELECT DISTINCT
+  T1.lat,
+  T1.lng
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'Abu Dhabi Grand Prix'"
+1a537e0,formula_1::qid::859,859,formula_1,0,"SELECT
+  T1.q1
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna'"
+1a537e0,formula_1::qid::861,861,formula_1,0,"SELECT
+  T2.number
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 903 AND T1.q3 LIKE '1:54%'"
+1a537e0,formula_1::qid::865,865,formula_1,0,"SELECT
+  T1.forename,
+  T1.surname
+FROM drivers AS T1
+INNER JOIN results AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T2.raceId = 592 AND NOT T2.time IS NULL AND NOT T1.dob IS NULL
+ORDER BY
+  T1.dob ASC
+LIMIT 1"
+1a537e0,formula_1::qid::866,866,formula_1,0,"SELECT DISTINCT
+  T2.forename,
+  T2.surname,
+  T2.url
+FROM lapTimes AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 161 AND T1.time LIKE '1:27%'"
+1a537e0,formula_1::qid::868,868,formula_1,0,"SELECT DISTINCT
+  T1.lat,
+  T1.lng
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'Malaysian Grand Prix'"
+1a537e0,formula_1::qid::869,869,formula_1,0,"SELECT
+  T2.url
+FROM constructorResults AS T1
+INNER JOIN constructors AS T2
+  ON T2.constructorId = T1.constructorId
+WHERE
+  T1.raceId = 9
+ORDER BY
+  T1.points DESC
+LIMIT 1"
+1a537e0,formula_1::qid::872,872,formula_1,0,"SELECT
+  T2.code
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 45 AND T1.q3 LIKE '1:33%'"
+1a537e0,formula_1::qid::875,875,formula_1,0,"SELECT
+  T2.url
+FROM races AS T1
+INNER JOIN seasons AS T2
+  ON T2.year = T1.year
+WHERE
+  T1.raceId = 901"
+1a537e0,formula_1::qid::877,877,formula_1,0,"SELECT
+  T1.forename,
+  T1.surname
+FROM drivers AS T1
+INNER JOIN results AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T2.raceId = 872 AND NOT T2.time IS NULL
+ORDER BY
+  T1.dob DESC
+LIMIT 1"
+1a537e0,formula_1::qid::909,909,formula_1,0,"SELECT
+  CAST(COUNT(CASE WHEN T1.country = 'Germany' THEN T2.circuitID END) AS DOUBLE) * 100 / COUNT(T2.circuitId)
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'European Grand Prix'"
+1a537e0,formula_1::qid::910,910,formula_1,0,"SELECT
+  lat,
+  lng
+FROM circuits
+WHERE
+  name = 'Silverstone Circuit'"
+1a537e0,formula_1::qid::912,912,formula_1,0,"SELECT
+  circuitRef
+FROM circuits
+WHERE
+  name = 'Marina Bay Street Circuit'"
+1a537e0,formula_1::qid::915,915,formula_1,0,"SELECT
+  nationality
+FROM drivers
+WHERE
+  NOT dob IS NULL
+ORDER BY
+  dob ASC
+LIMIT 1"
+1a537e0,formula_1::qid::928,928,formula_1,0,"SELECT
+  T3.forename,
+  T3.surname,
+  T3.driverRef
+FROM races AS T1
+INNER JOIN results AS T2
+  ON T2.raceId = T1.raceId
+INNER JOIN drivers AS T3
+  ON T3.driverId = T2.driverId
+WHERE
+  T1.name = 'Canadian Grand Prix' AND T2.rank = 1 AND T1.year = 2007"
+1a537e0,formula_1::qid::930,930,formula_1,0,"SELECT
+  name
+FROM races
+WHERE
+  raceId IN (
+    SELECT
+      raceId
+    FROM results
+    WHERE
+      rank = 1
+      AND driverId = (
+        SELECT
+          driverId
+        FROM drivers
+        WHERE
+          forename = 'Lewis' AND surname = 'Hamilton'
+      )
+  )"
+1a537e0,formula_1::qid::945,945,formula_1,0,"SELECT
+  COUNT(circuitId)
+FROM circuits
+WHERE
+  location = 'Adelaide' AND country = 'Australia'"
+1a537e0,formula_1::qid::950,950,formula_1,0,"SELECT
+  T2.name
+FROM constructorStandings AS T1
+INNER JOIN constructors AS T2
+  ON T1.constructorId = T2.constructorId
+WHERE
+  T1.points = 0 AND T1.raceId = 291"
+1a537e0,formula_1::qid::951,951,formula_1,0,"SELECT
+  COUNT(T1.raceId)
+FROM constructorStandings AS T1
+INNER JOIN constructors AS T2
+  ON T1.constructorId = T2.constructorId
+WHERE
+  T1.points = 0 AND T2.nationality = 'Japanese'
+GROUP BY
+  T1.constructorId
+HAVING
+  COUNT(raceId) = 2"
+1a537e0,formula_1::qid::963,963,formula_1,1,"SELECT
+  COUNT(T1.driverId)
+FROM drivers AS T1
+INNER JOIN lapTimes AS T2
+  ON T1.driverId = T2.driverId
+WHERE
+  T1.nationality = 'French'
+  AND (
+    CAST(SUBSTR(T2.time, 1, 2) AS SIGNED) * 60 + CAST(SUBSTR(T2.time, 4, 2) AS SIGNED) + CAST(SUBSTR(T2.time, 7, 2) AS DOUBLE) / 1000
+  ) < 120"
+1a537e0,formula_1::qid::964,964,formula_1,0,SELECT code FROM drivers WHERE Nationality = 'American'
+1a537e0,formula_1::qid::967,967,formula_1,0,SELECT COUNT(*) FROM (SELECT T1.nationality FROM drivers AS T1 ORDER BY T1.dob DESC LIMIT 3) AS T3 WHERE T3.nationality = 'Dutch'
+1a537e0,formula_1::qid::971,971,formula_1,0,SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY dob ASC LIMIT 1
+1a537e0,formula_1::qid::978,978,formula_1,0,"SELECT DISTINCT
+  location,
+  lat,
+  lng
+FROM circuits
+WHERE
+  country = 'Austria'"
+1a537e0,formula_1::qid::981,981,formula_1,0,"SELECT
+  T3.year,
+  T3.name,
+  T3.date,
+  T3.time
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T1.driverId = T2.driverId
+INNER JOIN races AS T3
+  ON T1.raceId = T3.raceId
+WHERE
+  T1.driverId = (
+    SELECT
+      driverId
+    FROM drivers
+    ORDER BY
+      dob DESC
+    LIMIT 1
+  )
+ORDER BY
+  T3.date ASC
+LIMIT 1"
+1a537e0,superhero::qid::717,717,superhero,0,SELECT  T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2  ON T1.id = T2.hero_id INNER JOIN superpower AS T3  ON T2.power_id = T3.id WHERE  T1.superhero_name = '3-D Man'
+1a537e0,formula_1::qid::994,994,formula_1,0,"SELECT
+  SUM(T1.points),
+  T2.name,
+  T2.nationality
+FROM constructorResults AS T1
+INNER JOIN constructors AS T2
+  ON T1.constructorId = T2.constructorId
+INNER JOIN races AS T3
+  ON T3.raceid = T1.raceid
+WHERE
+  T3.name = 'Monaco Grand Prix' AND T3.year BETWEEN 1980 AND 2010
+GROUP BY
+  T2.name
+ORDER BY
+  SUM(T1.points) DESC
+LIMIT 1"
+1a537e0,formula_1::qid::1001,1001,formula_1,0,"SELECT
+  T2.forename,
+  T2.surname
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T1.driverId = T2.driverId
+INNER JOIN races AS T3
+  ON T1.raceid = T3.raceid
+WHERE
+  NOT q3 IS NULL
+  AND T3.year = 2008
+  AND T3.circuitId IN (
+    SELECT
+      circuitId
+    FROM circuits
+    WHERE
+      name = 'Marina Bay Street Circuit'
+  )
+ORDER BY
+  CAST(SUBSTR(q3, 1, INSTR(q3, ':') - 1) AS SIGNED) * 60 + CAST(SUBSTR(q3, INSTR(q3, ':') + 1, INSTR(q3, '.') - INSTR(q3, ':') - 1) AS DOUBLE) + CAST(SUBSTR(q3, INSTR(q3, '.') + 1) AS DOUBLE) / 1000 ASC
+LIMIT 1"
+1a537e0,formula_1::qid::1011,1011,formula_1,1,"WITH lap_times_in_seconds AS (SELECT driverId, (CASE WHEN SUBSTR(time, 1, INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, 1, INSTR(time, ':') - 1) AS FLOAT) * 60 ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) AS FLOAT) ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, '.') + 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, '.') + 1) AS FLOAT) / 1000 ELSE 0 END) AS time_in_seconds FROM lapTimes) SELECT T2.forename, T2.surname, T1.driverId FROM (SELECT driverId, MIN(time_in_seconds) AS min_time_in_seconds FROM lap_times_in_seconds GROUP BY driverId) AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T1.min_time_in_seconds ASC LIMIT 20"
+1a537e0,formula_1::qid::1014,1014,formula_1,1,"WITH fastest_lap_times AS (
+  SELECT
+    T1.raceId,
+    T1.FastestLapTime,
+    (
+      CAST(SUBSTR(T1.FastestLapTime, 1, INSTR(T1.FastestLapTime, ':') - 1) AS DOUBLE) * 60
+    ) + (
+      CAST(SUBSTR(
+        T1.FastestLapTime,
+        INSTR(T1.FastestLapTime, ':') + 1,
+        INSTR(T1.FastestLapTime, '.') - INSTR(T1.FastestLapTime, ':') - 1
+      ) AS DOUBLE)
+    ) + (
+      CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS DOUBLE) / 1000
+    ) AS time_in_seconds
+  FROM results AS T1
+  WHERE
+    NOT T1.FastestLapTime IS NULL
+)
+SELECT
+  T1.FastestLapTime AS lap_record
+FROM results AS T1
+INNER JOIN races AS T2
+  ON T1.raceId = T2.raceId
+INNER JOIN circuits AS T3
+  ON T2.circuitId = T3.circuitId
+INNER JOIN (
+  SELECT
+    MIN(fastest_lap_times.time_in_seconds) AS min_time_in_seconds
+  FROM fastest_lap_times
+  INNER JOIN races AS T2
+    ON fastest_lap_times.raceId = T2.raceId
+  INNER JOIN circuits AS T3
+    ON T2.circuitId = T3.circuitId
+  WHERE
+    T3.country = 'Italy'
+) AS T4
+  ON (
+    CAST(SUBSTR(T1.FastestLapTime, 1, INSTR(T1.FastestLapTime, ':') - 1) AS DOUBLE) * 60
+  ) + (
+    CAST(SUBSTR(
+      T1.FastestLapTime,
+      INSTR(T1.FastestLapTime, ':') + 1,
+      INSTR(T1.FastestLapTime, '.') - INSTR(T1.FastestLapTime, ':') - 1
+    ) AS DOUBLE)
+  ) + (
+    CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS DOUBLE) / 1000
+  ) = T4.min_time_in_seconds
+LIMIT 1"
+1a537e0,superhero::qid::719,719,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T3.power_name = 'Super Strength' AND T1.height_cm > 200"
+1a537e0,superhero::qid::723,723,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+INNER JOIN colour AS T4
+  ON T1.eye_colour_id = T4.id
+WHERE
+  T3.power_name = 'Agility' AND T4.colour = 'Blue'"
+1a537e0,superhero::qid::724,724,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.hair_colour_id = T3.id
+WHERE
+  T2.colour = 'Blue' AND T3.colour = 'Blond'"
+1a537e0,superhero::qid::726,726,superhero,0,"SELECT
+  superhero_name,
+  height_cm,
+  RANK() OVER (ORDER BY height_cm DESC) AS HeightRank
+FROM superhero
+INNER JOIN publisher
+  ON superhero.publisher_id = publisher.id
+WHERE
+  publisher.publisher_name = 'Marvel Comics'"
+1a537e0,superhero::qid::728,728,superhero,0,"SELECT
+  colour.colour AS EyeColor,
+  COUNT(superhero.id) AS Count,
+  RANK() OVER (ORDER BY COUNT(superhero.id) DESC) AS PopularityRank
+FROM superhero
+INNER JOIN colour
+  ON superhero.eye_colour_id = colour.id
+INNER JOIN publisher
+  ON superhero.publisher_id = publisher.id
+WHERE
+  publisher.publisher_name = 'Marvel Comics'
+GROUP BY
+  colour.colour"
+1a537e0,superhero::qid::730,730,superhero,1,"SELECT
+  superhero_name
+FROM superhero AS T1
+WHERE
+  EXISTS(
+    SELECT
+      1
+    FROM hero_power AS T2
+    INNER JOIN superpower AS T3
+      ON T2.power_id = T3.id
+    WHERE
+      T3.power_name = 'Super Strength' AND T1.id = T2.hero_id
+  )
+  AND EXISTS(
+    SELECT
+      1
+    FROM publisher AS T4
+    WHERE
+      T4.publisher_name = 'Marvel Comics' AND T1.publisher_id = T4.id
+  )"
+1a537e0,superhero::qid::732,732,superhero,0,"SELECT
+  T2.publisher_name
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN hero_attribute AS T3
+  ON T1.id = T3.hero_id
+INNER JOIN attribute AS T4
+  ON T3.attribute_id = T4.id
+WHERE
+  T4.attribute_name = 'Speed'
+ORDER BY
+  T3.attribute_value
+LIMIT 1"
+1a537e0,superhero::qid::733,733,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.eye_colour_id = T3.id
+WHERE
+  T2.publisher_name = 'Marvel Comics' AND T3.colour = 'Gold'"
+1a537e0,superhero::qid::736,736,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T2.attribute_id = T3.id
+WHERE
+  T3.attribute_name = 'Intelligence'
+ORDER BY
+  T2.attribute_value
+LIMIT 1"
+1a537e0,superhero::qid::737,737,superhero,0,"SELECT
+  T2.race
+FROM superhero AS T1
+INNER JOIN race AS T2
+  ON T1.race_id = T2.id
+WHERE
+  T1.superhero_name = 'Copycat'"
+1a537e0,superhero::qid::738,738,superhero,1,"SELECT
+  superhero_name
+FROM superhero AS T1
+WHERE
+  EXISTS(
+    SELECT
+      1
+    FROM hero_attribute AS T2
+    INNER JOIN attribute AS T3
+      ON T2.attribute_id = T3.id
+    WHERE
+      T3.attribute_name = 'Durability'
+      AND T2.attribute_value < 50
+      AND T1.id = T2.hero_id
+  )"
+1a537e0,superhero::qid::739,739,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T3.power_name = 'Death Touch'"
+1a537e0,superhero::qid::740,740,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T2.attribute_id = T3.id
+INNER JOIN gender AS T4
+  ON T1.gender_id = T4.id
+WHERE
+  T3.attribute_name = 'Strength'
+  AND T2.attribute_value = 100
+  AND T4.gender = 'Female'"
+1a537e0,superhero::qid::743,743,superhero,0,"SELECT
+  (
+    CAST(COUNT(*) AS DOUBLE) * 100 / (
+      SELECT
+        COUNT(*)
+      FROM superhero
+    )
+  ),
+  CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS DOUBLE)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN alignment AS T3
+  ON T3.id = T1.alignment_id
+WHERE
+  T3.alignment = 'Bad'"
+1a537e0,superhero::qid::744,744,superhero,0,"SELECT
+  SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id"
+1a537e0,superhero::qid::745,745,superhero,0,"SELECT
+  id
+FROM publisher
+WHERE
+  publisher_name = 'Star Trek'"
+1a537e0,superhero::qid::747,747,superhero,0,"SELECT
+  COUNT(id)
+FROM superhero
+WHERE
+  full_name IS NULL"
+1a537e0,superhero::qid::750,750,superhero,0,"SELECT
+  AVG(T1.weight_kg)
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id
+WHERE
+  T2.gender = 'Female'"
+1a537e0,superhero::qid::751,751,superhero,0,"SELECT
+  T3.power_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T3.id = T2.power_id
+INNER JOIN gender AS T4
+  ON T4.id = T1.gender_id
+WHERE
+  T4.gender = 'Male'
+LIMIT 5"
+1a537e0,superhero::qid::753,753,superhero,0,"SELECT DISTINCT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'"
+1a537e0,superhero::qid::758,758,superhero,0,"SELECT DISTINCT
+  T3.colour
+FROM superhero AS T1
+INNER JOIN race AS T2
+  ON T1.race_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.hair_colour_id = T3.id
+WHERE
+  T1.height_cm = 185 AND T2.race = 'Human'"
+1a537e0,superhero::qid::760,760,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+WHERE
+  T1.height_cm BETWEEN 150 AND 180"
+1a537e0,superhero::qid::761,761,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id
+WHERE
+  T2.gender = 'Male'
+  AND T1.weight_kg * 100 > (
+    SELECT
+      AVG(weight_kg)
+    FROM superhero
+  ) * 79"
+1a537e0,superhero::qid::764,764,superhero,0,"SELECT DISTINCT
+  T2.power_name
+FROM hero_power AS T1
+INNER JOIN superpower AS T2
+  ON T1.power_id = T2.id
+WHERE
+  T1.hero_id = 1"
+1a537e0,superhero::qid::765,765,superhero,0,"SELECT
+  COUNT(T1.hero_id)
+FROM hero_power AS T1
+INNER JOIN superpower AS T2
+  ON T1.power_id = T2.id
+WHERE
+  T2.power_name = 'Stealth'"
+1a537e0,superhero::qid::766,766,superhero,0,SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC LIMIT 1
+1a537e0,superhero::qid::769,769,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T3.id = T2.attribute_id
+INNER JOIN publisher AS T4
+  ON T4.id = T1.publisher_id
+WHERE
+  T4.publisher_name = 'Dark Horse Comics'
+  AND T3.attribute_name = 'Durability'
+ORDER BY
+  T2.attribute_value DESC
+LIMIT 1"
+1a537e0,superhero::qid::772,772,superhero,0,"SELECT
+  T1.eye_colour_id,
+  T1.hair_colour_id,
+  T1.skin_colour_id
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T2.id = T1.publisher_id
+INNER JOIN gender AS T3
+  ON T3.id = T1.gender_id
+WHERE
+  T2.publisher_name = 'Dark Horse Comics' AND T3.gender = 'Female'"
+1a537e0,superhero::qid::773,773,superhero,0,"SELECT
+  T1.superhero_name,
+  T2.publisher_name
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+WHERE
+  T1.eye_colour_id = T1.hair_colour_id
+  AND T1.eye_colour_id = T1.skin_colour_id"
+1a537e0,superhero::qid::775,775,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T3.colour = 'Blue' THEN T1.id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.skin_colour_id = T3.id
+WHERE
+  T2.gender = 'Female'"
+1a537e0,superhero::qid::779,779,superhero,0,"SELECT
+  COUNT(T1.power_id)
+FROM hero_power AS T1
+INNER JOIN superhero AS T2
+  ON T1.hero_id = T2.id
+WHERE
+  T2.superhero_name = 'Amazo'"
+1a537e0,superhero::qid::781,781,superhero,0,"SELECT
+  T1.height_cm
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T2.colour = 'Amber'"
+1a537e0,superhero::qid::782,782,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id AND T1.hair_colour_id = T2.id
+WHERE
+  T2.colour = 'Black'"
+1a537e0,superhero::qid::785,785,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN alignment AS T2
+  ON T1.alignment_id = T2.id
+WHERE
+  T2.alignment = 'Neutral'"
+1a537e0,superhero::qid::786,786,superhero,0,"SELECT
+  COUNT(T1.hero_id)
+FROM hero_attribute AS T1
+INNER JOIN attribute AS T2
+  ON T1.attribute_id = T2.id
+WHERE
+  T2.attribute_name = 'Strength'
+  AND T1.attribute_value = (
+    SELECT
+      MAX(attribute_value)
+    FROM hero_attribute
+  )"
+1a537e0,superhero::qid::788,788,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' AND T3.gender = 'Female' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN gender AS T3
+  ON T1.gender_id = T3.id"
+1a537e0,superhero::qid::790,790,superhero,0,"SELECT
+  (
+    SELECT
+      weight_kg
+    FROM superhero
+    WHERE
+      full_name LIKE 'Emil Blonsky'
+  ) - (
+    SELECT
+      weight_kg
+    FROM superhero
+    WHERE
+      full_name LIKE 'Charles Chandler'
+  ) AS CALCULATE"
+1a537e0,superhero::qid::791,791,superhero,0,"SELECT
+  CAST(SUM(height_cm) AS DOUBLE) / COUNT(id)
+FROM superhero"
+1a537e0,superhero::qid::792,792,superhero,0,"SELECT
+  T3.power_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T1.superhero_name = 'Abomination'"
+1a537e0,superhero::qid::796,796,superhero,0,"SELECT
+  T3.attribute_name,
+  T2.attribute_value
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T2.attribute_id = T3.id
+WHERE
+  T1.superhero_name = '3-D Man'"
+1a537e0,superhero::qid::797,797,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.hair_colour_id = T3.id
+WHERE
+  T2.colour = 'Blue' AND T3.colour = 'Brown'"
+1a537e0,superhero::qid::798,798,superhero,0,"SELECT
+  T2.publisher_name
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+WHERE
+  T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')"
+1a537e0,superhero::qid::800,800,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.colour = 'Blue' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id"
+1a537e0,superhero::qid::801,801,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.gender = 'Male' THEN T1.id ELSE NULL END) AS DOUBLE) / COUNT(CASE WHEN T2.gender = 'Female' THEN T1.id ELSE NULL END)
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id"
+1a537e0,superhero::qid::806,806,superhero,0,"SELECT
+  T2.colour
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T1.full_name = 'Karen Beecher-Duncan'"
+1a537e0,superhero::qid::819,819,superhero,0,"SELECT
+  SUM(CASE WHEN T2.id = 7 THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.id = 1 THEN 1 ELSE 0 END)
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T1.weight_kg = 0 OR T1.weight_kg IS NULL"
+1a537e0,superhero::qid::822,822,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN alignment AS T2
+  ON T1.alignment_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.skin_colour_id = T3.id
+WHERE
+  T2.alignment = 'Bad' AND T3.colour = 'Green'"
+1a537e0,superhero::qid::824,824,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T3.power_name = 'Wind Control'
+ORDER BY
+  T1.superhero_name"
+1a537e0,superhero::qid::825,825,superhero,0,"SELECT
+  T4.gender
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+INNER JOIN gender AS T4
+  ON T1.gender_id = T4.id
+WHERE
+  T3.power_name = 'Phoenix Force'"
+1a537e0,superhero::qid::829,829,superhero,0,"SELECT
+  SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id"
+1a537e0,toxicology::qid::195,195,toxicology,0,"SELECT
+  T.bond_type
+FROM (
+  SELECT
+    bond_type,
+    COUNT(bond_id)
+  FROM bond
+  GROUP BY
+    bond_type
+  ORDER BY
+    COUNT(bond_id) DESC
+  LIMIT 1
+) AS T"
+1a537e0,toxicology::qid::198,198,toxicology,1,"SELECT
+  AVG(single_bond_count)
+FROM (
+  SELECT
+    T3.molecule_id,
+    COUNT(T1.bond_type) AS single_bond_count
+  FROM bond AS T1
+  INNER JOIN atom AS T2
+    ON T1.molecule_id = T2.molecule_id
+  INNER JOIN molecule AS T3
+    ON T3.molecule_id = T2.molecule_id
+  WHERE
+    T1.bond_type = '-' AND T3.label = '+'
+  GROUP BY
+    T3.molecule_id
+) AS subquery"
+1a537e0,toxicology::qid::200,200,toxicology,0,"SELECT DISTINCT
+  T2.molecule_id
+FROM bond AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T1.bond_type = '#' AND T2.label = '+'"
+1a537e0,toxicology::qid::206,206,toxicology,0,"SELECT DISTINCT
+  T1.element
+FROM atom AS T1
+INNER JOIN connected AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T2.bond_id = 'TR004_8_9'"
+1a537e0,toxicology::qid::208,208,toxicology,0,"SELECT
+  T.label
+FROM (
+  SELECT
+    T2.label,
+    COUNT(T2.molecule_id)
+  FROM atom AS T1
+  INNER JOIN molecule AS T2
+    ON T1.molecule_id = T2.molecule_id
+  WHERE
+    T1.element = 'h'
+  GROUP BY
+    T2.label
+  ORDER BY
+    COUNT(T2.molecule_id) DESC
+  LIMIT 1
+) AS t"
+1a537e0,toxicology::qid::213,213,toxicology,0,"SELECT
+  T1.bond_type
+FROM bond AS T1
+INNER JOIN connected AS T2
+  ON T1.bond_id = T2.bond_id
+WHERE
+  T2.atom_id = 'TR004_8'
+  AND T2.atom_id2 = 'TR004_20'
+  OR T2.atom_id2 = 'TR004_8'
+  AND T2.atom_id = 'TR004_20'"
+1a537e0,toxicology::qid::218,218,toxicology,0,"SELECT
+  CAST(COUNT(DISTINCT CASE WHEN T1.element <> 'f' THEN T2.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(DISTINCT T2.molecule_id)
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.label = '+'"
+1a537e0,toxicology::qid::220,220,toxicology,0,"SELECT DISTINCT
+  T.element
+FROM atom AS T
+WHERE
+  T.molecule_id = 'TR000'
+ORDER BY
+  T.element
+LIMIT 3"
+1a537e0,toxicology::qid::226,226,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.bond_id),
+    5
+  )
+FROM bond AS T
+WHERE
+  T.molecule_id = 'TR008'"
+1a537e0,toxicology::qid::227,227,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T.label = '+' THEN T.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.molecule_id),
+    3
+  )
+FROM molecule AS t"
+1a537e0,toxicology::qid::228,228,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.atom_id),
+    4
+  )
+FROM atom AS T
+WHERE
+  T.molecule_id = 'TR206'"
+1a537e0,toxicology::qid::230,230,toxicology,0,"SELECT DISTINCT
+  T1.element,
+  T2.label
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.molecule_id = 'TR060'"
+1a537e0,toxicology::qid::231,231,toxicology,0,"SELECT
+  T.bond_type
+FROM (
+  SELECT
+    T1.bond_type,
+    COUNT(T1.molecule_id)
+  FROM bond AS T1
+  WHERE
+    T1.molecule_id = 'TR010'
+  GROUP BY
+    T1.bond_type
+  ORDER BY
+    COUNT(T1.molecule_id) DESC
+  LIMIT 1
+) AS T"
+1a537e0,toxicology::qid::236,236,toxicology,0,"SELECT
+  T1.bond_type,
+  T2.atom_id,
+  T2.atom_id2
+FROM bond AS T1
+INNER JOIN connected AS T2
+  ON T1.bond_id = T2.bond_id
+WHERE
+  T2.bond_id = 'TR001_6_9'"
+1a537e0,toxicology::qid::240,240,toxicology,0,"SELECT DISTINCT
+  T.element
+FROM atom AS T
+WHERE
+  T.molecule_id = 'TR004'"
+1a537e0,toxicology::qid::242,242,toxicology,0,"SELECT DISTINCT
+  T2.molecule_id
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  SUBSTR(T1.atom_id, -2) BETWEEN '21' AND '25' AND T2.label = '+'"
+1a537e0,toxicology::qid::244,244,toxicology,0,"SELECT
+  T1.label
+FROM molecule AS T1
+INNER JOIN (
+  SELECT
+    T.molecule_id,
+    COUNT(T.bond_type)
+  FROM bond AS T
+  WHERE
+    T.bond_type = '='
+  GROUP BY
+    T.molecule_id
+  ORDER BY
+    COUNT(T.bond_type) DESC
+  LIMIT 1
+) AS T2
+  ON T1.molecule_id = T2.molecule_id"
+1a537e0,toxicology::qid::245,245,toxicology,0,"SELECT
+  CAST(COUNT(T2.bond_id) AS DOUBLE) / COUNT(T1.atom_id)
+FROM atom AS T1
+INNER JOIN connected AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T1.element = 'i'"
+1a537e0,toxicology::qid::249,249,toxicology,0,"SELECT
+  T2.element
+FROM connected AS T1
+INNER JOIN atom AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T1.bond_id = 'TR144_8_19'"
+1a537e0,toxicology::qid::255,255,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T2.label = '+' THEN T1.bond_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.bond_id),
+    5
+  )
+FROM bond AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T1.bond_type = '-'"
+1a537e0,toxicology::qid::260,260,toxicology,0,"SELECT
+  COUNT(T1.atom_id)
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+INNER JOIN bond AS T3
+  ON T2.molecule_id = T3.molecule_id
+WHERE
+  T3.bond_type = '#' AND T1.element IN ('p', 'br')"
+1a537e0,toxicology::qid::268,268,toxicology,0,"SELECT
+  T2.element
+FROM connected AS T1
+INNER JOIN atom AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T1.bond_id = 'TR001_10_11'"
+1a537e0,toxicology::qid::273,273,toxicology,0,"SELECT
+  CAST(COUNT(CASE WHEN T1.element = 'cl' THEN T1.element ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.element)
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.label = '+'"
+1a537e0,toxicology::qid::281,281,toxicology,0,"SELECT DISTINCT
+  T1.element
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.label = '+'
+  AND SUBSTR(T1.atom_id, -1) = '4'
+  AND LENGTH(T1.atom_id) = 7"
+1a537e0,toxicology::qid::282,282,toxicology,0,"WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT CAST(COUNT(CASE WHEN element = 'h' THEN atom_id ELSE NULL END) AS DECIMAL(10,2)) / NULLIF(COUNT(atom_id), 0) AS ratio, label FROM SubQuery GROUP BY label"
+1a537e0,california_schools::qid::37,37,california_schools,0,"SELECT
+  T2.Street,
+  T2.City,
+  T2.State,
+  T2.Zip
+FROM satscores AS T1
+INNER JOIN schools AS T2
+  ON T1.cds = T2.CDSCode
+ORDER BY
+  CAST(T1.NumGE1500 AS DOUBLE) / T1.NumTstTakr ASC
+LIMIT 1"
+1a537e0,california_schools::qid::36,36,california_schools,0,"SELECT
+  T2.AdmFName1,
+  T2.AdmLName1,
+  T2.AdmFName2,
+  T2.AdmLName2,
+  T2.AdmFName3,
+  T2.AdmLName3
+FROM satscores AS T1
+INNER JOIN schools AS T2
+  ON T1.cds = T2.CDSCode
+ORDER BY
+  T1.NumGE1500 DESC
+LIMIT 1"
+1a537e0,california_schools::qid::50,50,california_schools,0,"SELECT
+  T2.MailStreet,
+  T2.School
+FROM satscores AS T1
+INNER JOIN schools AS T2
+  ON T1.cds = T2.CDSCode
+ORDER BY
+  T1.AvgScrMath DESC
+LIMIT 1
+OFFSET 6"
+1a537e0,financial::qid::89,89,financial,0,"SELECT
+  COUNT(T2.account_id)
+FROM district AS T1
+INNER JOIN account AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'"
+1a537e0,financial::qid::92,92,financial,0,"SELECT
+  COUNT(DISTINCT T2.district_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'F' AND T2.A11 BETWEEN 6000 AND 10000"
+1a537e0,financial::qid::93,93,financial,0,"SELECT
+  COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000"
+1a537e0,financial::qid::94,94,financial,0,"SELECT
+  T1.account_id,
+  (
+    SELECT
+      MAX(A11) - MIN(A11)
+    FROM district
+  )
+FROM account AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN disp AS T3
+  ON T1.account_id = T3.account_id
+INNER JOIN client AS T4
+  ON T3.client_id = T4.client_id
+WHERE
+  T2.district_id = (
+    SELECT
+      district_id
+    FROM client
+    WHERE
+      gender = 'F'
+    ORDER BY
+      birth_date ASC
+    LIMIT 1
+  )
+ORDER BY
+  T2.A11 DESC
+LIMIT 1"
+1a537e0,financial::qid::95,95,financial,0,"SELECT
+  T1.account_id
+FROM account AS T1
+INNER JOIN disp AS T2
+  ON T1.account_id = T2.account_id
+INNER JOIN client AS T3
+  ON T2.client_id = T3.client_id
+INNER JOIN district AS T4
+  ON T4.district_id = T1.district_id
+WHERE
+  T2.client_id = (
+    SELECT
+      client_id
+    FROM client
+    ORDER BY
+      birth_date DESC
+    LIMIT 1
+  )
+GROUP BY
+  T4.A11,
+  T1.account_id"
+1a537e0,financial::qid::112,112,financial,0,"SELECT
+  T1.A2
+FROM district AS T1
+INNER JOIN client AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T2.birth_date = '1976-01-29' AND T2.gender = 'F'"
+1a537e0,financial::qid::115,115,financial,0,"SELECT
+  CAST(SUM(T1.gender = 'M') AS DOUBLE) * 100 / COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T2.A3 = 'south Bohemia'
+GROUP BY
+  T2.A4
+ORDER BY
+  T2.A4 DESC
+LIMIT 1"
+1a537e0,financial::qid::116,116,financial,1,"SELECT
+  CAST((
+    SUM(CASE WHEN T3.date = '1998-12-27' THEN T3.balance ELSE 0 END) - SUM(CASE WHEN T3.date = '1993-03-22' THEN T3.balance ELSE 0 END)
+  ) AS DOUBLE) * 100 / SUM(CASE WHEN T3.date = '1993-03-22' THEN T3.balance ELSE 0 END)
+FROM loan AS T1
+INNER JOIN account AS T2
+  ON T1.account_id = T2.account_id
+INNER JOIN trans AS T3
+  ON T3.account_id = T2.account_id
+WHERE
+  T1.date = '1993-07-05'"
+1a537e0,financial::qid::117,117,financial,0,"SELECT
+  (
+    CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS DOUBLE) * 100
+  ) / SUM(amount)
+FROM loan"
+1a537e0,financial::qid::118,118,financial,0,"SELECT
+  CAST(SUM(status = 'C') AS DOUBLE) * 100 / COUNT(account_id)
+FROM loan
+WHERE
+  amount < 100000"
+1a537e0,financial::qid::125,125,financial,0,"SELECT
+  CAST((
+    T3.A13 - T3.A12
+  ) AS DOUBLE) * 100 / T3.A12
+FROM loan AS T1
+INNER JOIN account AS T2
+  ON T1.account_id = T2.account_id
+INNER JOIN district AS T3
+  ON T2.district_id = T3.district_id
+WHERE
+  T1.status = 'D'"
+1a537e0,financial::qid::128,128,financial,0,"SELECT
+  T2.A2,
+  COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'F'
+GROUP BY
+  T2.district_id,
+  T2.A2
+ORDER BY
+  COUNT(T1.client_id) DESC
+LIMIT 9"
+1a537e0,financial::qid::136,136,financial,0,"SELECT
+  COUNT(T1.account_id)
+FROM account AS T1
+INNER JOIN loan AS T2
+  ON T1.account_id = T2.account_id
+WHERE
+  T2.date BETWEEN '1995-01-01' AND '1997-12-31'
+  AND T1.frequency = 'POPLATEK MESICNE'
+  AND T2.amount >= 250000"
+1a537e0,financial::qid::137,137,financial,0,"SELECT
+  COUNT(T1.account_id)
+FROM account AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN loan AS T3
+  ON T1.account_id = T3.account_id
+WHERE
+  T1.district_id = 1 AND (
+    T3.status = 'C' OR T3.status = 'D'
+  )"
+1a537e0,financial::qid::138,138,financial,0,"SELECT
+  COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'M'
+  AND T2.A15 = (
+    SELECT
+      T3.A15
+    FROM district AS T3
+    ORDER BY
+      T3.A15 DESC
+    LIMIT 1
+    OFFSET 1
+  )"
+1a537e0,financial::qid::129,129,financial,1,"SELECT DISTINCT
+  T1.A2
+FROM district AS T1
+INNER JOIN account AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN trans AS T3
+  ON T2.account_id = T3.account_id
+WHERE
+  T3.type = 'VYDAJ' AND T3.date LIKE '1996-01%'
+ORDER BY
+  A2 ASC
+LIMIT 10"
+1a537e0,financial::qid::149,149,financial,0,"SELECT
+  T3.type
+FROM district AS T1
+INNER JOIN account AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN disp AS T3
+  ON T2.account_id = T3.account_id
+WHERE
+  T3.type <> 'OWNER' AND T1.A11 BETWEEN 8000 AND 9000"
+1a537e0,financial::qid::159,159,financial,1,"SELECT
+  T4.trans_id
+FROM client AS T1
+INNER JOIN disp AS T2
+  ON T1.client_id = T2.client_id
+INNER JOIN account AS T3
+  ON T2.account_id = T3.account_id
+INNER JOIN trans AS T4
+  ON T3.account_id = T4.account_id
+WHERE
+  T1.client_id = 3356 AND T4.operation = 'VYBER'"
+1a537e0,financial::qid::168,168,financial,0,"SELECT
+  CAST(SUM(T2.gender = 'F') AS DOUBLE) * 100 / COUNT(T2.client_id)
+FROM district AS T1
+INNER JOIN client AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.A11 > 10000"
+1a537e0,financial::qid::186,186,financial,0,"SELECT
+  CAST(SUM(T1.gender = 'M') AS DOUBLE) * 100 / COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T3
+  ON T1.district_id = T3.district_id
+INNER JOIN account AS T2
+  ON T2.district_id = T3.district_id
+INNER JOIN disp AS T4
+  ON T1.client_id = T4.client_id AND T2.account_id = T4.account_id
+WHERE
+  T2.frequency = 'POPLATEK TYDNE'"
+1a537e0,financial::qid::189,189,financial,0,"SELECT
+  T3.account_id
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN account AS T3
+  ON T2.district_id = T3.district_id
+INNER JOIN disp AS T4
+  ON T1.client_id = T4.client_id AND T4.account_id = T3.account_id
+WHERE
+  T1.gender = 'F'
+ORDER BY
+  T1.birth_date ASC,
+  T2.A11 ASC
+LIMIT 1"
+1a537e0,financial::qid::192,192,financial,0,"SELECT
+  AVG(T2.amount)
+FROM account AS T1
+INNER JOIN loan AS T2
+  ON T1.account_id = T2.account_id
+WHERE
+  T2.status IN ('C', 'D') AND T1.frequency = 'POPLATEK PO OBRATU'"
+061f0ff,debit_card_specializing::qid::1472,1472,debit_card_specializing,1,"SELECT
+  T1.CustomerID
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Segment = 'LAM' AND SUBSTR(T2.Date, 1, 4) = '2012'
+GROUP BY
+  T1.CustomerID
+ORDER BY
+  SUM(T2.Consumption) ASC
+LIMIT 1"
+061f0ff,debit_card_specializing::qid::1473,1473,debit_card_specializing,1,"SELECT
+  AVG(T2.Consumption) / 12
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'"
+061f0ff,debit_card_specializing::qid::1476,1476,debit_card_specializing,1,"SELECT
+  SUM(CASE WHEN T1.Currency = 'CZK' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Currency = 'EUR' THEN T2.Consumption ELSE 0 END)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  SUBSTR(T2.Date, 1, 4) = '2012'"
+061f0ff,debit_card_specializing::qid::1479,1479,debit_card_specializing,1,"SELECT
+  SUBSTR(T2.Date, 1, 4)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Currency = 'CZK'
+GROUP BY
+  SUBSTR(T2.Date, 1, 4)
+ORDER BY
+  SUM(T2.Consumption) DESC
+LIMIT 1"
+061f0ff,debit_card_specializing::qid::1480,1480,debit_card_specializing,1,"SELECT
+  SUBSTR(T2.Date, 5, 2)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'
+GROUP BY
+  SUBSTR(T2.Date, 5, 2)
+ORDER BY
+  SUM(T2.Consumption) DESC
+LIMIT 1"
+061f0ff,debit_card_specializing::qid::1481,1481,debit_card_specializing,1,"SELECT
+  CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID),
+  CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID),
+  CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID) - CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS DOUBLE) / COUNT(T1.CustomerID)
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Currency = 'CZK'
+  AND T2.Consumption = (
+    SELECT
+      MIN(Consumption)
+    FROM yearmonth
+  )
+  AND T2.Date BETWEEN 201301 AND 201312"
+061f0ff,debit_card_specializing::qid::1482,1482,debit_card_specializing,1,"SELECT
+  CAST((
+    SUM(
+      CASE
+        WHEN T1.Segment = 'SME' AND T2.Date LIKE '2013%'
+        THEN T2.Consumption
+        ELSE 0
+      END
+    ) - SUM(
+      CASE
+        WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%'
+        THEN T2.Consumption
+        ELSE 0
+      END
+    )
+  ) AS DOUBLE) * 100 / SUM(
+    CASE
+      WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ),
+  CAST(SUM(
+    CASE
+      WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2013%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) - SUM(
+    CASE
+      WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) AS DOUBLE) * 100 / SUM(
+    CASE
+      WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ),
+  CAST(SUM(
+    CASE
+      WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2013%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) - SUM(
+    CASE
+      WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  ) AS DOUBLE) * 100 / SUM(
+    CASE
+      WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%'
+      THEN T2.Consumption
+      ELSE 0
+    END
+  )
+FROM customers AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID"
+061f0ff,debit_card_specializing::qid::1484,1484,debit_card_specializing,0,"SELECT
+  SUM(CASE WHEN Country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END)
+FROM gasstations
+WHERE
+  Segment = 'Discount'"
+061f0ff,debit_card_specializing::qid::1498,1498,debit_card_specializing,1,"SELECT
+  SUM(Consumption)
+FROM yearmonth
+WHERE
+  SUBSTR(Date, 1, 4) = '2012'
+GROUP BY
+  SUBSTR(Date, 5, 2)
+ORDER BY
+  SUM(Consumption) DESC
+LIMIT 1"
+061f0ff,debit_card_specializing::qid::1501,1501,debit_card_specializing,0,"SELECT DISTINCT
+  T2.Country
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+INNER JOIN yearmonth AS T3
+  ON T1.CustomerID = T3.CustomerID
+WHERE
+  T3.Date = '201306'"
+061f0ff,debit_card_specializing::qid::1506,1506,debit_card_specializing,0,"SELECT DISTINCT
+  T3.Description
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+INNER JOIN products AS T3
+  ON T1.ProductID = T3.ProductID
+WHERE
+  T2.Country = 'CZE'"
+061f0ff,debit_card_specializing::qid::1507,1507,debit_card_specializing,0,"SELECT DISTINCT
+  T1.Time
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+WHERE
+  T2.ChainID = 11"
+061f0ff,debit_card_specializing::qid::1514,1514,debit_card_specializing,0,"SELECT DISTINCT
+  T3.Currency
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+INNER JOIN customers AS T3
+  ON T1.CustomerID = T3.CustomerID
+WHERE
+  T1.Date = '2012-08-24' AND T1.Time = '16:25:00'"
+061f0ff,debit_card_specializing::qid::1515,1515,debit_card_specializing,0,"SELECT
+  T2.Segment
+FROM transactions_1k AS T1
+INNER JOIN customers AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.date = '2012-08-23' AND T1.time = '21:20:00'"
+061f0ff,debit_card_specializing::qid::1521,1521,debit_card_specializing,0,"SELECT
+  COUNT(T1.TransactionID)
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+WHERE
+  T1.Date = '2012-08-26'
+  AND T1.Time BETWEEN '08:00:00' AND '09:00:00'
+  AND T2.Country = 'CZE'"
+061f0ff,debit_card_specializing::qid::1524,1524,debit_card_specializing,0,"SELECT
+  T2.Country
+FROM transactions_1k AS T1
+INNER JOIN gasstations AS T2
+  ON T1.GasStationID = T2.GasStationID
+WHERE
+  T1.Date = '2012-08-24' AND  T1.Price = 548.4"
+061f0ff,debit_card_specializing::qid::1525,1525,debit_card_specializing,0,"SELECT
+  CAST(SUM(CASE WHEN T2.Currency = 'EUR' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T1.CustomerID)
+FROM transactions_1k AS T1
+INNER JOIN customers AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Date = '2012-08-25'"
+061f0ff,debit_card_specializing::qid::1528,1528,debit_card_specializing,0,"SELECT
+  CAST(SUM(CASE WHEN Country = 'SVK' AND Segment = 'Premium' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END)
+FROM gasstations"
+061f0ff,debit_card_specializing::qid::1533,1533,debit_card_specializing,0,"SELECT
+  T2.Consumption
+FROM transactions_1k AS T1
+INNER JOIN yearmonth AS T2
+  ON T1.CustomerID = T2.CustomerID
+WHERE
+  T1.Price / T1.Amount > 29.00
+  AND T1.ProductID = 5
+  AND T2.Date = '201208'"
+061f0ff,student_club::qid::1312,1312,student_club,0,"SELECT
+  T2.major_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.first_name = 'Angela' AND T1.last_name = 'Sanders'"
+061f0ff,student_club::qid::1317,1317,student_club,0,"SELECT
+  COUNT(T1.event_id)
+FROM event AS T1
+INNER JOIN attendance AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN member AS T3
+  ON T2.link_to_member = T3.member_id
+WHERE
+  T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'"
+061f0ff,student_club::qid::1322,1322,student_club,0,SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10
+061f0ff,student_club::qid::1323,1323,student_club,0,SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 AND NOT EXISTS (SELECT 1 FROM event AS E WHERE E.event_id = T1.event_id AND E.type = 'Fundraiser')
+061f0ff,student_club::qid::1331,1331,student_club,0,"SELECT
+  T2.amount
+FROM member AS T1
+INNER JOIN income AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.position = 'Vice President'"
+061f0ff,student_club::qid::1334,1334,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name
+FROM member AS T1
+INNER JOIN zip_code AS T2
+  ON T1.zip = T2.zip_code
+WHERE
+  T2.state = 'Illinois'"
+061f0ff,student_club::qid::1338,1338,student_club,0,"SELECT
+  T3.approved
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+WHERE
+  T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'"
+061f0ff,student_club::qid::1339,1339,student_club,0,"SELECT
+  AVG(T2.cost)
+FROM member AS T1
+INNER JOIN expense AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.last_name = 'Allen'
+  AND T1.first_name = 'Elijah'
+  AND (
+    SUBSTR(T2.expense_date, 6, 2) = '09'
+    OR SUBSTR(T2.expense_date, 6, 2) = '10'
+  )"
+061f0ff,student_club::qid::1340,1340,student_club,0,"SELECT
+  SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event"
+061f0ff,student_club::qid::1344,1344,student_club,0,"SELECT
+  notes
+FROM income
+WHERE
+  source = 'Fundraising' AND date_received = '2019-09-14'"
+061f0ff,student_club::qid::1346,1346,student_club,0,"SELECT
+  phone
+FROM member
+WHERE
+  first_name = 'Carlo' AND last_name = 'Jacobs'"
+061f0ff,student_club::qid::1350,1350,student_club,0,"SELECT
+  T1.event_status
+FROM budget AS T1
+INNER JOIN expense AS T2
+  ON T1.budget_id = T2.link_to_budget
+WHERE
+  T2.expense_description = 'Post Cards, Posters'
+  AND T2.expense_date = '2019-08-20'"
+061f0ff,student_club::qid::1351,1351,student_club,0,"SELECT
+  T2.major_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.first_name = 'Brent' AND T1.last_name = 'Thomason'"
+061f0ff,student_club::qid::1352,1352,student_club,0,"SELECT
+  COUNT(T1.member_id)
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'"
+061f0ff,student_club::qid::1356,1356,student_club,0,"SELECT
+  T2.department
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.position = 'President'"
+061f0ff,student_club::qid::1357,1357,student_club,0,"SELECT
+  T2.date_received
+FROM member AS T1
+INNER JOIN income AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.first_name = 'Connor'
+  AND T1.last_name = 'Hilton'
+  AND T2.source = 'Dues'"
+061f0ff,student_club::qid::1359,1359,student_club,0,"SELECT
+  CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS DOUBLE) / SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END)
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T1.link_to_event = T2.event_id
+WHERE
+  T1.category = 'Advertisement' AND T2.type = 'Meeting'"
+061f0ff,student_club::qid::1361,1361,student_club,0,"SELECT
+  SUM(cost)
+FROM expense
+WHERE
+  expense_description = 'Pizza'"
+061f0ff,student_club::qid::1368,1368,student_club,0,"SELECT
+  T2.major_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T1.phone = '809-555-3360'"
+061f0ff,student_club::qid::1371,1371,student_club,0,"SELECT
+  COUNT(T2.link_to_member)
+FROM event AS T1
+INNER JOIN attendance AS T2
+  ON T1.event_id = T2.link_to_event
+WHERE
+  T1.event_name = 'Women''s Soccer'"
+061f0ff,student_club::qid::1375,1375,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name
+FROM member AS T1
+INNER JOIN major AS T2
+  ON T1.link_to_major = T2.major_id
+WHERE
+  T2.department = 'School of Applied Sciences, Technology and Education'"
+061f0ff,student_club::qid::1376,1376,student_club,0,"SELECT
+  T2.event_name
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T1.link_to_event = T2.event_id
+WHERE
+  T2.status = 'Closed'
+ORDER BY
+  T1.spent / T1.amount DESC
+LIMIT 1"
+061f0ff,student_club::qid::1378,1378,student_club,0,"SELECT
+  MAX(spent)
+FROM budget"
+061f0ff,student_club::qid::1380,1380,student_club,0,SELECT SUM(spent) FROM budget WHERE category = 'Food'
+061f0ff,student_club::qid::1381,1381,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name
+FROM member AS T1
+INNER JOIN attendance AS T2
+  ON T1.member_id = T2.link_to_member
+GROUP BY
+  T2.link_to_member
+HAVING
+  COUNT(T2.link_to_event) > 7"
+061f0ff,student_club::qid::1387,1387,student_club,0,"SELECT
+  T4.first_name,
+  T4.last_name
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+INNER JOIN member AS T4
+  ON T3.link_to_member = T4.member_id
+WHERE
+  T1.event_name = 'Yearly Kickoff'"
+061f0ff,student_club::qid::1389,1389,student_club,0,"SELECT
+  T1.event_name
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+ORDER BY
+  T3.cost
+LIMIT 1"
+061f0ff,student_club::qid::1390,1390,student_club,0,"SELECT
+  CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS DOUBLE) * 100 / SUM(T3.cost)
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget"
+061f0ff,student_club::qid::1392,1392,student_club,0,"SELECT
+  source
+FROM income
+WHERE
+  date_received BETWEEN '2019-09-01' AND '2019-09-30'
+ORDER BY
+  source DESC
+LIMIT 1"
+061f0ff,student_club::qid::1394,1394,student_club,0,"SELECT
+  COUNT(T2.member_id)
+FROM major AS T1
+INNER JOIN member AS T2
+  ON T1.major_id = T2.link_to_major
+WHERE
+  T1.major_name = 'Physics Teaching'"
+061f0ff,student_club::qid::1398,1398,student_club,0,"SELECT
+  T2.event_name
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T1.link_to_event = T2.event_id
+WHERE
+  T1.category = 'Advertisement'
+ORDER BY
+  T1.spent DESC
+LIMIT 1"
+061f0ff,student_club::qid::1399,1399,student_club,0,"SELECT
+  CASE WHEN T3.event_name = 'Women''s Soccer' THEN 'YES' END AS result
+FROM member AS T1
+INNER JOIN attendance AS T2
+  ON T1.member_id = T2.link_to_member
+INNER JOIN event AS T3
+  ON T2.link_to_event = T3.event_id
+WHERE
+  T1.first_name = 'Maya' AND T1.last_name = 'Mclean'"
+061f0ff,student_club::qid::1401,1401,student_club,0,"SELECT
+  T3.cost
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN expense AS T3
+  ON T2.budget_id = T3.link_to_budget
+WHERE
+  T1.event_name = 'September Speaker'
+  AND T3.expense_description = 'Posters'"
+061f0ff,student_club::qid::1403,1403,student_club,0,"SELECT
+  T2.event_name
+FROM budget AS T1
+INNER JOIN event AS T2
+  ON T2.event_id = T1.link_to_event
+WHERE
+  T1.event_status = 'Closed' AND T1.remaining < 0
+ORDER BY
+  T1.remaining
+LIMIT 1"
+061f0ff,student_club::qid::1404,1404,student_club,0,"SELECT T1.type, SUM(T3.cost) AS total_cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' GROUP BY T1.type"
+061f0ff,student_club::qid::1405,1405,student_club,0,"SELECT T2.category, SUM(T2.amount) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC"
+061f0ff,student_club::qid::1409,1409,student_club,0,"SELECT
+  SUM(cost)
+FROM expense
+WHERE
+  expense_date = '2019-08-20'"
+061f0ff,student_club::qid::1410,1410,student_club,0,"SELECT
+  T1.first_name,
+  T1.last_name,
+  SUM(T2.cost)
+FROM member AS T1
+INNER JOIN expense AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.member_id = 'rec4BLdZHS2Blfp4v'"
+061f0ff,student_club::qid::1411,1411,student_club,0,"SELECT
+  T2.expense_description
+FROM member AS T1
+INNER JOIN expense AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'"
+061f0ff,student_club::qid::1422,1422,student_club,0,"SELECT DISTINCT
+  T2.category
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+WHERE
+  T1.location = 'MU 215'"
+061f0ff,student_club::qid::1426,1426,student_club,0,"SELECT
+  T2.last_name,
+  T1.department,
+  T1.college
+FROM major AS T1
+INNER JOIN member AS T2
+  ON T1.major_id = T2.link_to_major
+WHERE
+  T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'"
+061f0ff,student_club::qid::1427,1427,student_club,0,"SELECT DISTINCT
+  T2.category,
+  T1.type
+FROM event AS T1
+INNER JOIN budget AS T2
+  ON T1.event_id = T2.link_to_event
+WHERE
+  T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'"
+061f0ff,student_club::qid::1432,1432,student_club,0,"SELECT
+  CAST(SUM(CASE WHEN T2.amount = 50 THEN 1.0 ELSE 0 END) AS DOUBLE) * 100 / COUNT(T2.income_id)
+FROM member AS T1
+INNER JOIN income AS T2
+  ON T1.member_id = T2.link_to_member
+WHERE
+  T1.position = 'Member' AND T1.t_shirt_size = 'Medium'"
+061f0ff,student_club::qid::1435,1435,student_club,0,"SELECT DISTINCT
+  event_name
+FROM event
+WHERE
+  type = 'Game'
+  AND DATE(SUBSTR(event_date, 1, 10)) BETWEEN '2019-03-15' AND '2020-03-20'
+  AND status = 'Closed'"
+061f0ff,student_club::qid::1457,1457,student_club,0,"SELECT DISTINCT
+  T3.first_name,
+  T3.last_name,
+  T3.phone
+FROM expense AS T1
+INNER JOIN budget AS T2
+  ON T1.link_to_budget = T2.budget_id
+INNER JOIN member AS T3
+  ON T3.member_id = T1.link_to_member
+WHERE
+  T1.cost > (
+    SELECT
+      AVG(T1.cost)
+    FROM expense AS T1
+    INNER JOIN budget AS T2
+      ON T1.link_to_budget = T2.budget_id
+    INNER JOIN member AS T3
+      ON T3.member_id = T1.link_to_member
+  )"
+061f0ff,student_club::qid::1460,1460,student_club,0,"SELECT
+  T2.first_name,
+  T2.last_name,
+  T1.cost
+FROM expense AS T1
+INNER JOIN member AS T2
+  ON T1.link_to_member = T2.member_id
+WHERE
+  T1.expense_description = 'Water, Veggie tray, supplies'"
+061f0ff,student_club::qid::1464,1464,student_club,0,"SELECT DISTINCT
+  T3.first_name,
+  T3.last_name,
+  T4.amount
+FROM event AS T1
+INNER JOIN attendance AS T2
+  ON T1.event_id = T2.link_to_event
+INNER JOIN member AS T3
+  ON T3.member_id = T2.link_to_member
+INNER JOIN income AS T4
+  ON T4.link_to_member = T3.member_id
+WHERE
+  T4.date_received = '2019-09-09'"
+061f0ff,thrombosis_prediction::qid::1149,1149,thrombosis_prediction,0,"SELECT
+  CAST(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS DOUBLE) * 100 / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
+FROM Patient
+WHERE
+  SEX = 'M'"
+061f0ff,thrombosis_prediction::qid::1152,1152,thrombosis_prediction,0,"SELECT
+  SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
+FROM Patient
+WHERE
+  Diagnosis = 'SLE'"
+061f0ff,thrombosis_prediction::qid::1153,1153,thrombosis_prediction,0,"SELECT
+  T1.Diagnosis,
+  T2.Date
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T1.ID = 30609"
+061f0ff,thrombosis_prediction::qid::1157,1157,thrombosis_prediction,0,"SELECT DISTINCT
+  T1.ID,
+  T1.SEX,
+  T1.Diagnosis
+FROM Patient AS T1
+INNER JOIN Examination AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.Thrombosis = 2"
+061f0ff,thrombosis_prediction::qid::1166,1166,thrombosis_prediction,0,"SELECT
+  T2.Symptoms,
+  T1.Diagnosis
+FROM Patient AS T1
+INNER JOIN Examination AS T2
+  ON T1.ID = T2.ID
+WHERE
+  NOT T2.Symptoms IS NULL
+ORDER BY
+  T1.Birthday DESC
+LIMIT 1"
+061f0ff,thrombosis_prediction::qid::1195,1195,thrombosis_prediction,0,"SELECT
+  AVG(T2.ALB)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.PLT > 400 AND T1.Diagnosis = 'SLE' AND T1.SEX = 'F'"
+061f0ff,thrombosis_prediction::qid::1198,1198,thrombosis_prediction,0,"SELECT
+  COUNT(ID)
+FROM Patient
+WHERE
+  SEX = 'F' AND Diagnosis = 'APS'"
+061f0ff,thrombosis_prediction::qid::1205,1205,thrombosis_prediction,0,"SELECT
+  CASE
+    WHEN (
+      T1.SEX = 'F' AND T2.UA > 6.5
+    )
+    OR (
+      T1.SEX = 'M' AND T2.UA > 8.0
+    )
+    THEN TRUE
+    ELSE FALSE
+  END
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T1.ID = 57266"
+061f0ff,thrombosis_prediction::qid::1208,1208,thrombosis_prediction,0,"SELECT DISTINCT
+  T1.ID
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T1.SEX = 'M' AND T2.GPT >= 60"
+061f0ff,thrombosis_prediction::qid::1252,1252,thrombosis_prediction,0,"SELECT
+  COUNT(T1.ID)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+INNER JOIN Examination AS T3
+  ON T3.ID = T2.ID
+WHERE
+  T2.IGG BETWEEN 900 AND 2000 AND NOT T3.Symptoms IS NULL"
+061f0ff,thrombosis_prediction::qid::1267,1267,thrombosis_prediction,0,"SELECT
+  COUNT(T1.ID)
+FROM Examination AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.SM IN ('negative', '0') AND T1.Thrombosis = 0"
+061f0ff,thrombosis_prediction::qid::1275,1275,thrombosis_prediction,0,"SELECT
+  COUNT(DISTINCT T1.ID)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+WHERE
+  T2.CENTROMEA IN ('negative', '0')
+  AND T2.SSB IN ('negative', '0')
+  AND T1.SEX = 'M'"
+061f0ff,thrombosis_prediction::qid::1302,1302,thrombosis_prediction,0,"SELECT
+  COUNT(T1.ID)
+FROM Patient AS T1
+INNER JOIN Laboratory AS T2
+  ON T1.ID = T2.ID
+INNER JOIN Examination AS T3
+  ON T1.ID = T3.ID
+WHERE
+  T2.CPK < 250
+  AND (
+    T3.KCT = '+' OR T3.RVVT = '+' OR T3.LAC = '+'
+  )"
+061f0ff,formula_1::qid::846,846,formula_1,0,"SELECT
+  T2.driverRef
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 20
+ORDER BY
+  T1.q1 DESC
+LIMIT 5"
+061f0ff,formula_1::qid::847,847,formula_1,0,"SELECT
+  T2.surname
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 19
+ORDER BY
+  T1.q2 ASC
+LIMIT 1"
+061f0ff,formula_1::qid::850,850,formula_1,0,"SELECT DISTINCT
+  T2.name
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T1.country = 'Germany'"
+061f0ff,formula_1::qid::854,854,formula_1,0,"SELECT DISTINCT
+  T1.lat,
+  T1.lng
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'Australian Grand Prix'"
+061f0ff,formula_1::qid::857,857,formula_1,0,"SELECT DISTINCT
+  T1.lat,
+  T1.lng
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'Abu Dhabi Grand Prix'"
+061f0ff,formula_1::qid::859,859,formula_1,0,"SELECT
+  T1.q1
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna'"
+061f0ff,formula_1::qid::861,861,formula_1,0,"SELECT
+  T2.number
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 903 AND T1.q3 LIKE '1:54%'"
+061f0ff,formula_1::qid::866,866,formula_1,0,"SELECT DISTINCT
+  T2.forename,
+  T2.surname,
+  T2.url
+FROM lapTimes AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 161 AND T1.time LIKE '1:27%'"
+061f0ff,formula_1::qid::868,868,formula_1,0,"SELECT DISTINCT
+  T1.lat,
+  T1.lng
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'Malaysian Grand Prix'"
+061f0ff,formula_1::qid::869,869,formula_1,0,"SELECT
+  T2.url
+FROM constructorResults AS T1
+INNER JOIN constructors AS T2
+  ON T2.constructorId = T1.constructorId
+WHERE
+  T1.raceId = 9
+ORDER BY
+  T1.points DESC
+LIMIT 1"
+061f0ff,formula_1::qid::872,872,formula_1,0,"SELECT
+  T2.code
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T2.driverId = T1.driverId
+WHERE
+  T1.raceId = 45 AND T1.q3 LIKE '1:33%'"
+061f0ff,formula_1::qid::875,875,formula_1,0,"SELECT
+  T2.url
+FROM races AS T1
+INNER JOIN seasons AS T2
+  ON T2.year = T1.year
+WHERE
+  T1.raceId = 901"
+061f0ff,formula_1::qid::909,909,formula_1,0,"SELECT
+  CAST(COUNT(CASE WHEN T1.country = 'Germany' THEN T2.circuitID END) AS DOUBLE) * 100 / COUNT(T2.circuitId)
+FROM circuits AS T1
+INNER JOIN races AS T2
+  ON T2.circuitID = T1.circuitId
+WHERE
+  T2.name = 'European Grand Prix'"
+061f0ff,formula_1::qid::910,910,formula_1,0,"SELECT
+  lat,
+  lng
+FROM circuits
+WHERE
+  name = 'Silverstone Circuit'"
+061f0ff,formula_1::qid::912,912,formula_1,0,"SELECT
+  circuitRef
+FROM circuits
+WHERE
+  name = 'Marina Bay Street Circuit'"
+061f0ff,formula_1::qid::915,915,formula_1,0,"SELECT
+  nationality
+FROM drivers
+WHERE
+  NOT dob IS NULL
+ORDER BY
+  dob ASC
+LIMIT 1"
+061f0ff,formula_1::qid::945,945,formula_1,0,"SELECT
+  COUNT(circuitId)
+FROM circuits
+WHERE
+  location = 'Adelaide' AND country = 'Australia'"
+061f0ff,formula_1::qid::950,950,formula_1,0,"SELECT
+  T2.name
+FROM constructorStandings AS T1
+INNER JOIN constructors AS T2
+  ON T1.constructorId = T2.constructorId
+WHERE
+  T1.points = 0 AND T1.raceId = 291"
+061f0ff,formula_1::qid::951,951,formula_1,0,"SELECT
+  COUNT(T1.raceId)
+FROM constructorStandings AS T1
+INNER JOIN constructors AS T2
+  ON T1.constructorId = T2.constructorId
+WHERE
+  T1.points = 0 AND T2.nationality = 'Japanese'
+GROUP BY
+  T1.constructorId
+HAVING
+  COUNT(raceId) = 2"
+061f0ff,formula_1::qid::963,963,formula_1,1,"SELECT
+  COUNT(T1.driverId)
+FROM drivers AS T1
+INNER JOIN lapTimes AS T2
+  ON T1.driverId = T2.driverId
+WHERE
+  T1.nationality = 'French'
+  AND (
+    CAST(SUBSTR(T2.time, 1, 2) AS SIGNED) * 60 + CAST(SUBSTR(T2.time, 4, 2) AS SIGNED) + CAST(SUBSTR(T2.time, 7, 2) AS DOUBLE) / 1000
+  ) < 120"
+061f0ff,formula_1::qid::964,964,formula_1,0,SELECT code FROM drivers WHERE Nationality = 'American'
+061f0ff,formula_1::qid::967,967,formula_1,0,SELECT COUNT(*) FROM (SELECT T1.nationality FROM drivers AS T1 ORDER BY T1.dob DESC LIMIT 3) AS T3 WHERE T3.nationality = 'Dutch'
+061f0ff,formula_1::qid::971,971,formula_1,0,SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY dob ASC LIMIT 1
+061f0ff,formula_1::qid::978,978,formula_1,0,"SELECT DISTINCT
+  location,
+  lat,
+  lng
+FROM circuits
+WHERE
+  country = 'Austria'"
+061f0ff,formula_1::qid::981,981,formula_1,0,"SELECT
+  T3.year,
+  T3.name,
+  T3.date,
+  T3.time
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T1.driverId = T2.driverId
+INNER JOIN races AS T3
+  ON T1.raceId = T3.raceId
+WHERE
+  T1.driverId = (
+    SELECT
+      driverId
+    FROM drivers
+    ORDER BY
+      dob DESC
+    LIMIT 1
+  )
+ORDER BY
+  T3.date ASC
+LIMIT 1"
+061f0ff,superhero::qid::717,717,superhero,0,SELECT  T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2  ON T1.id = T2.hero_id INNER JOIN superpower AS T3  ON T2.power_id = T3.id WHERE  T1.superhero_name = '3-D Man'
+061f0ff,formula_1::qid::994,994,formula_1,0,"SELECT
+  SUM(T1.points),
+  T2.name,
+  T2.nationality
+FROM constructorResults AS T1
+INNER JOIN constructors AS T2
+  ON T1.constructorId = T2.constructorId
+INNER JOIN races AS T3
+  ON T3.raceid = T1.raceid
+WHERE
+  T3.name = 'Monaco Grand Prix' AND T3.year BETWEEN 1980 AND 2010
+GROUP BY
+  T2.name
+ORDER BY
+  SUM(T1.points) DESC
+LIMIT 1"
+061f0ff,formula_1::qid::1001,1001,formula_1,0,"SELECT
+  T2.forename,
+  T2.surname
+FROM qualifying AS T1
+INNER JOIN drivers AS T2
+  ON T1.driverId = T2.driverId
+INNER JOIN races AS T3
+  ON T1.raceid = T3.raceid
+WHERE
+  NOT q3 IS NULL
+  AND T3.year = 2008
+  AND T3.circuitId IN (
+    SELECT
+      circuitId
+    FROM circuits
+    WHERE
+      name = 'Marina Bay Street Circuit'
+  )
+ORDER BY
+  CAST(SUBSTR(q3, 1, INSTR(q3, ':') - 1) AS SIGNED) * 60 + CAST(SUBSTR(q3, INSTR(q3, ':') + 1, INSTR(q3, '.') - INSTR(q3, ':') - 1) AS DOUBLE) + CAST(SUBSTR(q3, INSTR(q3, '.') + 1) AS DOUBLE) / 1000 ASC
+LIMIT 1"
+061f0ff,formula_1::qid::1011,1011,formula_1,1,"WITH lap_times_in_seconds AS (SELECT driverId, (CASE WHEN SUBSTR(time, 1, INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, 1, INSTR(time, ':') - 1) AS FLOAT) * 60 ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) AS FLOAT) ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, '.') + 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, '.') + 1) AS FLOAT) / 1000 ELSE 0 END) AS time_in_seconds FROM lapTimes) SELECT T2.forename, T2.surname, T1.driverId FROM (SELECT driverId, MIN(time_in_seconds) AS min_time_in_seconds FROM lap_times_in_seconds GROUP BY driverId) AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T1.min_time_in_seconds ASC LIMIT 20"
+061f0ff,formula_1::qid::1014,1014,formula_1,1,"WITH fastest_lap_times AS (
+  SELECT
+    T1.raceId,
+    T1.FastestLapTime,
+    (
+      CAST(SUBSTR(T1.FastestLapTime, 1, INSTR(T1.FastestLapTime, ':') - 1) AS DOUBLE) * 60
+    ) + (
+      CAST(SUBSTR(
+        T1.FastestLapTime,
+        INSTR(T1.FastestLapTime, ':') + 1,
+        INSTR(T1.FastestLapTime, '.') - INSTR(T1.FastestLapTime, ':') - 1
+      ) AS DOUBLE)
+    ) + (
+      CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS DOUBLE) / 1000
+    ) AS time_in_seconds
+  FROM results AS T1
+  WHERE
+    NOT T1.FastestLapTime IS NULL
+)
+SELECT
+  T1.FastestLapTime AS lap_record
+FROM results AS T1
+INNER JOIN races AS T2
+  ON T1.raceId = T2.raceId
+INNER JOIN circuits AS T3
+  ON T2.circuitId = T3.circuitId
+INNER JOIN (
+  SELECT
+    MIN(fastest_lap_times.time_in_seconds) AS min_time_in_seconds
+  FROM fastest_lap_times
+  INNER JOIN races AS T2
+    ON fastest_lap_times.raceId = T2.raceId
+  INNER JOIN circuits AS T3
+    ON T2.circuitId = T3.circuitId
+  WHERE
+    T3.country = 'Italy'
+) AS T4
+  ON (
+    CAST(SUBSTR(T1.FastestLapTime, 1, INSTR(T1.FastestLapTime, ':') - 1) AS DOUBLE) * 60
+  ) + (
+    CAST(SUBSTR(
+      T1.FastestLapTime,
+      INSTR(T1.FastestLapTime, ':') + 1,
+      INSTR(T1.FastestLapTime, '.') - INSTR(T1.FastestLapTime, ':') - 1
+    ) AS DOUBLE)
+  ) + (
+    CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS DOUBLE) / 1000
+  ) = T4.min_time_in_seconds
+LIMIT 1"
+061f0ff,superhero::qid::719,719,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T3.power_name = 'Super Strength' AND T1.height_cm > 200"
+061f0ff,superhero::qid::723,723,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+INNER JOIN colour AS T4
+  ON T1.eye_colour_id = T4.id
+WHERE
+  T3.power_name = 'Agility' AND T4.colour = 'Blue'"
+061f0ff,superhero::qid::724,724,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.hair_colour_id = T3.id
+WHERE
+  T2.colour = 'Blue' AND T3.colour = 'Blond'"
+061f0ff,superhero::qid::726,726,superhero,0,"SELECT
+  superhero_name,
+  height_cm,
+  RANK() OVER (ORDER BY height_cm DESC) AS HeightRank
+FROM superhero
+INNER JOIN publisher
+  ON superhero.publisher_id = publisher.id
+WHERE
+  publisher.publisher_name = 'Marvel Comics'"
+061f0ff,superhero::qid::728,728,superhero,0,"SELECT
+  colour.colour AS EyeColor,
+  COUNT(superhero.id) AS Count,
+  RANK() OVER (ORDER BY COUNT(superhero.id) DESC) AS PopularityRank
+FROM superhero
+INNER JOIN colour
+  ON superhero.eye_colour_id = colour.id
+INNER JOIN publisher
+  ON superhero.publisher_id = publisher.id
+WHERE
+  publisher.publisher_name = 'Marvel Comics'
+GROUP BY
+  colour.colour"
+061f0ff,superhero::qid::730,730,superhero,1,"SELECT
+  superhero_name
+FROM superhero AS T1
+WHERE
+  EXISTS(
+    SELECT
+      1
+    FROM hero_power AS T2
+    INNER JOIN superpower AS T3
+      ON T2.power_id = T3.id
+    WHERE
+      T3.power_name = 'Super Strength' AND T1.id = T2.hero_id
+  )
+  AND EXISTS(
+    SELECT
+      1
+    FROM publisher AS T4
+    WHERE
+      T4.publisher_name = 'Marvel Comics' AND T1.publisher_id = T4.id
+  )"
+061f0ff,superhero::qid::732,732,superhero,0,"SELECT
+  T2.publisher_name
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN hero_attribute AS T3
+  ON T1.id = T3.hero_id
+INNER JOIN attribute AS T4
+  ON T3.attribute_id = T4.id
+WHERE
+  T4.attribute_name = 'Speed'
+ORDER BY
+  T3.attribute_value
+LIMIT 1"
+061f0ff,superhero::qid::733,733,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.eye_colour_id = T3.id
+WHERE
+  T2.publisher_name = 'Marvel Comics' AND T3.colour = 'Gold'"
+061f0ff,superhero::qid::736,736,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T2.attribute_id = T3.id
+WHERE
+  T3.attribute_name = 'Intelligence'
+ORDER BY
+  T2.attribute_value
+LIMIT 1"
+061f0ff,superhero::qid::737,737,superhero,0,"SELECT
+  T2.race
+FROM superhero AS T1
+INNER JOIN race AS T2
+  ON T1.race_id = T2.id
+WHERE
+  T1.superhero_name = 'Copycat'"
+061f0ff,superhero::qid::738,738,superhero,1,"SELECT
+  superhero_name
+FROM superhero AS T1
+WHERE
+  EXISTS(
+    SELECT
+      1
+    FROM hero_attribute AS T2
+    INNER JOIN attribute AS T3
+      ON T2.attribute_id = T3.id
+    WHERE
+      T3.attribute_name = 'Durability'
+      AND T2.attribute_value < 50
+      AND T1.id = T2.hero_id
+  )"
+061f0ff,superhero::qid::739,739,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T3.power_name = 'Death Touch'"
+061f0ff,superhero::qid::740,740,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T2.attribute_id = T3.id
+INNER JOIN gender AS T4
+  ON T1.gender_id = T4.id
+WHERE
+  T3.attribute_name = 'Strength'
+  AND T2.attribute_value = 100
+  AND T4.gender = 'Female'"
+061f0ff,superhero::qid::743,743,superhero,0,"SELECT
+  (
+    CAST(COUNT(*) AS DOUBLE) * 100 / (
+      SELECT
+        COUNT(*)
+      FROM superhero
+    )
+  ),
+  CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS DOUBLE)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN alignment AS T3
+  ON T3.id = T1.alignment_id
+WHERE
+  T3.alignment = 'Bad'"
+061f0ff,superhero::qid::744,744,superhero,0,"SELECT
+  SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id"
+061f0ff,superhero::qid::745,745,superhero,0,"SELECT
+  id
+FROM publisher
+WHERE
+  publisher_name = 'Star Trek'"
+061f0ff,superhero::qid::747,747,superhero,0,"SELECT
+  COUNT(id)
+FROM superhero
+WHERE
+  full_name IS NULL"
+061f0ff,superhero::qid::750,750,superhero,0,"SELECT
+  AVG(T1.weight_kg)
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id
+WHERE
+  T2.gender = 'Female'"
+061f0ff,superhero::qid::751,751,superhero,0,"SELECT
+  T3.power_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T3.id = T2.power_id
+INNER JOIN gender AS T4
+  ON T4.id = T1.gender_id
+WHERE
+  T4.gender = 'Male'
+LIMIT 5"
+061f0ff,superhero::qid::753,753,superhero,0,"SELECT DISTINCT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'"
+061f0ff,superhero::qid::758,758,superhero,0,"SELECT DISTINCT
+  T3.colour
+FROM superhero AS T1
+INNER JOIN race AS T2
+  ON T1.race_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.hair_colour_id = T3.id
+WHERE
+  T1.height_cm = 185 AND T2.race = 'Human'"
+061f0ff,superhero::qid::760,760,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+WHERE
+  T1.height_cm BETWEEN 150 AND 180"
+061f0ff,superhero::qid::761,761,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id
+WHERE
+  T2.gender = 'Male'
+  AND T1.weight_kg * 100 > (
+    SELECT
+      AVG(weight_kg)
+    FROM superhero
+  ) * 79"
+061f0ff,superhero::qid::764,764,superhero,0,"SELECT DISTINCT
+  T2.power_name
+FROM hero_power AS T1
+INNER JOIN superpower AS T2
+  ON T1.power_id = T2.id
+WHERE
+  T1.hero_id = 1"
+061f0ff,superhero::qid::765,765,superhero,0,"SELECT
+  COUNT(T1.hero_id)
+FROM hero_power AS T1
+INNER JOIN superpower AS T2
+  ON T1.power_id = T2.id
+WHERE
+  T2.power_name = 'Stealth'"
+061f0ff,superhero::qid::766,766,superhero,0,SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC LIMIT 1
+061f0ff,superhero::qid::769,769,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T3.id = T2.attribute_id
+INNER JOIN publisher AS T4
+  ON T4.id = T1.publisher_id
+WHERE
+  T4.publisher_name = 'Dark Horse Comics'
+  AND T3.attribute_name = 'Durability'
+ORDER BY
+  T2.attribute_value DESC
+LIMIT 1"
+061f0ff,superhero::qid::772,772,superhero,0,"SELECT
+  T1.eye_colour_id,
+  T1.hair_colour_id,
+  T1.skin_colour_id
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T2.id = T1.publisher_id
+INNER JOIN gender AS T3
+  ON T3.id = T1.gender_id
+WHERE
+  T2.publisher_name = 'Dark Horse Comics' AND T3.gender = 'Female'"
+061f0ff,superhero::qid::773,773,superhero,0,"SELECT
+  T1.superhero_name,
+  T2.publisher_name
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+WHERE
+  T1.eye_colour_id = T1.hair_colour_id
+  AND T1.eye_colour_id = T1.skin_colour_id"
+061f0ff,superhero::qid::775,775,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T3.colour = 'Blue' THEN T1.id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.skin_colour_id = T3.id
+WHERE
+  T2.gender = 'Female'"
+061f0ff,superhero::qid::779,779,superhero,0,"SELECT
+  COUNT(T1.power_id)
+FROM hero_power AS T1
+INNER JOIN superhero AS T2
+  ON T1.hero_id = T2.id
+WHERE
+  T2.superhero_name = 'Amazo'"
+061f0ff,superhero::qid::781,781,superhero,0,"SELECT
+  T1.height_cm
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T2.colour = 'Amber'"
+061f0ff,superhero::qid::782,782,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id AND T1.hair_colour_id = T2.id
+WHERE
+  T2.colour = 'Black'"
+061f0ff,superhero::qid::785,785,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN alignment AS T2
+  ON T1.alignment_id = T2.id
+WHERE
+  T2.alignment = 'Neutral'"
+061f0ff,superhero::qid::786,786,superhero,0,"SELECT
+  COUNT(T1.hero_id)
+FROM hero_attribute AS T1
+INNER JOIN attribute AS T2
+  ON T1.attribute_id = T2.id
+WHERE
+  T2.attribute_name = 'Strength'
+  AND T1.attribute_value = (
+    SELECT
+      MAX(attribute_value)
+    FROM hero_attribute
+  )"
+061f0ff,superhero::qid::788,788,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' AND T3.gender = 'Female' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+INNER JOIN gender AS T3
+  ON T1.gender_id = T3.id"
+061f0ff,superhero::qid::790,790,superhero,0,"SELECT
+  (
+    SELECT
+      weight_kg
+    FROM superhero
+    WHERE
+      full_name LIKE 'Emil Blonsky'
+  ) - (
+    SELECT
+      weight_kg
+    FROM superhero
+    WHERE
+      full_name LIKE 'Charles Chandler'
+  ) AS CALCULATE"
+061f0ff,superhero::qid::791,791,superhero,0,"SELECT
+  CAST(SUM(height_cm) AS DOUBLE) / COUNT(id)
+FROM superhero"
+061f0ff,superhero::qid::792,792,superhero,0,"SELECT
+  T3.power_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T1.superhero_name = 'Abomination'"
+061f0ff,superhero::qid::796,796,superhero,0,"SELECT
+  T3.attribute_name,
+  T2.attribute_value
+FROM superhero AS T1
+INNER JOIN hero_attribute AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN attribute AS T3
+  ON T2.attribute_id = T3.id
+WHERE
+  T1.superhero_name = '3-D Man'"
+061f0ff,superhero::qid::797,797,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.hair_colour_id = T3.id
+WHERE
+  T2.colour = 'Blue' AND T3.colour = 'Brown'"
+061f0ff,superhero::qid::798,798,superhero,0,"SELECT
+  T2.publisher_name
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id
+WHERE
+  T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')"
+061f0ff,superhero::qid::800,800,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.colour = 'Blue' THEN 1 ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id"
+061f0ff,superhero::qid::801,801,superhero,0,"SELECT
+  CAST(COUNT(CASE WHEN T2.gender = 'Male' THEN T1.id ELSE NULL END) AS DOUBLE) / COUNT(CASE WHEN T2.gender = 'Female' THEN T1.id ELSE NULL END)
+FROM superhero AS T1
+INNER JOIN gender AS T2
+  ON T1.gender_id = T2.id"
+061f0ff,superhero::qid::806,806,superhero,0,"SELECT
+  T2.colour
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T1.full_name = 'Karen Beecher-Duncan'"
+061f0ff,superhero::qid::819,819,superhero,0,"SELECT
+  SUM(CASE WHEN T2.id = 7 THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.id = 1 THEN 1 ELSE 0 END)
+FROM superhero AS T1
+INNER JOIN colour AS T2
+  ON T1.eye_colour_id = T2.id
+WHERE
+  T1.weight_kg = 0 OR T1.weight_kg IS NULL"
+061f0ff,superhero::qid::822,822,superhero,0,"SELECT
+  COUNT(T1.id)
+FROM superhero AS T1
+INNER JOIN alignment AS T2
+  ON T1.alignment_id = T2.id
+INNER JOIN colour AS T3
+  ON T1.skin_colour_id = T3.id
+WHERE
+  T2.alignment = 'Bad' AND T3.colour = 'Green'"
+061f0ff,superhero::qid::824,824,superhero,0,"SELECT
+  T1.superhero_name
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+WHERE
+  T3.power_name = 'Wind Control'
+ORDER BY
+  T1.superhero_name"
+061f0ff,superhero::qid::825,825,superhero,0,"SELECT
+  T4.gender
+FROM superhero AS T1
+INNER JOIN hero_power AS T2
+  ON T1.id = T2.hero_id
+INNER JOIN superpower AS T3
+  ON T2.power_id = T3.id
+INNER JOIN gender AS T4
+  ON T1.gender_id = T4.id
+WHERE
+  T3.power_name = 'Phoenix Force'"
+061f0ff,superhero::qid::829,829,superhero,0,"SELECT
+  SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END)
+FROM superhero AS T1
+INNER JOIN publisher AS T2
+  ON T1.publisher_id = T2.id"
+061f0ff,toxicology::qid::200,200,toxicology,0,"SELECT DISTINCT
+  T2.molecule_id
+FROM bond AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T1.bond_type = '#' AND T2.label = '+'"
+061f0ff,toxicology::qid::208,208,toxicology,0,"SELECT
+  T.label
+FROM (
+  SELECT
+    T2.label,
+    COUNT(T2.molecule_id)
+  FROM atom AS T1
+  INNER JOIN molecule AS T2
+    ON T1.molecule_id = T2.molecule_id
+  WHERE
+    T1.element = 'h'
+  GROUP BY
+    T2.label
+  ORDER BY
+    COUNT(T2.molecule_id) DESC
+  LIMIT 1
+) AS t"
+061f0ff,toxicology::qid::212,212,toxicology,0,"SELECT
+  T.element
+FROM (
+  SELECT
+    T1.element,
+    COUNT(DISTINCT T1.molecule_id)
+  FROM atom AS T1
+  INNER JOIN molecule AS T2
+    ON T1.molecule_id = T2.molecule_id
+  WHERE
+    T2.label = '-'
+  GROUP BY
+    T1.element
+  ORDER BY
+    COUNT(DISTINCT T1.molecule_id) ASC
+  LIMIT 1
+) AS t"
+061f0ff,toxicology::qid::213,213,toxicology,0,"SELECT
+  T1.bond_type
+FROM bond AS T1
+INNER JOIN connected AS T2
+  ON T1.bond_id = T2.bond_id
+WHERE
+  T2.atom_id = 'TR004_8'
+  AND T2.atom_id2 = 'TR004_20'
+  OR T2.atom_id2 = 'TR004_8'
+  AND T2.atom_id = 'TR004_20'"
+061f0ff,toxicology::qid::219,219,toxicology,0,"SELECT
+  CAST(COUNT(DISTINCT CASE WHEN T2.label = '+' THEN T2.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(DISTINCT T2.molecule_id)
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+INNER JOIN bond AS T3
+  ON T2.molecule_id = T3.molecule_id
+WHERE
+  T3.bond_type = '#'"
+061f0ff,toxicology::qid::220,220,toxicology,0,"SELECT DISTINCT
+  T.element
+FROM atom AS T
+WHERE
+  T.molecule_id = 'TR000'
+ORDER BY
+  T.element
+LIMIT 3"
+061f0ff,toxicology::qid::226,226,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.bond_id),
+    5
+  )
+FROM bond AS T
+WHERE
+  T.molecule_id = 'TR008'"
+061f0ff,toxicology::qid::227,227,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T.label = '+' THEN T.molecule_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.molecule_id),
+    3
+  )
+FROM molecule AS t"
+061f0ff,toxicology::qid::228,228,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T.atom_id),
+    4
+  )
+FROM atom AS T
+WHERE
+  T.molecule_id = 'TR206'"
+061f0ff,toxicology::qid::230,230,toxicology,0,"SELECT DISTINCT
+  T1.element,
+  T2.label
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.molecule_id = 'TR060'"
+061f0ff,toxicology::qid::231,231,toxicology,0,"SELECT
+  T.bond_type
+FROM (
+  SELECT
+    T1.bond_type,
+    COUNT(T1.molecule_id)
+  FROM bond AS T1
+  WHERE
+    T1.molecule_id = 'TR010'
+  GROUP BY
+    T1.bond_type
+  ORDER BY
+    COUNT(T1.molecule_id) DESC
+  LIMIT 1
+) AS T"
+061f0ff,toxicology::qid::232,232,toxicology,0,"SELECT DISTINCT
+  T2.molecule_id
+FROM bond AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T1.bond_type = '-' AND T2.label = '-'
+ORDER BY
+  T2.molecule_id
+LIMIT 3"
+061f0ff,toxicology::qid::236,236,toxicology,0,"SELECT
+  T1.bond_type,
+  T2.atom_id,
+  T2.atom_id2
+FROM bond AS T1
+INNER JOIN connected AS T2
+  ON T1.bond_id = T2.bond_id
+WHERE
+  T2.bond_id = 'TR001_6_9'"
+061f0ff,toxicology::qid::239,239,toxicology,0,"SELECT
+  COUNT(T.bond_id)
+FROM connected AS T
+WHERE
+  SUBSTR(T.atom_id, -2) = '19'"
+061f0ff,toxicology::qid::240,240,toxicology,0,"SELECT DISTINCT
+  T.element
+FROM atom AS T
+WHERE
+  T.molecule_id = 'TR004'"
+061f0ff,toxicology::qid::242,242,toxicology,0,"SELECT DISTINCT
+  T2.molecule_id
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  SUBSTR(T1.atom_id, -2) BETWEEN '21' AND '25' AND T2.label = '+'"
+061f0ff,toxicology::qid::244,244,toxicology,0,"SELECT
+  T1.label
+FROM molecule AS T1
+INNER JOIN (
+  SELECT
+    T.molecule_id,
+    COUNT(T.bond_type)
+  FROM bond AS T
+  WHERE
+    T.bond_type = '='
+  GROUP BY
+    T.molecule_id
+  ORDER BY
+    COUNT(T.bond_type) DESC
+  LIMIT 1
+) AS T2
+  ON T1.molecule_id = T2.molecule_id"
+061f0ff,toxicology::qid::245,245,toxicology,0,"SELECT
+  CAST(COUNT(T2.bond_id) AS DOUBLE) / COUNT(T1.atom_id)
+FROM atom AS T1
+INNER JOIN connected AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T1.element = 'i'"
+061f0ff,toxicology::qid::249,249,toxicology,0,"SELECT
+  T2.element
+FROM connected AS T1
+INNER JOIN atom AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T1.bond_id = 'TR144_8_19'"
+061f0ff,toxicology::qid::255,255,toxicology,0,"SELECT
+  ROUND(
+    CAST(COUNT(CASE WHEN T2.label = '+' THEN T1.bond_id ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.bond_id),
+    5
+  )
+FROM bond AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T1.bond_type = '-'"
+061f0ff,toxicology::qid::260,260,toxicology,0,"SELECT
+  COUNT(T1.atom_id)
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+INNER JOIN bond AS T3
+  ON T2.molecule_id = T3.molecule_id
+WHERE
+  T3.bond_type = '#' AND T1.element IN ('p', 'br')"
+061f0ff,toxicology::qid::268,268,toxicology,0,"SELECT
+  T2.element
+FROM connected AS T1
+INNER JOIN atom AS T2
+  ON T1.atom_id = T2.atom_id
+WHERE
+  T1.bond_id = 'TR001_10_11'"
+061f0ff,toxicology::qid::273,273,toxicology,0,"SELECT
+  CAST(COUNT(CASE WHEN T1.element = 'cl' THEN T1.element ELSE NULL END) AS DOUBLE) * 100 / COUNT(T1.element)
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.label = '+'"
+061f0ff,toxicology::qid::281,281,toxicology,0,"SELECT DISTINCT
+  T1.element
+FROM atom AS T1
+INNER JOIN molecule AS T2
+  ON T1.molecule_id = T2.molecule_id
+WHERE
+  T2.label = '+'
+  AND SUBSTR(T1.atom_id, -1) = '4'
+  AND LENGTH(T1.atom_id) = 7"
+061f0ff,toxicology::qid::282,282,toxicology,0,"WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT CAST(COUNT(CASE WHEN element = 'h' THEN atom_id ELSE NULL END) AS DECIMAL(10,2)) / NULLIF(COUNT(atom_id), 0) AS ratio, label FROM SubQuery GROUP BY label"
+061f0ff,toxicology::qid::327,327,toxicology,0,"SELECT
+  T.molecule_id
+FROM (
+  SELECT
+    T1.molecule_id,
+    COUNT(T2.atom_id)
+  FROM molecule AS T1
+  INNER JOIN atom AS T2
+    ON T1.molecule_id = T2.molecule_id
+  WHERE
+    T1.label = '-'
+  GROUP BY
+    T1.molecule_id
+  HAVING
+    COUNT(T2.atom_id) > 5
+) AS t"
+061f0ff,california_schools::qid::37,37,california_schools,0,"SELECT
+  T2.Street,
+  T2.City,
+  T2.State,
+  T2.Zip
+FROM satscores AS T1
+INNER JOIN schools AS T2
+  ON T1.cds = T2.CDSCode
+ORDER BY
+  CAST(T1.NumGE1500 AS DOUBLE) / T1.NumTstTakr ASC
+LIMIT 1"
+061f0ff,california_schools::qid::36,36,california_schools,0,"SELECT
+  T2.AdmFName1,
+  T2.AdmLName1,
+  T2.AdmFName2,
+  T2.AdmLName2,
+  T2.AdmFName3,
+  T2.AdmLName3
+FROM satscores AS T1
+INNER JOIN schools AS T2
+  ON T1.cds = T2.CDSCode
+ORDER BY
+  T1.NumGE1500 DESC
+LIMIT 1"
+061f0ff,california_schools::qid::50,50,california_schools,0,"SELECT
+  T2.MailStreet,
+  T2.School
+FROM satscores AS T1
+INNER JOIN schools AS T2
+  ON T1.cds = T2.CDSCode
+ORDER BY
+  T1.AvgScrMath DESC
+LIMIT 1
+OFFSET 6"
+061f0ff,financial::qid::89,89,financial,0,"SELECT
+  COUNT(T2.account_id)
+FROM district AS T1
+INNER JOIN account AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'"
+061f0ff,financial::qid::92,92,financial,0,"SELECT
+  COUNT(DISTINCT T2.district_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'F' AND T2.A11 BETWEEN 6000 AND 10000"
+061f0ff,financial::qid::93,93,financial,0,"SELECT
+  COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000"
+061f0ff,financial::qid::94,94,financial,0,"SELECT
+  T1.account_id,
+  (
+    SELECT
+      MAX(A11) - MIN(A11)
+    FROM district
+  )
+FROM account AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN disp AS T3
+  ON T1.account_id = T3.account_id
+INNER JOIN client AS T4
+  ON T3.client_id = T4.client_id
+WHERE
+  T2.district_id = (
+    SELECT
+      district_id
+    FROM client
+    WHERE
+      gender = 'F'
+    ORDER BY
+      birth_date ASC
+    LIMIT 1
+  )
+ORDER BY
+  T2.A11 DESC
+LIMIT 1"
+061f0ff,financial::qid::95,95,financial,0,"SELECT
+  T1.account_id
+FROM account AS T1
+INNER JOIN disp AS T2
+  ON T1.account_id = T2.account_id
+INNER JOIN client AS T3
+  ON T2.client_id = T3.client_id
+INNER JOIN district AS T4
+  ON T4.district_id = T1.district_id
+WHERE
+  T2.client_id = (
+    SELECT
+      client_id
+    FROM client
+    ORDER BY
+      birth_date DESC
+    LIMIT 1
+  )
+GROUP BY
+  T4.A11,
+  T1.account_id"
+061f0ff,financial::qid::112,112,financial,0,"SELECT
+  T1.A2
+FROM district AS T1
+INNER JOIN client AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T2.birth_date = '1976-01-29' AND T2.gender = 'F'"
+061f0ff,financial::qid::115,115,financial,0,"SELECT
+  CAST(SUM(T1.gender = 'M') AS DOUBLE) * 100 / COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T2.A3 = 'south Bohemia'
+GROUP BY
+  T2.A4
+ORDER BY
+  T2.A4 DESC
+LIMIT 1"
+061f0ff,financial::qid::116,116,financial,1,"SELECT
+  CAST((
+    SUM(CASE WHEN T3.date = '1998-12-27' THEN T3.balance ELSE 0 END) - SUM(CASE WHEN T3.date = '1993-03-22' THEN T3.balance ELSE 0 END)
+  ) AS DOUBLE) * 100 / SUM(CASE WHEN T3.date = '1993-03-22' THEN T3.balance ELSE 0 END)
+FROM loan AS T1
+INNER JOIN account AS T2
+  ON T1.account_id = T2.account_id
+INNER JOIN trans AS T3
+  ON T3.account_id = T2.account_id
+WHERE
+  T1.date = '1993-07-05'"
+061f0ff,financial::qid::117,117,financial,0,"SELECT
+  (
+    CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS DOUBLE) * 100
+  ) / SUM(amount)
+FROM loan"
+061f0ff,financial::qid::118,118,financial,0,"SELECT
+  CAST(SUM(status = 'C') AS DOUBLE) * 100 / COUNT(account_id)
+FROM loan
+WHERE
+  amount < 100000"
+061f0ff,financial::qid::125,125,financial,0,"SELECT
+  CAST((
+    T3.A13 - T3.A12
+  ) AS DOUBLE) * 100 / T3.A12
+FROM loan AS T1
+INNER JOIN account AS T2
+  ON T1.account_id = T2.account_id
+INNER JOIN district AS T3
+  ON T2.district_id = T3.district_id
+WHERE
+  T1.status = 'D'"
+061f0ff,financial::qid::128,128,financial,0,"SELECT
+  T2.A2,
+  COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'F'
+GROUP BY
+  T2.district_id,
+  T2.A2
+ORDER BY
+  COUNT(T1.client_id) DESC
+LIMIT 9"
+061f0ff,financial::qid::136,136,financial,0,"SELECT
+  COUNT(T1.account_id)
+FROM account AS T1
+INNER JOIN loan AS T2
+  ON T1.account_id = T2.account_id
+WHERE
+  T2.date BETWEEN '1995-01-01' AND '1997-12-31'
+  AND T1.frequency = 'POPLATEK MESICNE'
+  AND T2.amount >= 250000"
+061f0ff,financial::qid::137,137,financial,0,"SELECT
+  COUNT(T1.account_id)
+FROM account AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN loan AS T3
+  ON T1.account_id = T3.account_id
+WHERE
+  T1.district_id = 1 AND (
+    T3.status = 'C' OR T3.status = 'D'
+  )"
+061f0ff,financial::qid::138,138,financial,0,"SELECT
+  COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.gender = 'M'
+  AND T2.A15 = (
+    SELECT
+      T3.A15
+    FROM district AS T3
+    ORDER BY
+      T3.A15 DESC
+    LIMIT 1
+    OFFSET 1
+  )"
+061f0ff,financial::qid::129,129,financial,1,"SELECT DISTINCT
+  T1.A2
+FROM district AS T1
+INNER JOIN account AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN trans AS T3
+  ON T2.account_id = T3.account_id
+WHERE
+  T3.type = 'VYDAJ' AND T3.date LIKE '1996-01%'
+ORDER BY
+  A2 ASC
+LIMIT 10"
+061f0ff,financial::qid::149,149,financial,0,"SELECT
+  T3.type
+FROM district AS T1
+INNER JOIN account AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN disp AS T3
+  ON T2.account_id = T3.account_id
+WHERE
+  T3.type <> 'OWNER' AND T1.A11 BETWEEN 8000 AND 9000"
+061f0ff,financial::qid::159,159,financial,1,"SELECT
+  T4.trans_id
+FROM client AS T1
+INNER JOIN disp AS T2
+  ON T1.client_id = T2.client_id
+INNER JOIN account AS T3
+  ON T2.account_id = T3.account_id
+INNER JOIN trans AS T4
+  ON T3.account_id = T4.account_id
+WHERE
+  T1.client_id = 3356 AND T4.operation = 'VYBER'"
+061f0ff,financial::qid::168,168,financial,0,"SELECT
+  CAST(SUM(T2.gender = 'F') AS DOUBLE) * 100 / COUNT(T2.client_id)
+FROM district AS T1
+INNER JOIN client AS T2
+  ON T1.district_id = T2.district_id
+WHERE
+  T1.A11 > 10000"
+061f0ff,financial::qid::186,186,financial,0,"SELECT
+  CAST(SUM(T1.gender = 'M') AS DOUBLE) * 100 / COUNT(T1.client_id)
+FROM client AS T1
+INNER JOIN district AS T3
+  ON T1.district_id = T3.district_id
+INNER JOIN account AS T2
+  ON T2.district_id = T3.district_id
+INNER JOIN disp AS T4
+  ON T1.client_id = T4.client_id AND T2.account_id = T4.account_id
+WHERE
+  T2.frequency = 'POPLATEK TYDNE'"
+061f0ff,financial::qid::189,189,financial,0,"SELECT
+  T3.account_id
+FROM client AS T1
+INNER JOIN district AS T2
+  ON T1.district_id = T2.district_id
+INNER JOIN account AS T3
+  ON T2.district_id = T3.district_id
+INNER JOIN disp AS T4
+  ON T1.client_id = T4.client_id AND T4.account_id = T3.account_id
+WHERE
+  T1.gender = 'F'
+ORDER BY
+  T1.birth_date ASC,
+  T2.A11 ASC
+LIMIT 1"
+061f0ff,financial::qid::192,192,financial,0,"SELECT
+  AVG(T2.amount)
+FROM account AS T1
+INNER JOIN loan AS T2
+  ON T1.account_id = T2.account_id
+WHERE
+  T2.status IN ('C', 'D') AND T1.frequency = 'POPLATEK PO OBRATU'"
+018ac87,debit_card_specializing::qid::1471,1471,debit_card_specializing,0,"SELECT CAST(SUM(IIF(Currency = 'EUR', 1, 0)) AS FLOAT) / SUM(IIF(Currency = 'CZK', 1, 0)) AS ratio FROM customers"
+018ac87,debit_card_specializing::qid::1479,1479,debit_card_specializing,1,"SELECT SUBSTR(T2.Date, 1, 4) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Currency = 'CZK' GROUP BY SUBSTR(T2.Date, 1, 4) ORDER BY SUM(T2.Consumption) DESC LIMIT 1"
+018ac87,debit_card_specializing::qid::1480,1480,debit_card_specializing,1,"SELECT SUBSTR(T2.Date, 5, 2) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME' GROUP BY SUBSTR(T2.Date, 5, 2) ORDER BY SUM(T2.Consumption) DESC LIMIT 1"
+018ac87,debit_card_specializing::qid::1481,1481,debit_card_specializing,1,"SELECT CAST(SUM(IIF(T1.Segment = 'SME', T2.Consumption, 0)) AS REAL) / COUNT(T1.CustomerID) - CAST(SUM(IIF(T1.Segment = 'LAM', T2.Consumption, 0)) AS REAL) / COUNT(T1.CustomerID) , CAST(SUM(IIF(T1.Segment = 'LAM', T2.Consumption, 0)) AS REAL) / COUNT(T1.CustomerID) - CAST(SUM(IIF(T1.Segment = 'KAM', T2.Consumption, 0)) AS REAL) / COUNT(T1.CustomerID) , CAST(SUM(IIF(T1.Segment = 'KAM', T2.Consumption, 0)) AS REAL) / COUNT(T1.CustomerID) - CAST(SUM(IIF(T1.Segment = 'SME', T2.Consumption, 0)) AS REAL) / COUNT(T1.CustomerID) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Currency = 'CZK' AND T2.Consumption = ( SELECT MIN(Consumption) FROM yearmonth ) AND T2.Date BETWEEN 201301 AND 201312"
+018ac87,debit_card_specializing::qid::1482,1482,debit_card_specializing,1,"SELECT CAST((SUM(IIF(T1.Segment = 'SME' AND T2.Date LIKE '2013%', T2.Consumption, 0)) - SUM(IIF(T1.Segment = 'SME' AND T2.Date LIKE '2012%', T2.Consumption, 0))) AS FLOAT) * 100 / SUM(IIF(T1.Segment = 'SME' AND T2.Date LIKE '2012%', T2.Consumption, 0)), CAST(SUM(IIF(T1.Segment = 'LAM' AND T2.Date LIKE '2013%', T2.Consumption, 0)) - SUM(IIF(T1.Segment = 'LAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) AS FLOAT) * 100 / SUM(IIF(T1.Segment = 'LAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) , CAST(SUM(IIF(T1.Segment = 'KAM' AND T2.Date LIKE '2013%', T2.Consumption, 0)) - SUM(IIF(T1.Segment = 'KAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) AS FLOAT) * 100 / SUM(IIF(T1.Segment = 'KAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID"
+018ac87,debit_card_specializing::qid::1484,1484,debit_card_specializing,0,"SELECT SUM(IIF(Country = 'CZE', 1, 0)) - SUM(IIF(Country = 'SVK', 1, 0)) FROM gasstations WHERE Segment = 'Discount'"
+018ac87,debit_card_specializing::qid::1498,1498,debit_card_specializing,1,"SELECT SUM(Consumption) FROM yearmonth WHERE SUBSTR(Date, 1, 4) = '2012' GROUP BY SUBSTR(Date, 5, 2) ORDER BY SUM(Consumption) DESC LIMIT 1"
+018ac87,debit_card_specializing::qid::1500,1500,debit_card_specializing,0,SELECT T3.Description FROM transactions_1k AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID INNER JOIN products AS T3 ON T1.ProductID = T3.ProductID WHERE T2.Date = '201309'
+018ac87,debit_card_specializing::qid::1501,1501,debit_card_specializing,0,SELECT DISTINCT T2.Country FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN yearmonth AS T3 ON T1.CustomerID = T3.CustomerID WHERE T3.Date = '201306'
+018ac87,debit_card_specializing::qid::1506,1506,debit_card_specializing,0,SELECT DISTINCT T3.Description FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN products AS T3 ON T1.ProductID = T3.ProductID WHERE T2.Country = 'CZE'
+018ac87,debit_card_specializing::qid::1507,1507,debit_card_specializing,0,SELECT DISTINCT T1.Time FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T2.ChainID = 11
+018ac87,debit_card_specializing::qid::1509,1509,debit_card_specializing,0,"SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T2.Country = 'CZE' AND STRFTIME('%Y', T1.Date) >= '2012'"
+018ac87,debit_card_specializing::qid::1514,1514,debit_card_specializing,0,SELECT DISTINCT T3.Currency FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN customers AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.Date = '2012-08-24' AND T1.Time = '16:25:00'
+018ac87,debit_card_specializing::qid::1515,1515,debit_card_specializing,0,SELECT T2.Segment FROM transactions_1k AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.date = '2012-08-23' AND T1.time = '21:20:00'
+018ac87,debit_card_specializing::qid::1521,1521,debit_card_specializing,0,SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date = '2012-08-26' AND T1.Time BETWEEN '08:00:00' AND '09:00:00' AND T2.Country = 'CZE'
+018ac87,debit_card_specializing::qid::1524,1524,debit_card_specializing,0,SELECT T2.Country FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date = '2012-08-24' AND T1.Price  = 548.4
+018ac87,debit_card_specializing::qid::1525,1525,debit_card_specializing,0,"SELECT CAST(SUM(IIF(T2.Currency = 'EUR', 1, 0)) AS FLOAT) * 100 / COUNT(T1.CustomerID) FROM transactions_1k AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Date = '2012-08-25'"
+018ac87,debit_card_specializing::qid::1528,1528,debit_card_specializing,0,"SELECT CAST(SUM(IIF(Country = 'SVK' AND Segment = 'Premium', 1, 0)) AS FLOAT) * 100 / SUM(IIF(Country = 'SVK', 1, 0)) FROM gasstations"
+018ac87,debit_card_specializing::qid::1533,1533,debit_card_specializing,0,SELECT T2.Consumption FROM transactions_1k AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Price / T1.Amount > 29.00 AND T1.ProductID = 5 AND T2.Date = '201208'
+018ac87,student_club::qid::1312,1312,student_club,0,SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Angela' AND T1.last_name = 'Sanders'
+018ac87,student_club::qid::1317,1317,student_club,0,SELECT COUNT(T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T2.link_to_member = T3.member_id WHERE T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'
+018ac87,student_club::qid::1322,1322,student_club,0,SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10
+018ac87,student_club::qid::1323,1323,student_club,0,SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 EXCEPT SELECT T1.event_name FROM event AS T1  WHERE T1.type = 'Fundraiser'
+018ac87,student_club::qid::1331,1331,student_club,0,SELECT T2.amount FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Vice President'
+018ac87,student_club::qid::1334,1334,student_club,0,"SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T2.state = 'Illinois'"
+018ac87,student_club::qid::1338,1338,student_club,0,SELECT T3.approved FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'
+018ac87,student_club::qid::1339,1339,student_club,0,"SELECT AVG(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.last_name = 'Allen' AND T1.first_name = 'Elijah' AND (SUBSTR(T2.expense_date, 6, 2) = '09' OR SUBSTR(T2.expense_date, 6, 2) = '10')"
+018ac87,student_club::qid::1340,1340,student_club,0,"SELECT SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event"
+018ac87,student_club::qid::1344,1344,student_club,0,SELECT notes FROM income WHERE source = 'Fundraising' AND date_received = '2019-09-14'
+018ac87,student_club::qid::1346,1346,student_club,0,SELECT phone FROM member WHERE first_name = 'Carlo' AND last_name = 'Jacobs'
+018ac87,student_club::qid::1350,1350,student_club,0,"SELECT T1.event_status FROM budget AS T1 INNER JOIN expense AS T2 ON T1.budget_id = T2.link_to_budget WHERE T2.expense_description = 'Post Cards, Posters' AND T2.expense_date = '2019-08-20'"
+018ac87,student_club::qid::1351,1351,student_club,0,SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Brent' AND T1.last_name = 'Thomason'
+018ac87,student_club::qid::1352,1352,student_club,0,SELECT COUNT(T1.member_id) FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'
+018ac87,student_club::qid::1356,1356,student_club,0,SELECT T2.department FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.position = 'President'
+018ac87,student_club::qid::1357,1357,student_club,0,SELECT T2.date_received FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Connor' AND T1.last_name = 'Hilton' AND T2.source = 'Dues'
+018ac87,student_club::qid::1359,1359,student_club,0,SELECT CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS REAL) / SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END) FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' AND T2.type = 'Meeting'
+018ac87,student_club::qid::1361,1361,student_club,0,SELECT SUM(cost) FROM expense WHERE expense_description = 'Pizza'
+018ac87,student_club::qid::1368,1368,student_club,0,SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.phone = '809-555-3360'
+018ac87,student_club::qid::1371,1371,student_club,0,SELECT COUNT(T2.link_to_member) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'Women''s Soccer'
+018ac87,student_club::qid::1375,1375,student_club,0,"SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'School of Applied Sciences, Technology and Education'"
+018ac87,student_club::qid::1376,1376,student_club,0,SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T2.status = 'Closed' ORDER BY T1.spent / T1.amount DESC LIMIT 1
+018ac87,student_club::qid::1378,1378,student_club,0,SELECT MAX(spent) FROM budget
+018ac87,student_club::qid::1380,1380,student_club,0,SELECT SUM(spent) FROM budget WHERE category = 'Food'
+018ac87,student_club::qid::1381,1381,student_club,0,"SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member GROUP BY T2.link_to_member HAVING COUNT(T2.link_to_event) > 7"
+018ac87,student_club::qid::1387,1387,student_club,0,"SELECT T4.first_name, T4.last_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget INNER JOIN member AS T4 ON T3.link_to_member = T4.member_id WHERE T1.event_name = 'Yearly Kickoff'"
+018ac87,student_club::qid::1389,1389,student_club,0,SELECT T1.event_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget ORDER BY T3.cost LIMIT 1
+018ac87,student_club::qid::1390,1390,student_club,0,SELECT CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS REAL) * 100 / SUM(T3.cost) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget
+018ac87,student_club::qid::1392,1392,student_club,0,SELECT source FROM income WHERE date_received BETWEEN '2019-09-01' and '2019-09-30' ORDER BY source DESC LIMIT 1
+018ac87,student_club::qid::1394,1394,student_club,0,SELECT COUNT(T2.member_id) FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T1.major_name = 'Physics Teaching'
+018ac87,student_club::qid::1398,1398,student_club,0,SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' ORDER BY T1.spent DESC LIMIT 1
+018ac87,student_club::qid::1399,1399,student_club,0,SELECT CASE WHEN T3.event_name = 'Women''s Soccer' THEN 'YES' END AS result FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member INNER JOIN event AS T3 ON T2.link_to_event = T3.event_id WHERE T1.first_name = 'Maya' AND T1.last_name = 'Mclean'
+018ac87,student_club::qid::1401,1401,student_club,0,SELECT T3.cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'September Speaker' AND T3.expense_description = 'Posters'
+018ac87,student_club::qid::1403,1403,student_club,0,SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event WHERE T1.event_status = 'Closed' AND T1.remaining < 0 ORDER BY T1.remaining LIMIT 1
+018ac87,student_club::qid::1404,1404,student_club,0,"SELECT T1.type, SUM(T3.cost) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting'"
+018ac87,student_club::qid::1405,1405,student_club,0,"SELECT T2.category, SUM(T2.amount) FROM event AS T1 JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC"
+018ac87,student_club::qid::1409,1409,student_club,0,SELECT SUM(cost) FROM expense WHERE expense_date = '2019-08-20'
+018ac87,student_club::qid::1410,1410,student_club,0,"SELECT T1.first_name, T1.last_name, SUM(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.member_id = 'rec4BLdZHS2Blfp4v'"
+018ac87,student_club::qid::1411,1411,student_club,0,SELECT T2.expense_description FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'
+018ac87,student_club::qid::1422,1422,student_club,0,SELECT DISTINCT T2.category FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215'
+018ac87,student_club::qid::1426,1426,student_club,0,"SELECT T2.last_name, T1.department, T1.college FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'"
+018ac87,student_club::qid::1427,1427,student_club,0,"SELECT DISTINCT T2.category, T1.type FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'"
+018ac87,student_club::qid::1432,1432,student_club,0,SELECT CAST(SUM(CASE WHEN T2.amount = 50 THEN 1.0 ELSE 0 END) AS REAL) * 100 / COUNT(T2.income_id) FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Member' AND T1.t_shirt_size = 'Medium'
+018ac87,student_club::qid::1435,1435,student_club,0,"SELECT DISTINCT event_name FROM event WHERE type = 'Game' AND date(SUBSTR(event_date, 1, 10)) BETWEEN '2019-03-15' AND '2020-03-20' AND status = 'Closed'"
+018ac87,student_club::qid::1457,1457,student_club,0,"SELECT DISTINCT T3.first_name, T3.last_name, T3.phone FROM expense AS T1 INNER JOIN budget AS T2 ON T1.link_to_budget = T2.budget_id INNER JOIN member AS T3 ON T3.member_id = T1.link_to_member WHERE T1.cost > ( SELECT AVG(T1.cost) FROM expense AS T1 INNER JOIN budget AS T2 ON T1.link_to_budget = T2.budget_id INNER JOIN member AS T3 ON T3.member_id = T1.link_to_member )"
+018ac87,student_club::qid::1460,1460,student_club,0,"SELECT T2.first_name, T2.last_name, T1.cost FROM expense AS T1 INNER JOIN member AS T2 ON T1.link_to_member = T2.member_id WHERE T1.expense_description = 'Water, Veggie tray, supplies'"
+018ac87,student_club::qid::1464,1464,student_club,0,"SELECT DISTINCT T3.first_name, T3.last_name, T4.amount FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T3.member_id = T2.link_to_member INNER JOIN income AS T4 ON T4.link_to_member = T3.member_id WHERE T4.date_received = '2019-09-09'"
+018ac87,thrombosis_prediction::qid::1149,1149,thrombosis_prediction,0,SELECT CAST(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) FROM Patient WHERE SEX = 'M'
+018ac87,thrombosis_prediction::qid::1150,1150,thrombosis_prediction,0,"SELECT CAST(SUM(CASE WHEN STRFTIME('%Y', Birthday) > '1930' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM Patient WHERE SEX = 'F'"
+018ac87,thrombosis_prediction::qid::1152,1152,thrombosis_prediction,0,SELECT SUM(CASE WHEN Admission = '+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) FROM Patient WHERE Diagnosis = 'SLE'
+018ac87,thrombosis_prediction::qid::1153,1153,thrombosis_prediction,0,"SELECT T1.Diagnosis, T2.Date FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.ID = 30609"
+018ac87,thrombosis_prediction::qid::1156,1156,thrombosis_prediction,0,"SELECT DISTINCT T1.ID, STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T1.Birthday) FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T2.RVVT = '+'"
+018ac87,thrombosis_prediction::qid::1157,1157,thrombosis_prediction,0,"SELECT DISTINCT T1.ID, T1.SEX, T1.Diagnosis FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T2.Thrombosis = 2"
+018ac87,thrombosis_prediction::qid::1162,1162,thrombosis_prediction,0,"SELECT COUNT(*) FROM Patient WHERE STRFTIME('%Y', Description) = '1997' AND SEX = 'F' AND Admission = '-'"
+018ac87,thrombosis_prediction::qid::1164,1164,thrombosis_prediction,0,"SELECT  COUNT(*) FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T1.SEX = 'F' AND STRFTIME('%Y', T2.`Examination Date`) = '1997' AND T2.Thrombosis = 1"
+018ac87,thrombosis_prediction::qid::1166,1166,thrombosis_prediction,0,"SELECT T2.Symptoms, T1.Diagnosis FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T2.Symptoms IS NOT NULL ORDER BY T1.Birthday DESC LIMIT 1"
+018ac87,thrombosis_prediction::qid::1168,1168,thrombosis_prediction,0,"SELECT T1.Date, STRFTIME('%Y', T2.`First Date`) - STRFTIME('%Y', T2.Birthday),T2.Birthday FROM Laboratory AS T1 INNER JOIN Patient AS T2 ON T1.ID = T2.ID WHERE T2.Diagnosis = 'SJS' AND T2.Birthday IS NOT NULL ORDER BY T2.Birthday ASC LIMIT 1"
+018ac87,thrombosis_prediction::qid::1171,1171,thrombosis_prediction,0,"SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE STRFTIME('%Y', T2.`Examination Date`) BETWEEN '1990' AND '1993' AND STRFTIME('%Y', T2.`Examination Date`) - STRFTIME('%Y', T1.Birthday) < 18"
+018ac87,thrombosis_prediction::qid::1179,1179,thrombosis_prediction,0,"SELECT `aCL IgA`, `aCL IgG`, `aCL IgM` FROM Examination WHERE ID IN ( SELECT ID FROM Patient WHERE Diagnosis = 'SLE' AND Description = '1994-02-19' ) AND `Examination Date` = '1993-11-12'"
+018ac87,thrombosis_prediction::qid::1185,1185,thrombosis_prediction,0,SELECT CAST((SUM(CASE WHEN T2.Date LIKE '1981-11-%' THEN T2.`T-CHO` ELSE 0 END) - SUM(CASE WHEN T2.Date LIKE '1981-12-%' THEN T2.`T-CHO` ELSE 0 END)) AS REAL) / SUM(CASE WHEN T2.Date LIKE '1981-12-%' THEN T2.`T-CHO` ELSE 0 END) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.Birthday = '1959-02-18'
+018ac87,thrombosis_prediction::qid::1189,1189,thrombosis_prediction,0,SELECT COUNT(*) FROM Examination WHERE Thrombosis = 2 AND `ANA Pattern` = 'S' AND `aCL IgM` > (SELECT AVG(`aCL IgM`) * 1.2 FROM Examination WHERE Thrombosis = 2 AND `ANA Pattern` = 'S')
+018ac87,thrombosis_prediction::qid::1192,1192,thrombosis_prediction,0,SELECT DISTINCT T1.ID FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.Admission = '-' AND T2.`T-BIL` < 2.0 AND T2.Date LIKE '1991-10-%'
+018ac87,thrombosis_prediction::qid::1195,1195,thrombosis_prediction,0,SELECT AVG(T2.ALB) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.PLT > 400 AND T1.Diagnosis = 'SLE' AND T1.SEX = 'F'
+018ac87,thrombosis_prediction::qid::1198,1198,thrombosis_prediction,0,SELECT COUNT(ID) FROM Patient WHERE SEX = 'F' AND Diagnosis = 'APS'
+018ac87,thrombosis_prediction::qid::1201,1201,thrombosis_prediction,0,"SELECT CAST(SUM(CASE WHEN SEX = 'F' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(ID) FROM Patient WHERE Diagnosis = 'RA' AND STRFTIME('%Y', Birthday) = '1980'"
+018ac87,thrombosis_prediction::qid::1205,1205,thrombosis_prediction,0,SELECT CASE WHEN (T1.SEX = 'F' AND T2.UA > 6.5) OR (T1.SEX = 'M' AND T2.UA > 8.0) THEN true ELSE false END FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.ID = 57266
+018ac87,thrombosis_prediction::qid::1208,1208,thrombosis_prediction,0,SELECT DISTINCT T1.ID FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.SEX = 'M' AND T2.GPT >= 60
+018ac87,thrombosis_prediction::qid::1227,1227,thrombosis_prediction,0,"SELECT AVG(STRFTIME('%Y', date('NOW')) - STRFTIME('%Y', T1.Birthday)) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.`T-CHO` >= 250 AND T1.SEX = 'M'"
+018ac87,thrombosis_prediction::qid::1231,1231,thrombosis_prediction,0,"SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE STRFTIME('%Y', T1.Birthday) BETWEEN '1936' AND '1956' AND T1.SEX = 'M' AND T2.CPK >= 250"
+018ac87,thrombosis_prediction::qid::1238,1238,thrombosis_prediction,0,"SELECT T1.ID, T1.SEX FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.Diagnosis = 'SLE' AND T2.HGB > 10 AND T2.HGB < 17 ORDER BY T1.Birthday ASC LIMIT 1"
+018ac87,thrombosis_prediction::qid::1252,1252,thrombosis_prediction,0,SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID INNER JOIN Examination AS T3 ON T3.ID = T2.ID WHERE T2.IGG BETWEEN 900 AND 2000 AND T3.Symptoms IS NOT NULL
+018ac87,thrombosis_prediction::qid::1267,1267,thrombosis_prediction,0,"SELECT COUNT(T1.ID) FROM Examination AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.SM IN ('negative','0') AND T1.Thrombosis = 0"
+018ac87,thrombosis_prediction::qid::1275,1275,thrombosis_prediction,0,"SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.CENTROMEA IN ('negative', '0') AND T2.SSB IN ('negative', '0') AND T1.SEX = 'M'"
+018ac87,thrombosis_prediction::qid::1302,1302,thrombosis_prediction,0,SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID INNER JOIN Examination AS T3 ON T1.ID = T3.ID WHERE T2.CPK < 250 AND (T3.KCT = '+' OR T3.RVVT = '+' OR T3.LAC = '+')
+018ac87,formula_1::qid::846,846,formula_1,0,SELECT T2.driverRef FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 20 ORDER BY T1.q1 DESC LIMIT 5
+018ac87,formula_1::qid::847,847,formula_1,0,SELECT T2.surname FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 19 ORDER BY T1.q2 ASC LIMIT 1
+018ac87,formula_1::qid::850,850,formula_1,0,SELECT DISTINCT T2.name FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T1.country = 'Germany'
+018ac87,formula_1::qid::854,854,formula_1,0,"SELECT DISTINCT T1.lat, T1.lng FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.name = 'Australian Grand Prix'"
+018ac87,formula_1::qid::857,857,formula_1,0,"SELECT DISTINCT T1.lat, T1.lng FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.name = 'Abu Dhabi Grand Prix'"
+018ac87,formula_1::qid::859,859,formula_1,0,SELECT T1.q1 FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna'
+018ac87,formula_1::qid::861,861,formula_1,0,SELECT T2.number FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'
+018ac87,formula_1::qid::865,865,formula_1,0,"SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T2.raceId = 592 AND T2.time IS NOT NULL AND T1.dob IS NOT NULL ORDER BY T1.dob ASC LIMIT 1"
+018ac87,formula_1::qid::866,866,formula_1,0,"SELECT DISTINCT T2.forename, T2.surname, T2.url FROM lapTimes AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 161 AND T1.time LIKE '1:27%'"
+018ac87,formula_1::qid::868,868,formula_1,0,"SELECT DISTINCT T1.lat, T1.lng FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.name = 'Malaysian Grand Prix'"
+018ac87,formula_1::qid::869,869,formula_1,0,SELECT T2.url FROM constructorResults AS T1 INNER JOIN constructors AS T2 ON T2.constructorId = T1.constructorId WHERE T1.raceId = 9 ORDER BY T1.points DESC LIMIT 1
+018ac87,formula_1::qid::872,872,formula_1,0,SELECT T2.code FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 45 AND T1.q3 LIKE '1:33%'
+018ac87,formula_1::qid::875,875,formula_1,0,SELECT T2.url FROM races AS T1 INNER JOIN seasons AS T2 ON T2.year = T1.year WHERE T1.raceId = 901
+018ac87,formula_1::qid::877,877,formula_1,0,"SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T2.raceId = 872 AND T2.time IS NOT NULL ORDER BY T1.dob DESC LIMIT 1"
+018ac87,formula_1::qid::884,884,formula_1,0,"SELECT name FROM races WHERE STRFTIME('%Y', date) = ( SELECT STRFTIME('%Y', date) FROM races ORDER BY date ASC LIMIT 1 ) AND STRFTIME('%m', date) = ( SELECT STRFTIME('%m', date) FROM races ORDER BY date ASC LIMIT 1 )"
+018ac87,formula_1::qid::898,898,formula_1,0,"SELECT STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', dob), forename , surname FROM drivers WHERE nationality = 'Japanese' ORDER BY dob DESC LIMIT 1"
+018ac87,formula_1::qid::901,901,formula_1,0,"SELECT DISTINCT T2.name, T1.name, T1.location FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.year = 2005 AND STRFTIME('%m', T2.date) = '09'"
+018ac87,formula_1::qid::909,909,formula_1,0,SELECT CAST(COUNT(CASE WHEN T1.country = 'Germany' THEN T2.circuitID END) AS REAL) * 100 / COUNT(T2.circuitId) FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.name = 'European Grand Prix'
+018ac87,formula_1::qid::910,910,formula_1,0,"SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'"
+018ac87,formula_1::qid::912,912,formula_1,0,SELECT circuitRef FROM circuits WHERE name = 'Marina Bay Street Circuit'
+018ac87,formula_1::qid::915,915,formula_1,0,SELECT nationality FROM drivers WHERE dob IS NOT NULL ORDER BY dob ASC LIMIT 1
+018ac87,formula_1::qid::937,937,formula_1,0,SELECT T1.time FROM results AS T1 INNER JOIN races AS T2 on T1.raceId = T2.raceId WHERE T1.rank = 2 AND T2.name = 'Chinese Grand Prix' AND T2.year = 2008
+018ac87,formula_1::qid::945,945,formula_1,0,SELECT COUNT(circuitId) FROM circuits WHERE location = 'Adelaide' AND country = 'Australia'
+018ac87,formula_1::qid::948,948,formula_1,0,SELECT MAX(T1.points) FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId WHERE T2.nationality = 'British'
+018ac87,formula_1::qid::950,950,formula_1,0,SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId WHERE T1.points = 0 AND T1.raceId = 291
+018ac87,formula_1::qid::951,951,formula_1,0,SELECT COUNT(T1.raceId) FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId WHERE T1.points = 0 AND T2.nationality = 'Japanese' GROUP BY T1.constructorId HAVING COUNT(raceId) = 2
+018ac87,formula_1::qid::963,963,formula_1,1,"SELECT COUNT(T1.driverId) FROM drivers AS T1 INNER JOIN lapTimes AS T2 on T1.driverId = T2.driverId WHERE T1.nationality = 'French' AND (CAST(SUBSTR(T2.time, 1, 2) AS INTEGER) * 60 + CAST(SUBSTR(T2.time, 4, 2) AS INTEGER) + CAST(SUBSTR(T2.time, 7, 2) AS REAL) / 1000) < 120"
+018ac87,formula_1::qid::964,964,formula_1,0,SELECT code FROM drivers WHERE Nationality = 'American'
+018ac87,formula_1::qid::967,967,formula_1,0,SELECT COUNT(*) FROM ( SELECT T1.nationality FROM drivers AS T1 ORDER BY JULIANDAY(T1.dob) DESC LIMIT 3) AS T3 WHERE T3.nationality = 'Dutch'
+018ac87,formula_1::qid::971,971,formula_1,0,SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY JULIANDAY(dob) ASC LIMIT 1
+018ac87,formula_1::qid::977,977,formula_1,0,"SELECT SUM(IIF(time IS NOT NULL, 1, 0)) FROM results WHERE statusId = 2 AND raceID < 100 AND raceId > 50"
+018ac87,formula_1::qid::978,978,formula_1,0,"SELECT DISTINCT location, lat, lng FROM circuits WHERE country = 'Austria'"
+018ac87,formula_1::qid::981,981,formula_1,0,"SELECT T3.year, T3.name, T3.date, T3.time FROM qualifying AS T1 INNER JOIN drivers AS T2 on T1.driverId = T2.driverId INNER JOIN races AS T3 on T1.raceId = T3.raceId WHERE T1.driverId = ( SELECT driverId FROM drivers ORDER BY dob DESC LIMIT 1 ) ORDER BY T3.date ASC LIMIT 1"
+018ac87,formula_1::qid::988,988,formula_1,0,"SELECT T2.forename, T2.surname FROM pitStops AS T1 INNER JOIN drivers AS T2 on T1.driverId = T2.driverId WHERE T2.nationality = 'German' AND STRFTIME('%Y', T2.dob) BETWEEN '1980' AND '1985' GROUP BY T2.forename, T2.surname ORDER BY AVG(T1.duration) LIMIT 3"
+018ac87,formula_1::qid::989,989,formula_1,0,SELECT T1.time FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.name = 'Canadian Grand Prix' AND T2.year = 2008 AND T1.time LIKE '_:%:__.___'
+018ac87,formula_1::qid::990,990,formula_1,0,"SELECT T3.constructorRef, T3.url FROM results AS T1 INNER JOIN races AS T2 on T1.raceId = T2.raceId INNER JOIN constructors AS T3 on T1.constructorId = T3.constructorId WHERE T2.name = 'Singapore Grand Prix' AND T2.year = 2009 AND T1.time LIKE '_:%:__.___'"
+018ac87,superhero::qid::717,717,superhero,0,SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.superhero_name = '3-D Man'
+018ac87,formula_1::qid::994,994,formula_1,0,"SELECT SUM(T1.points), T2.name, T2.nationality FROM constructorResults AS T1 INNER JOIN constructors AS T2 ON T1.constructorId = T2.constructorId INNER JOIN races AS T3 ON T3.raceid = T1.raceid WHERE T3.name = 'Monaco Grand Prix' AND T3.year BETWEEN 1980 AND 2010 GROUP BY T2.name ORDER BY SUM(T1.points) DESC LIMIT 1"
+018ac87,formula_1::qid::1001,1001,formula_1,0,"SELECT T2.forename, T2.surname FROM qualifying AS T1 INNER JOIN drivers AS T2 on T1.driverId = T2.driverId INNER JOIN races AS T3 ON T1.raceid = T3.raceid WHERE q3 IS NOT NULL AND T3.year = 2008 AND T3.circuitId IN ( SELECT circuitId FROM circuits WHERE name = 'Marina Bay Street Circuit' ) ORDER BY CAST(SUBSTR(q3, 1, INSTR(q3, ':') - 1) AS INTEGER) * 60 + CAST(SUBSTR(q3, INSTR(q3, ':') + 1, INSTR(q3, '.') - INSTR(q3, ':') - 1) AS REAL) + CAST(SUBSTR(q3, INSTR(q3, '.') + 1) AS REAL) / 1000 ASC LIMIT 1"
+018ac87,formula_1::qid::1003,1003,formula_1,0,SELECT COUNT(T1.driverId) FROM results AS T1 INNER JOIN races AS T2 on T1.raceId = T2.raceId INNER JOIN status AS T3 on T1.statusId = T3.statusId WHERE T3.statusId = 3 AND T2.name = 'Canadian Grand Prix' GROUP BY T1.driverId ORDER BY COUNT(T1.driverId) DESC LIMIT 1
+018ac87,formula_1::qid::1011,1011,formula_1,1,"WITH lap_times_in_seconds AS (SELECT driverId, (CASE WHEN SUBSTR(time, 1, INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, 1, INSTR(time, ':') - 1) AS REAL) * 60 ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, ':') + 1, INSTR(time, '.') - INSTR(time, ':') - 1) AS REAL) ELSE 0 END + CASE WHEN SUBSTR(time, INSTR(time, '.') + 1) <> '' THEN CAST(SUBSTR(time, INSTR(time, '.') + 1) AS REAL) / 1000 ELSE 0 END) AS time_in_seconds FROM lapTimes) SELECT T2.forename, T2.surname, T1.driverId FROM (SELECT driverId, MIN(time_in_seconds) AS min_time_in_seconds FROM lap_times_in_seconds GROUP BY driverId) AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T1.min_time_in_seconds ASC LIMIT 20"
+018ac87,formula_1::qid::1014,1014,formula_1,1,"WITH fastest_lap_times AS (SELECT T1.raceId, T1.FastestLapTime, (CAST(SUBSTR(T1.FastestLapTime, 1, INSTR(T1.FastestLapTime, ':') - 1) AS REAL) * 60) + (CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, ':') + 1, INSTR(T1.FastestLapTime, '.') - INSTR(T1.FastestLapTime, ':') - 1) AS REAL)) + (CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS REAL) / 1000) as time_in_seconds FROM results AS T1 WHERE T1.FastestLapTime IS NOT NULL ) SELECT T1.FastestLapTime as lap_record FROM results AS T1 INNER JOIN races AS T2 on T1.raceId = T2.raceId INNER JOIN circuits AS T3 on T2.circuitId = T3.circuitId INNER JOIN (SELECT MIN(fastest_lap_times.time_in_seconds) as min_time_in_seconds FROM fastest_lap_times INNER JOIN races AS T2 on fastest_lap_times.raceId = T2.raceId INNER JOIN circuits AS T3 on T2.circuitId = T3.circuitId WHERE T3.country = 'Italy' ) AS T4 ON (CAST(SUBSTR(T1.FastestLapTime, 1, INSTR(T1.FastestLapTime, ':') - 1) AS REAL) * 60) + (CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, ':') + 1, INSTR(T1.FastestLapTime, '.') - INSTR(T1.FastestLapTime, ':') - 1) AS REAL)) + (CAST(SUBSTR(T1.FastestLapTime, INSTR(T1.FastestLapTime, '.') + 1) AS REAL) / 1000) = T4.min_time_in_seconds LIMIT 1"
+018ac87,superhero::qid::719,719,superhero,0,SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Super Strength' AND T1.height_cm > 200
+018ac87,superhero::qid::723,723,superhero,0,SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id INNER JOIN colour AS T4 ON T1.eye_colour_id = T4.id WHERE T3.power_name = 'Agility' AND T4.colour = 'Blue'
+018ac87,superhero::qid::724,724,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id WHERE T2.colour = 'Blue' AND T3.colour = 'Blond'
+018ac87,superhero::qid::726,726,superhero,0,"SELECT superhero_name, height_cm, RANK() OVER (ORDER BY height_cm DESC) AS HeightRank FROM superhero INNER JOIN publisher ON superhero.publisher_id = publisher.id WHERE publisher.publisher_name = 'Marvel Comics'"
+018ac87,superhero::qid::728,728,superhero,0,"SELECT colour.colour AS EyeColor, COUNT(superhero.id) AS Count, RANK() OVER (ORDER BY COUNT(superhero.id) DESC) AS PopularityRank FROM superhero INNER JOIN colour ON superhero.eye_colour_id = colour.id INNER JOIN publisher ON superhero.publisher_id = publisher.id WHERE publisher.publisher_name = 'Marvel Comics' GROUP BY colour.colour"
+018ac87,superhero::qid::732,732,superhero,0,SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN hero_attribute AS T3 ON T1.id = T3.hero_id INNER JOIN attribute AS T4 ON T3.attribute_id = T4.id WHERE T4.attribute_name = 'Speed' ORDER BY T3.attribute_value LIMIT 1
+018ac87,superhero::qid::733,733,superhero,0,SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN colour AS T3 ON T1.eye_colour_id = T3.id WHERE T2.publisher_name = 'Marvel Comics' AND T3.colour = 'Gold'
+018ac87,superhero::qid::736,736,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Intelligence' ORDER BY T2.attribute_value LIMIT 1
+018ac87,superhero::qid::737,737,superhero,0,SELECT T2.race FROM superhero AS T1 INNER JOIN race AS T2 ON T1.race_id = T2.id WHERE T1.superhero_name = 'Copycat'
+018ac87,superhero::qid::739,739,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Death Touch'
+018ac87,superhero::qid::740,740,superhero,0,SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id INNER JOIN gender AS T4 ON T1.gender_id = T4.id WHERE T3.attribute_name = 'Strength' AND T2.attribute_value = 100 AND T4.gender = 'Female'
+018ac87,superhero::qid::743,743,superhero,0,"SELECT (CAST(COUNT(*) AS REAL) * 100 / (SELECT COUNT(*) FROM superhero)), CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN alignment AS T3 ON T3.id = T1.alignment_id WHERE T3.alignment = 'Bad'"
+018ac87,superhero::qid::744,744,superhero,0,SELECT SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id
+018ac87,superhero::qid::745,745,superhero,0,SELECT id FROM publisher WHERE publisher_name = 'Star Trek'
+018ac87,superhero::qid::747,747,superhero,0,SELECT COUNT(id) FROM superhero WHERE full_name IS NULL
+018ac87,superhero::qid::750,750,superhero,0,SELECT AVG(T1.weight_kg) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id WHERE T2.gender = 'Female'
+018ac87,superhero::qid::751,751,superhero,0,SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T3.id = T2.power_id INNER JOIN gender AS T4 ON T4.id = T1.gender_id WHERE T4.gender = 'Male' LIMIT 5
+018ac87,superhero::qid::753,753,superhero,0,SELECT DISTINCT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'
+018ac87,superhero::qid::758,758,superhero,0,SELECT DISTINCT T3.colour FROM superhero AS T1 INNER JOIN race AS T2 ON T1.race_id = T2.id INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id WHERE T1.height_cm = 185 AND T2.race = 'Human'
+018ac87,superhero::qid::760,760,superhero,0,SELECT CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180
+018ac87,superhero::qid::761,761,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id WHERE T2.gender = 'Male' AND T1.weight_kg * 100 > ( SELECT AVG(weight_kg) FROM superhero ) * 79
+018ac87,superhero::qid::764,764,superhero,0,SELECT DISTINCT T2.power_name FROM hero_power AS T1 INNER JOIN superpower AS T2 ON T1.power_id = T2.id WHERE T1.hero_id = 1
+018ac87,superhero::qid::765,765,superhero,0,SELECT COUNT(T1.hero_id) FROM hero_power AS T1 INNER JOIN superpower AS T2 ON T1.power_id = T2.id WHERE T2.power_name = 'Stealth'
+018ac87,superhero::qid::766,766,superhero,0,SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC LIMIT 1
+018ac87,superhero::qid::769,769,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T3.id = T2.attribute_id INNER JOIN publisher AS T4 ON T4.id = T1.publisher_id WHERE T4.publisher_name = 'Dark Horse Comics' AND T3.attribute_name = 'Durability' ORDER BY T2.attribute_value DESC LIMIT 1
+018ac87,superhero::qid::772,772,superhero,0,"SELECT T1.eye_colour_id, T1.hair_colour_id, T1.skin_colour_id FROM superhero AS T1 INNER JOIN publisher AS T2 ON T2.id = T1.publisher_id INNER JOIN gender AS T3 ON T3.id = T1.gender_id WHERE T2.publisher_name = 'Dark Horse Comics' AND T3.gender = 'Female'"
+018ac87,superhero::qid::773,773,superhero,0,"SELECT T1.superhero_name, T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.eye_colour_id = T1.hair_colour_id AND T1.eye_colour_id = T1.skin_colour_id"
+018ac87,superhero::qid::775,775,superhero,0,SELECT CAST(COUNT(CASE WHEN T3.colour = 'Blue' THEN T1.id ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id INNER JOIN colour AS T3 ON T1.skin_colour_id = T3.id WHERE T2.gender = 'Female'
+018ac87,superhero::qid::779,779,superhero,0,SELECT COUNT(T1.power_id) FROM hero_power AS T1 INNER JOIN superhero AS T2 ON T1.hero_id = T2.id WHERE T2.superhero_name = 'Amazo'
+018ac87,superhero::qid::781,781,superhero,0,SELECT T1.height_cm FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T2.colour = 'Amber'
+018ac87,superhero::qid::782,782,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id AND T1.hair_colour_id = T2.id WHERE T2.colour = 'Black'
+018ac87,superhero::qid::785,785,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN alignment AS T2 ON T1.alignment_id = T2.id WHERE T2.alignment = 'Neutral'
+018ac87,superhero::qid::786,786,superhero,0,SELECT COUNT(T1.hero_id) FROM hero_attribute AS T1 INNER JOIN attribute AS T2 ON T1.attribute_id = T2.id WHERE T2.attribute_name = 'Strength' AND T1.attribute_value = ( SELECT MAX(attribute_value) FROM hero_attribute )
+018ac87,superhero::qid::788,788,superhero,0,SELECT CAST(COUNT(CASE WHEN T3.gender = 'Female' AND T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS REAL) / COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) * 100 FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN gender AS T3 ON T1.gender_id = T3.id
+018ac87,superhero::qid::790,790,superhero,0,SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE
+018ac87,superhero::qid::791,791,superhero,0,SELECT CAST(SUM(height_cm) AS REAL) / COUNT(id) FROM superhero
+018ac87,superhero::qid::792,792,superhero,0,SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.superhero_name = 'Abomination'
+018ac87,superhero::qid::794,794,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Speed' ORDER BY T2.attribute_value DESC LIMIT 1
+018ac87,superhero::qid::796,796,superhero,0,"SELECT T3.attribute_name, T2.attribute_value FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T1.superhero_name = '3-D Man'"
+018ac87,superhero::qid::797,797,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id WHERE T2.colour = 'Blue' AND T3.colour = 'Brown'
+018ac87,superhero::qid::798,798,superhero,0,"SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')"
+018ac87,superhero::qid::800,800,superhero,0,SELECT CAST(COUNT(CASE WHEN T2.colour = 'Blue' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id
+018ac87,superhero::qid::801,801,superhero,0,SELECT CAST(COUNT(CASE WHEN T2.gender = 'Male' THEN T1.id ELSE NULL END) AS REAL) / COUNT(CASE WHEN T2.gender = 'Female' THEN T1.id ELSE NULL END) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id
+018ac87,superhero::qid::806,806,superhero,0,SELECT T2.colour FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.full_name = 'Karen Beecher-Duncan'
+018ac87,superhero::qid::819,819,superhero,0,SELECT SUM(CASE WHEN T2.id = 7 THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.id = 1 THEN 1 ELSE 0 END) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.weight_kg = 0 OR T1.weight_kg is NULL
+018ac87,superhero::qid::822,822,superhero,0,SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN alignment AS T2 ON T1.alignment_id = T2.id INNER JOIN colour AS T3 ON T1.skin_colour_id = T3.id WHERE T2.alignment = 'Bad' AND T3.colour = 'Green'
+018ac87,superhero::qid::824,824,superhero,0,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Wind Control' ORDER BY T1.superhero_name
+018ac87,superhero::qid::825,825,superhero,0,SELECT T4.gender FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id INNER JOIN gender AS T4 ON T1.gender_id = T4.id WHERE T3.power_name = 'Phoenix Force'
+018ac87,superhero::qid::829,829,superhero,0,SELECT SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id
+018ac87,toxicology::qid::195,195,toxicology,0,"SELECT T.bond_type FROM ( SELECT bond_type, COUNT(bond_id) FROM bond GROUP BY bond_type ORDER BY COUNT(bond_id) DESC LIMIT 1 ) AS T"
+018ac87,toxicology::qid::198,198,toxicology,1,"SELECT AVG(single_bond_count) FROM (SELECT T3.molecule_id, COUNT(T1.bond_type) AS single_bond_count FROM bond AS T1  INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN molecule AS T3 ON T3.molecule_id = T2.molecule_id WHERE T1.bond_type = '-' AND T3.label = '+' GROUP BY T3.molecule_id) AS subquery"
+018ac87,toxicology::qid::200,200,toxicology,0,SELECT DISTINCT T2.molecule_id FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '#' AND T2.label = '+'
+018ac87,toxicology::qid::206,206,toxicology,0,SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR004_8_9'
+018ac87,toxicology::qid::208,208,toxicology,0,"SELECT T.label FROM ( SELECT T2.label, COUNT(T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'h' GROUP BY T2.label ORDER BY COUNT(T2.molecule_id) DESC LIMIT 1 ) t"
+018ac87,toxicology::qid::213,213,toxicology,0,SELECT T1.bond_type FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.atom_id = 'TR004_8' AND T2.atom_id2 = 'TR004_20' OR T2.atom_id2 = 'TR004_8' AND T2.atom_id = 'TR004_20'
+018ac87,toxicology::qid::220,220,toxicology,0,SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR000' ORDER BY T.element LIMIT 3
+018ac87,toxicology::qid::226,226,toxicology,0,"SELECT ROUND(CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS REAL) * 100 / COUNT(T.bond_id),5) FROM bond AS T WHERE T.molecule_id = 'TR008'"
+018ac87,toxicology::qid::227,227,toxicology,0,"SELECT ROUND(CAST(COUNT(CASE WHEN T.label = '+' THEN T.molecule_id ELSE NULL END) AS REAL) * 100 / COUNT(T.molecule_id),3) FROM molecule t"
+018ac87,toxicology::qid::228,228,toxicology,0,"SELECT ROUND(CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / COUNT(T.atom_id),4) FROM atom AS T WHERE T.molecule_id = 'TR206'"
+018ac87,toxicology::qid::230,230,toxicology,0,"SELECT DISTINCT T1.element, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR060'"
+018ac87,toxicology::qid::231,231,toxicology,0,"SELECT T.bond_type FROM ( SELECT T1.bond_type, COUNT(T1.molecule_id) FROM bond AS T1  WHERE T1.molecule_id = 'TR010' GROUP BY T1.bond_type ORDER BY COUNT(T1.molecule_id) DESC LIMIT 1 ) AS T"
+018ac87,toxicology::qid::236,236,toxicology,0,"SELECT T1.bond_type, T2.atom_id, T2.atom_id2 FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.bond_id = 'TR001_6_9'"
+018ac87,toxicology::qid::239,239,toxicology,0,"SELECT COUNT(T.bond_id) FROM connected AS T WHERE SUBSTR(T.atom_id, -2) = '19'"
+018ac87,toxicology::qid::240,240,toxicology,0,SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR004'
+018ac87,toxicology::qid::242,242,toxicology,0,"SELECT DISTINCT T2.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE SUBSTR(T1.atom_id, -2) BETWEEN '21' AND '25' AND T2.label = '+'"
+018ac87,toxicology::qid::244,244,toxicology,0,"SELECT T1.label FROM molecule AS T1 INNER JOIN ( SELECT T.molecule_id, COUNT(T.bond_type) FROM bond AS T WHERE T.bond_type = '=' GROUP BY T.molecule_id ORDER BY COUNT(T.bond_type) DESC LIMIT 1 ) AS T2 ON T1.molecule_id = T2.molecule_id"
+018ac87,toxicology::qid::245,245,toxicology,0,SELECT CAST(COUNT(T2.bond_id) AS REAL) / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.element = 'i'
+018ac87,toxicology::qid::249,249,toxicology,0,SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR144_8_19'
+018ac87,toxicology::qid::255,255,toxicology,0,"SELECT ROUND(CAST(COUNT(CASE WHEN T2.label = '+' THEN T1.bond_id ELSE NULL END) AS REAL) * 100 / COUNT(T1.bond_id),5) FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '-'"
+018ac87,toxicology::qid::260,260,toxicology,0,"SELECT COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T3.bond_type = '#' AND T1.element IN ('p', 'br')"
+018ac87,toxicology::qid::268,268,toxicology,0,SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR001_10_11'
+018ac87,toxicology::qid::273,273,toxicology,0,SELECT CAST(COUNT( CASE WHEN T1.element = 'cl' THEN T1.element ELSE NULL END) AS REAL) * 100 / COUNT(T1.element) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+'
+018ac87,toxicology::qid::281,281,toxicology,0,"SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' AND SUBSTR(T1.atom_id, -1) = '4' AND LENGTH(T1.atom_id) = 7"
+018ac87,toxicology::qid::282,282,toxicology,0,"WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT CAST(COUNT(CASE WHEN element = 'h' THEN atom_id ELSE NULL END) AS REAL) / (CASE WHEN COUNT(atom_id) = 0 THEN NULL ELSE COUNT(atom_id) END) AS ratio, label FROM SubQuery GROUP BY label"
+018ac87,california_schools::qid::37,37,california_schools,0,"SELECT T2.Street, T2.City, T2.State, T2.Zip FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr ASC LIMIT 1"
+018ac87,california_schools::qid::36,36,california_schools,0,"SELECT T2.AdmFName1, T2.AdmLName1, T2.AdmFName2, T2.AdmLName2, T2.AdmFName3, T2.AdmLName3 FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.NumGE1500 DESC LIMIT 1"
+018ac87,california_schools::qid::50,50,california_schools,0,"SELECT T2.MailStreet, T2.School FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.AvgScrMath DESC LIMIT 6, 1"
+018ac87,financial::qid::89,89,financial,0,SELECT COUNT(T2.account_id) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id WHERE T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'
+018ac87,financial::qid::92,92,financial,0,SELECT COUNT(DISTINCT T2.district_id)  FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' AND T2.A11 BETWEEN 6000 AND 10000
+018ac87,financial::qid::93,93,financial,0,SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000
+018ac87,financial::qid::94,94,financial,0,"SELECT T1.account_id , ( SELECT MAX(A11) - MIN(A11) FROM district ) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T1.account_id = T3.account_id INNER JOIN client AS T4 ON T3.client_id = T4.client_id WHERE T2.district_id = ( SELECT district_id FROM client WHERE gender = 'F' ORDER BY birth_date ASC LIMIT 1 ) ORDER BY T2.A11 DESC LIMIT 1"
+018ac87,financial::qid::95,95,financial,0,"SELECT T1.account_id  FROM account AS T1 INNER JOIN disp AS T2 ON T1.account_id = T2.account_id INNER JOIN client AS T3 ON T2.client_id = T3.client_id INNER JOIN district AS T4 on T4.district_id = T1.district_id WHERE T2.client_id = ( SELECT client_id FROM client ORDER BY birth_date DESC LIMIT 1) GROUP BY T4.A11, T1.account_id"
+018ac87,financial::qid::98,98,financial,0,"SELECT T2.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T1.date) = '1997' AND T2.frequency = 'POPLATEK TYDNE' ORDER BY T1.amount LIMIT 1"
+018ac87,financial::qid::99,99,financial,0,"SELECT T1.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T2.date) = '1993' AND T1.duration > 12 ORDER BY T1.amount DESC LIMIT 1"
+018ac87,financial::qid::100,100,financial,0,"SELECT COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND STRFTIME('%Y', T2.birth_date) < '1950' AND T1.A2 = 'Sokolov'"
+018ac87,financial::qid::112,112,financial,0,SELECT T1.A2 FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.birth_date = '1976-01-29' AND T2.gender = 'F'
+018ac87,financial::qid::115,115,financial,0,SELECT CAST(SUM(T1.gender = 'M') AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'south Bohemia' GROUP BY T2.A4 ORDER BY T2.A4 DESC LIMIT 1
+018ac87,financial::qid::116,116,financial,1,"SELECT CAST((SUM(IIF(T3.date = '1998-12-27', T3.balance, 0)) - SUM(IIF(T3.date = '1993-03-22', T3.balance, 0))) AS REAL) * 100 / SUM(IIF(T3.date = '1993-03-22', T3.balance, 0)) FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN trans AS T3 ON T3.account_id = T2.account_id WHERE T1.date = '1993-07-05'"
+018ac87,financial::qid::117,117,financial,0,SELECT (CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS REAL) * 100) / SUM(amount) FROM loan
+018ac87,financial::qid::118,118,financial,0,SELECT CAST(SUM(status = 'C') AS REAL) * 100 / COUNT(account_id) FROM loan WHERE amount < 100000
+018ac87,financial::qid::125,125,financial,0,SELECT CAST((T3.A13 - T3.A12) AS REAL) * 100 / T3.A12 FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN district AS T3 ON T2.district_id = T3.district_id WHERE T1.status = 'D'
+018ac87,financial::qid::128,128,financial,0,"SELECT T2.A2, COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' GROUP BY T2.district_id, T2.A2 ORDER BY COUNT(T1.client_id) DESC LIMIT 9"
+018ac87,financial::qid::136,136,financial,0,SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN loan AS T2 ON T1.account_id = T2.account_id WHERE T2.date BETWEEN '1995-01-01' AND '1997-12-31' AND T1.frequency = 'POPLATEK MESICNE' AND T2.amount >= 250000
+018ac87,financial::qid::129,129,financial,1,SELECT DISTINCT T1.A2 FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN trans AS T3 ON T2.account_id = T3.account_id WHERE T3.type = 'VYDAJ' AND T3.date LIKE '1996-01%' ORDER BY A2 ASC LIMIT 10
+018ac87,financial::qid::137,137,financial,0,SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T1.district_id = 1 AND (T3.status = 'C' OR T3.status = 'D')
+018ac87,financial::qid::138,138,financial,0,"SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A15 = (SELECT T3.A15 FROM district AS T3 ORDER BY T3.A15 DESC LIMIT 1, 1)"
+018ac87,financial::qid::145,145,financial,1,"SELECT T1.account_id FROM trans AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T1.date) = '1998' AND T1.operation = 'VYBER KARTOU' AND T1.amount < (SELECT AVG(amount) FROM trans WHERE STRFTIME('%Y', date) = '1998')"
+018ac87,financial::qid::149,149,financial,0,SELECT T3.type FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T2.account_id = T3.account_id WHERE T3.type != 'OWNER' AND T1.A11 BETWEEN 8000 AND 9000
+018ac87,financial::qid::152,152,financial,0,"SELECT AVG(T1.A15) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id WHERE STRFTIME('%Y', T2.date) >= '1997' AND T1.A15 > 4000"
+018ac87,financial::qid::159,159,financial,1,SELECT T4.trans_id FROM client AS T1 INNER JOIN disp AS T2 ON T1.client_id = T2.client_id INNER JOIN account AS T3 ON T2.account_id = T3.account_id INNER JOIN trans AS T4 ON T3.account_id = T4.account_id WHERE T1.client_id = 3356 AND T4.operation = 'VYBER'
+018ac87,financial::qid::168,168,financial,0,SELECT CAST(SUM(T2.gender = 'F') AS REAL) * 100 / COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T1.A11 > 10000
+018ac87,financial::qid::169,169,financial,0,"SELECT CAST((SUM(CASE WHEN STRFTIME('%Y', T1.date) = '1997' THEN T1.amount ELSE 0 END) - SUM(CASE WHEN STRFTIME('%Y', T1.date) = '1996' THEN T1.amount ELSE 0 END)) AS REAL) * 100 / SUM(CASE WHEN STRFTIME('%Y', T1.date) = '1996' THEN T1.amount ELSE 0 END) FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN disp AS T3 ON T3.account_id = T2.account_id INNER JOIN client AS T4 ON T4.client_id = T3.client_id WHERE T4.gender = 'M' AND T3.type = 'OWNER'"
+018ac87,financial::qid::173,173,financial,0,"SELECT T1.frequency, T2.k_symbol FROM account AS T1 INNER JOIN (SELECT account_id, k_symbol, SUM(amount) AS total_amount FROM `order` GROUP BY account_id, k_symbol) AS T2 ON T1.account_id = T2.account_id WHERE T1.account_id = 3 AND T2.total_amount = 3539"
+018ac87,financial::qid::186,186,financial,0,SELECT CAST(SUM(T1.gender = 'M') AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T3 ON T1.district_id = T3.district_id INNER JOIN account AS T2 ON T2.district_id = T3.district_id INNER JOIN disp as T4 on T1.client_id = T4.client_id AND T2.account_id = T4.account_id WHERE T2.frequency = 'POPLATEK TYDNE'
+018ac87,financial::qid::189,189,financial,0,"SELECT T3.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN account AS T3 ON T2.district_id = T3.district_id INNER JOIN disp AS T4 ON T1.client_id = T4.client_id AND T4.account_id = T3.account_id  WHERE T1.gender = 'F' ORDER BY T1.birth_date ASC, T2.A11 ASC LIMIT 1"
+018ac87,financial::qid::192,192,financial,0,"SELECT AVG(T2.amount) FROM account AS T1 INNER JOIN loan AS T2 ON T1.account_id = T2.account_id WHERE T2.status IN ('C', 'D') AND T1.frequency = 'POPLATEK PO OBRATU'"
+018ac87,financial::qid::194,194,financial,0,"SELECT T1.client_id, STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T3.birth_date) FROM disp AS T1 INNER JOIN card AS T2 ON T2.disp_id = T1.disp_id INNER JOIN client AS T3 ON T1.client_id = T3.client_id WHERE T2.type = 'gold' AND T1.type = 'OWNER'"
+018ac87,financial::qid::119,119,financial,0,"SELECT T1.account_id, T2.A2, T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.frequency = 'POPLATEK PO OBRATU' AND STRFTIME('%Y', T1.date)= '1993'"
+018ac87,financial::qid::120,120,financial,0,"SELECT T1.account_id, T1.frequency FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'east Bohemia' AND STRFTIME('%Y', T1.date) BETWEEN '1995' AND '2000'"

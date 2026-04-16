@@ -124,10 +124,10 @@
   - SQL->feature extraction classifier prediction
   - runtime prediction/tier mapping using `sql_runtime_predictor/artifacts/runtime_predictor.pt` when available.
 - `Live Compare` page (`streamlit_app/components/live_compare.py`) executes SQL against real SQLite DBs, measures runtime, then compares measured tiers vs predicted tiers.
-- Documentation mismatch: `streamlit_app/README.md` says runtime-regression is not wired into the UI, but current code does integrate runtime-model inference paths. **[CHECK]**
+- `streamlit_app/README.md` is now broadly aligned with the implemented hybrid UI surface.
 
 ## Code quality notes
-- Hardcoded UI constant in `streamlit_app/app.py`: `s4.metric("Features used", 25)` duplicates configuration instead of deriving from `FEATURE_COLS`.
+- Streamlit now derives the displayed feature count from `FEATURE_COLS`, avoiding the earlier hardcoded `25`-feature UI duplication.
 - `main.py` always prints `reports/learning_curve.png` in output checklist even when learning-curve generation is disabled (`EVAL_ENABLE_LEARNING_CURVE=False`), which can show expected `MISSING`.
 - Legacy classifier and runtime-regression pipelines coexist with overlapping script names (`train.py`, `evaluate.py`), increasing cognitive load for contributors.
 - No actionable `TODO`/`FIXME` markers were found in core code files during this audit pass.

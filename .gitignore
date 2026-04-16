@@ -1,3 +1,6 @@
+# Microsoft Office lock/temp files (never commit)
+~$*
+
 # Python
 __pycache__/
 *.py[cod]

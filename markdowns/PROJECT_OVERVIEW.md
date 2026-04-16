@@ -1,6 +1,6 @@
 # Advanced ML Course — Project overview
 
-This repository is the **SQL query performance** coursework codebase: a **legacy root pipeline** that classifies queries as fast vs slow, a **separate runtime-regression subsystem** under `sql_runtime_predictor/` that predicts continuous runtimes from SQLite plan trees, and a **Streamlit dashboard** that visualizes the legacy pipeline only.
+This repository is the **SQL query performance** coursework codebase: a **legacy root pipeline** that classifies queries as fast vs slow, a **separate runtime-regression subsystem** under `sql_runtime_predictor/` that predicts continuous runtimes from SQLite plan trees, and a **Streamlit dashboard** that primarily visualizes the legacy pipeline while also exposing optional runtime prediction flows.
 
 Use **`sql_runtime_predictor/`** for plan-tree runtime prediction; use the **repository root** plus **`streamlit_app/`** for the sklearn classifier and its UI.
 
@@ -15,7 +15,7 @@ Use **`sql_runtime_predictor/`** for plan-tree runtime prediction; use the **rep
 | **`data/`** | Root pipeline CSVs (`query_dataset_raw.csv`, `query_dataset_features.csv`) after running `main.py` |
 | **`reports/`** | Root evaluation text/CSV outputs |
 | **`artifacts/`** | Expected location for `best_model.joblib` after training (create by running `main.py`) |
-| **`streamlit_app/`** | Multi-page Streamlit app (`app.py`, `components/`, `utils/`) for the legacy classifier |
+| **`streamlit_app/`** | Multi-page Streamlit app (`app.py`, `components/`, `utils/`) for the legacy classifier plus optional runtime prediction / live comparison surfaces |
 | **`sql_runtime_predictor/`** | Self-contained PyTorch runtime pipeline, own `requirements.txt`, `configs/default.yaml`, `data/`, `artifacts/` |
 | **`Mini Dev/`** | Local BIRD Mini-Dev layout (`MINIDEV/dev_databases/...`, JSON task files) when present |
 | **`markdowns/`** | Course / design notes (`AI_CONTEXT.md`, `SDD.md`, etc.) |
@@ -97,7 +97,7 @@ Primary subsystem documentation: **`sql_runtime_predictor/README.md`**.
 
 ## 3) Streamlit dashboard (`streamlit_app/`)
 
-Read-only UI for the **root legacy classifier** only: explores timed-query CSVs, report files, and predictions from **`artifacts/best_model.joblib`**. It does **not** read `sql_runtime_predictor/` checkpoints or JSONL features.
+Hybrid UI centered on the **root legacy classifier**: it explores timed-query CSVs, report files, and predictions from **`artifacts/best_model.joblib`**, and can also use `sql_runtime_predictor` checkpoints for runtime prediction and tier display when those runtime artifacts exist.
 
 **Layout**
 
@@ -105,7 +105,13 @@ Read-only UI for the **root legacy classifier** only: explores timed-query CSVs,
 - `components/` — `sidebar.py`, `charts.py`, `metrics.py`
 - `utils/` — `paths.py` (`SQPP_PROJECT_ROOT`), `data_loader.py`, `model_loader.py`, `predictor.py`
 
-**Pages**: Overview, Data Explorer, Model Results, Predict (SQL → features via root `src/features/extract_features.py`).
+**Pages**: Overview, Data Explorer, Model Results, Predict, Live Compare.
+
+**Runtime integration**:
+
+- `Predict` includes a runtime tab when `sql_runtime_predictor/artifacts/runtime_predictor.pt` is present.
+- `Live Compare` measures observed runtime on a selected SQLite DB and compares it with predicted runtime / tier.
+- Core data exploration and evaluation pages still rely on the root classifier outputs (`data/`, `reports/`, `artifacts/best_model.joblib`).
 
 **Run** (from repo root):
 

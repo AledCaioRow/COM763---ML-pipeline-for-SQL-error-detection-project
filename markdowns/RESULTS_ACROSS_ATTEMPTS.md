@@ -82,6 +82,8 @@ Evidence (`reports/tree_ablation_commit_metrics.csv`):
 
 Which variant was better?
 
+- Seen F1 on the matched extracted rows flips by commit: global-only wins in `061f0ff` and `018ac87`, while tree+global wins in `1a537e0`.
+- Seen ROC-AUC is saturated for both variants in every commit (`0.9444-1.0000`), so they are effectively tied at ceiling for within-schema ranking.
 - Unseen F1: tree+global is only slightly better in 2 commits and tied in 1 commit.
 - Unseen ROC-AUC: tree+global is worse in all 3 commits.
 - Best unseen F1 among SQL variants: `0.5455` at `061f0ff` (tie).
@@ -89,9 +91,66 @@ Which variant was better?
 
 Practical meaning:
 
+- The seen-db F1 winner flips because the matched extracted subset is tiny: only `210-244` total rows and `13-16` slow queries before the seen split.
+- That means the seen-db slow-class test count is probably in single digits, so differences like `1.00` vs `0.86` may only reflect a one-query swing.
+- The near-perfect seen ROC-AUC is the more stable signal here: on schemas the model has already seen, both feature sets can rank slow queries almost perfectly.
+- That makes the transfer result more interpretable: the features work within a schema context, but the signal does not generalize cleanly across schemas.
 - Adding tree features did **not** give a clear, stable transfer win in this setup.
 
-## 5) What does 0.8 vs 0.9 mean?
+## 5) Fairness control: same query set for global and tree
+
+This is an added control test, not a replacement for the main results above.
+
+Why run it:
+
+- The standalone global classifier in Section 3 used the full labelled dataset.
+- The tree-capable pipeline only works on the subset of queries where `EXPLAIN QUERY PLAN` succeeds.
+- So a fairer post hoc check is to rerun the global classifier on that exact same tree-eligible subset, then compare again.
+
+Evidence (`reports/tree_fairness_control_metrics.csv`):
+
+
+| Commit    | Full labelled rows | Tree-eligible matched rows | Matched global unseen best model + F1 / ROC / Acc | Tree+Global unseen F1 / ROC |
+| --------- | ------------------ | -------------------------- | ------------------------------------------------- | --------------------------- |
+| `1a537e0` | 320                | 211                        | `Logistic Regression: 0.3636 / 0.7517 / 0.8727`   | `0.4615 / 0.9252`           |
+| `061f0ff` | 320                | 210                        | `Logistic Regression: 0.3333 / 0.7519 / 0.8431`   | `0.5455 / 0.9259`           |
+| `018ac87` | 374                | 244                        | `Logistic Regression: 0.3333 / 0.7576 / 0.8904`   | `0.5000 / 0.8918`           |
+
+
+What this says:
+
+- On the matched tree-eligible subset, `tree+global` beats the matched global rerun on unseen F1 in all 3 commits.
+- On the same matched subset, `tree+global` also beats the matched global rerun on unseen ROC-AUC in all 3 commits.
+- That means the tree signal still looks useful after removing the extra-data advantage from the global side.
+
+Important caution:
+
+- This fairness-control subset is much more imbalanced than the full dataset because only a small number of slow queries survive plan extraction:
+  - `1a537e0`: `196 fast / 15 slow`
+  - `061f0ff`: `194 fast / 16 slow`
+  - `018ac87`: `231 fast / 13 slow`
+- So this test is best read as a supporting control, not the main headline benchmark.
+
+Fixed-model check (`reports/tree_fairness_fixed_lr_metrics.csv`):
+
+- To remove model-selection effects, a second fairness rerun fixed both sides to **Logistic Regression**.
+- Result: tree+global still beats matched global on unseen F1 and ROC-AUC in all 3 commits:
+  - `1a537e0`: unseen F1 `0.3636 -> 0.4615`, unseen ROC `0.7517 -> 0.9252`
+  - `061f0ff`: unseen F1 `0.3333 -> 0.5455`, unseen ROC `0.7519 -> 0.9259`
+  - `018ac87`: unseen F1 `0.3333 -> 0.5000`, unseen ROC `0.7576 -> 0.8918`
+
+Quantity-only control (`reports/global_downsampled_to_tree_size_metrics.csv`):
+
+- A separate control kept the **main global classifier unchanged** and only downsampled its dataset size to match the tree+global row count.
+- This isolates the effect of **having fewer rows**, without changing the global feature family.
+- Seen-DB F1 changed as follows after downsampling:
+  - `1a537e0`: `0.5000 -> 0.5185`
+  - `061f0ff`: `0.4444 -> 0.4000`
+  - `018ac87`: `0.3913 -> 0.2759`
+- So reducing the global dataset to tree size does hurt or destabilize performance in 2 of the 3 commits, but it does **not** fully explain the tree result by itself.
+- The closest like-for-like tree ablation is still `reports/tree_ablation_commit_metrics.csv`, because there `global_only` and `tree+global` already use the same extracted rows.
+
+## 6) What does 0.8 vs 0.9 mean?
 
 These are not tiny differences.
 
@@ -109,7 +168,7 @@ These are not tiny differences.
 
 So yes, `0.8` vs `0.9` is a meaningful quality jump.
 
-## 6) Summary stats with interpretation
+## 7) Summary stats with interpretation
 
 Across commits:
 
@@ -121,21 +180,36 @@ Meaning:
 - about **58%** of useful slow-class performance is lost when schemas are unseen.
 - this is the central technical finding.
 
-## 7) Final takeaway
+## 8) Why not add more buckets?
+
+- More runtime buckets would fragment an already small slow-query sample (`125` slow queries in the largest snapshot).
+- Splitting those slow examples into 3 or 5 tiers would leave each rare class even smaller and make F1 estimates less stable.
+- The current quantile-labelling setup also drops the middle band, which reduces usable sample size (`498 -> 374` rows at `018ac87`).
+- So if the goal is to preserve more runtime information, regression on `log(runtime_seconds)` is a more natural next step than finer classification buckets.
+
+## 9) Final takeaway
 
 - The project result is valid and meaningful: the pipeline learns useful patterns on familiar schemas.
+- The near-ceiling seen-DB ROC in the tree ablation shows there is strong within-schema signal.
 - The core unsolved problem is cross-schema transfer to unseen databases.
+- In other words, the features appear to encode schema-specific patterns more than schema-general ones.
 - More data alone did not reliably fix this.
 - Tree+global features were not consistently better than global-only features in this rerun.
+- But in the new matched-subset fairness control, tree+global was stronger than the matched global rerun on unseen transfer across all 3 commits.
 
 ## Evidence files
 
 - `reports/commit_rerun_metrics.csv`
 - `reports/tree_ablation_commit_metrics.csv`
+- `reports/tree_fairness_control_metrics.csv`
+- `reports/tree_fairness_fixed_lr_metrics.csv`
+- `reports/global_downsampled_to_tree_size_metrics.csv`
+- `reports/tree_fairness_query_manifest.csv`
 - `reports/model_results.txt`
 
 ## Limits
 
 - Seen-db values come from deterministic within-db reruns and may differ from older historical scripts.
 - Tree-ablation row counts are lower than full labelled counts because some SQLs fail `EXPLAIN QUERY PLAN` and are dropped.
+- The matched fairness-control subset is small and heavily skewed toward fast queries, so its values should be treated as supportive rather than definitive.
 

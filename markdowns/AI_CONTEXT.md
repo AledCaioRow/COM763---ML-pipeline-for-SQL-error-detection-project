@@ -12,7 +12,7 @@ The repository has two pipelines with different artifacts; keep them separated i
 - **Entry:** `python setup_bird.py` then `python -u main.py`
 - **Config:** `config.py` (`FEATURE_COLS`, split mode, holdout DBs, timing)
 - **Artifacts:** `artifacts/best_model.joblib`, `data/query_dataset_*.csv`, `reports/*`
-- **Streamlit:** `streamlit_app/` expects these root outputs.
+- **Streamlit:** `streamlit_app/` still centers on these root outputs, but now also exposes optional runtime prediction surfaces when `sql_runtime_predictor/artifacts/` exists.
 
 ---
 
@@ -34,5 +34,6 @@ The repository has two pipelines with different artifacts; keep them separated i
 - BIRD layout: `dev_databases/<db_id>/<db_id>.sqlite` + `mini_dev_sqlite.json` or `mini_dev_mysql.json`
 - `sql_runtime_predictor/src/database/utils.py`: `resolve_bird_root`, `convert_mysql_to_sqlite`, `list_sqlite_databases`
 - Legacy module paths (`src.generate_queries`, `src.train`, etc.) remain available for compatibility.
+- `streamlit_app/` is now a hybrid UI: classifier exploration/prediction from root artifacts plus optional runtime prediction and `Live Compare` support via `sql_runtime_predictor` checkpoints.
 
 When editing docs or code, always state which system you are changing (root legacy vs `sql_runtime_predictor` current).

@@ -1,0 +1,86 @@
+# COM763 Portfolio Task 1 – Machine Learning System Report
+
+## Task Description
+
+Students are required to design, build, evaluate, and demonstrate a complete machine learning system that solves a real-world problem. This task is assessed through a single technical report that documents the full development process from start to finish, along with the working system deployed on Streamlit Community Cloud.
+
+Your report must provide a clear, step-by-step account of how the system was developed, including the reasoning behind every key decision. The work should demonstrate strong engineering practice and experimental rigour, including:
+
+- Problem framing
+- Data handling and preprocessing
+- Model implementation and debugging
+- Performance evaluation and comparison
+- Final model selection based on evidence
+
+The report must include visuals throughout (e.g., workflow diagrams, plots, tables) and screenshots of relevant code and outputs to demonstrate implementation progress and technical work.
+
+The aim is for a reader to understand exactly what you did, why you did it, and what you learned from the results.
+
+---
+
+## Marking Rubric Overview
+
+### 1. Problem Framing (15%)
+
+- Clarity and depth of problem definition
+- Understanding of context and objectives
+- Justification of approach
+
+**Outstanding (90–100%)**:  
+Flawless and insightful framing; clearly identifies complex aspects of the problem and justifies decisions with strong reasoning.
+
+---
+
+### 2. Data Handling & Pipeline (25%)
+
+- Data collection, cleaning, and preprocessing
+- Feature engineering
+- Pipeline design
+
+**Outstanding (90–100%)**:  
+Comprehensive and sophisticated data pipeline; demonstrates strong control over preprocessing and feature design.
+
+---
+
+### 3. Model Implementation (30%)
+
+- Model selection and development
+- Debugging and iteration
+- Technical depth
+
+**Outstanding (90–100%)**:  
+Flawless implementation; exceptional depth in model understanding, tuning, and optimisation.
+
+---
+
+### 4. Evaluation & Analysis (20%)
+
+- Use of appropriate metrics
+- Comparison between models
+- Interpretation of results
+
+**Outstanding (90–100%)**:  
+Outstanding rigour; analysis is thorough, well-justified, and comparable to publication-quality work.
+
+---
+
+### 5. Communication & Presentation (10%)
+
+- Report clarity and structure
+- Use of visuals and screenshots
+- Professional presentation
+
+**Outstanding (90–100%)**:  
+Flawless professional communication; highly polished, clear, and visually strong.
+
+---
+
+## Overall Expectation
+
+To achieve high marks, the work must go beyond basic implementation. It should demonstrate:
+
+- Clear reasoning behind decisions
+- Evidence-driven experimentation
+- Strong technical execution
+- Insightful reflection on results
+- Professional-level presentation

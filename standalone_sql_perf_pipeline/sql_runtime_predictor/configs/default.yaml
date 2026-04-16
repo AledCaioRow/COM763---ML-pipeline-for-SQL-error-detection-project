@@ -1,0 +1,41 @@
+# Paths (override with env BIRD_ROOT / SRP_ROOT)
+bird_root_candidates:
+  - "../data/bird/mini_dev_data"
+  - "../Mini Dev/MINIDEV"
+
+data_dir: "data"
+synthetic_subdir: "synthetic_queries"
+runtimes_subdir: "collected_runtimes"
+features_subdir: "features"
+artifacts_subdir: "artifacts"
+
+# Synthetic generation
+queries_per_db_min: 2000
+queries_per_db_max: 5000
+random_seed: 42
+max_generation_attempts_per_db: 8000
+
+# Runtime collection (Phase 2)
+timing_runs: 5
+cache_size_pages: -2000
+timeout_seconds: 30
+
+# Training (Phase 4)
+hidden_dim: 128
+dropout: 0.15
+weight_decay: 0.0001
+learning_rate: 0.001
+epochs: 80
+batch_size: 32
+early_stopping_patience: 12
+train_fraction: 0.8
+
+# Evaluation
+q_error_percentiles: [50, 90]
+
+# Runtime tier calibration (display-only labels on top of runtime regression)
+# cutoff_policy: "global_quantile" or "per_db_quantile"
+cutoff_policy: "global_quantile"
+cutoff_quantiles: [0.2, 0.4, 0.6, 0.8]
+cutoff_labels: ["very_fast", "fast", "medium", "slow", "very_slow"]
+cutoff_min_samples_per_db: 20

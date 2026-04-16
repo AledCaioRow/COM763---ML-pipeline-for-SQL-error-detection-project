@@ -1,0 +1,19 @@
+Train: 310 rows from 9 databases
+Test:  64 rows  | fast=55 slow=9
+Test runtime range: 0.0001s - 4.1456s  mean=0.2300s
+
+=== REGRESSION: all seen DBs -> unseen (financial + formula_1) ===
+  Linear Regression: MAE(log)=2.9160  RMSE(log)=3.8583  R2(log)=-1.2795  |  MAE(s)=36756.0998  RMSE(s)=283461.1723  R2(s)=-137347871362.8284
+  Ridge (alpha=1): MAE(log)=2.8807  RMSE(log)=3.7565  R2(log)=-1.1608  |  MAE(s)=17633.8931  RMSE(s)=135028.8421  R2(s)=-31166487685.9291
+  Ridge (alpha=10): MAE(log)=2.6737  RMSE(log)=3.2220  R2(log)=-0.5896  |  MAE(s)=255.5448  RMSE(s)=1865.3697  R2(s)=-5947912.1784
+  Lasso: MAE(log)=2.7063  RMSE(log)=3.2940  R2(log)=-0.6615  |  MAE(s)=528.1449  RMSE(s)=3956.3163  R2(s)=-26755727.7622
+
+=== PER-DB (Ridge alpha=1) ===
+  financial: n=30 fast=26 slow=4 | runtime 0.0003s-3.0621s mean=0.2202s
+    MAE(log)=2.7661  R2(log)=-1.3506  |  MAE(s)=26.1392  R2(s)=-44616.5697
+  formula_1: n=34 fast=29 slow=5 | runtime 0.0001s-4.1456s mean=0.2387s
+    MAE(log)=2.9818  R2(log)=-1.0616  |  MAE(s)=33170.1466  R2(s)=-48825647922.5095
+
+=== SEEN DB baseline (within-DB split, Ridge alpha=1) for comparison ===
+  Seen-DB (Ridge alpha=1): MAE(log)=3.2667  R2(log)=-0.4048  |  MAE(s)=0.8354  R2(s)=-147.5524
+DONE

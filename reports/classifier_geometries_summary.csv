@@ -1,0 +1,2 @@
+commit,raw_rows,labelled_rows,fast_rows,slow_rows,unseen_train_rows,unseen_test_rows,seen_train_rows,seen_test_rows,unseen_best_model,unseen_f1,unseen_roc_auc,unseen_accuracy,seen_best_model,seen_f1,seen_roc_auc,seen_accuracy
+current_worktree,498,374,249,125,310,64,294,80,Random Forest,0.2702702702702703,0.5686868686868687,0.578125,Gradient Boosting,0.2553191489361702,0.45672727272727276,0.5625

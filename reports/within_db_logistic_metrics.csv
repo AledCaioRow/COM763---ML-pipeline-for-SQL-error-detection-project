@@ -1,0 +1,12 @@
+db_id,n,n_train,n_test,slow_pct,f1_slow,roc_auc,accuracy,status
+california_schools,3,,,0,,,,skipped_small
+card_games,46,36.0,10.0,85,0.888889,0.3125,0.8,ok
+codebase_community,37,29.0,8.0,92,0.933333,1.0,0.875,ok
+debit_card_specializing,20,16.0,4.0,35,0.0,0.666667,0.75,ok
+european_football_2,41,32.0,9.0,80,0.769231,0.642857,0.666667,ok
+financial,30,24.0,6.0,13,0.0,0.0,0.833333,ok
+formula_1,34,27.0,7.0,15,0.0,1.0,0.857143,ok
+student_club,47,37.0,10.0,0,,,,degenerate_train
+superhero,52,41.0,11.0,4,,,,degenerate_test
+thrombosis_prediction,38,30.0,8.0,0,,,,degenerate_train
+toxicology,26,20.0,6.0,4,,,,degenerate_train

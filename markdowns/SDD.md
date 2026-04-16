@@ -72,4 +72,4 @@ Classification outputs include precision/recall/F1, optional ROC-AUC, grouped CS
 
 ## 4. Streamlit dashboard
 
-`streamlit_app/` is a read-only UI for System A (root classifier outputs). It does not load `sql_runtime_predictor` checkpoints.
+`streamlit_app/` is a hybrid UI layered on top of System A. Its core pages still load the root classifier outputs (`data/`, `reports/`, `artifacts/best_model.joblib`), but the `Predict` page can also use `sql_runtime_predictor` checkpoints for runtime prediction, and `Live Compare` executes SQL against SQLite DBs to compare measured versus predicted runtime tiers.

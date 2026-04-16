@@ -1,6 +1,6 @@
 # Codebase overview
 
-This repository implements **SQL query performance** coursework in three parts: a **root legacy pipeline** (classify queries as fast vs slow on BIRD Mini-Dev), a **Streamlit dashboard** that visualizes that pipeline only, and a **separate runtime-regression subsystem** under `sql_runtime_predictor/` (synthetic queries, plan-tree features, PyTorch).
+This repository implements **SQL query performance** coursework in three parts: a **root legacy pipeline** (classify queries as fast vs slow on BIRD Mini-Dev), a **Streamlit dashboard** centered on that pipeline with optional runtime-prediction surfaces, and a **separate runtime-regression subsystem** under `sql_runtime_predictor/` (synthetic queries, plan-tree features, PyTorch).
 
 For a detailed file-by-file inventory and metrics snapshot, see `CODEBASE_AUDIT.md`. For high-level project intent, see `PROJECT_OVERVIEW.md`.
 
@@ -18,8 +18,8 @@ For a detailed file-by-file inventory and metrics snapshot, see `CODEBASE_AUDIT.
 | `data/` | `query_dataset_raw.csv`, `query_dataset_features.csv` (root pipeline outputs). |
 | `reports/` | `model_results.txt`, `per_database_results.csv`, `per_difficulty_results.csv`. |
 | `artifacts/` | `best_model.joblib` (root classifier). |
-| `streamlit_app/` | Streamlit UI: reads the artifacts above only. |
-| `sql_runtime_predictor/` | Synthetic query generation, runtime collection, plan features, PyTorch train/eval (no Streamlit integration). |
+| `streamlit_app/` | Streamlit UI: reads the legacy classifier artifacts above and can optionally call the runtime predictor when runtime checkpoints exist. |
+| `sql_runtime_predictor/` | Synthetic query generation, runtime collection, plan features, PyTorch train/eval; its artifacts can be consumed by optional Streamlit runtime views. |
 
 ## Entry points
 
@@ -30,13 +30,13 @@ python setup_bird.py
 python -u main.py
 ```
 
-**Streamlit (legacy dashboard)**
+**Streamlit dashboard**
 
 ```bash
 cd streamlit_app && python -m pip install -r requirements.txt && python -m streamlit run app.py
 ```
 
-See `streamlit_app/README.md` for pages, env vars (`SQPP_PROJECT_ROOT`), and artifact contract.
+See `streamlit_app/README.md` for pages, env vars (`SQPP_PROJECT_ROOT`), classifier artifacts, optional runtime artifacts, and `Live Compare`.
 
 **Runtime predictor (parallel pipeline)**
 
@@ -48,8 +48,8 @@ pip install -r requirements.txt
 
 ## Streamlit vs runtime predictor
 
-- **Streamlit** uses sklearn + CSV + text reports from the **root** tree. It does not read `sql_runtime_predictor/artifacts/` or PyTorch checkpoints.
-- **sql_runtime_predictor** targets **continuous** runtime (e.g. log-scale regression, q-error metrics) from `EXPLAIN QUERY PLAN`–style features, not the binary fast/slow UI.
+- **Streamlit** is still anchored to sklearn + CSV + text reports from the **root** tree for exploration and classifier evaluation, but it can also invoke `sql_runtime_predictor/artifacts/runtime_predictor.pt` for runtime prediction when that checkpoint exists.
+- **sql_runtime_predictor** is still the actual runtime-regression subsystem: synthetic-query generation, plan-tree feature extraction, PyTorch training/evaluation, and runtime artifacts.
 
 Keeping the two systems separate avoids mixing feature schemas and evaluation metrics.
 

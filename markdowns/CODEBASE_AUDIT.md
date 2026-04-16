@@ -1,127 +1,133 @@
-# SQPP Codebase Audit: 2026-04-13
+# SQPP Codebase Audit: 2026-04-14
 
 ## File inventory
-
-- `config.py` — Central root-pipeline configuration for paths, timing, split mode, labels, and `FEATURE_COLS` (25 features). **MODIFIED**
-- `main.py` — Root pipeline orchestrator (`load_and_time_bird_queries` -> `add_parsed_features` -> `add_labels` -> train -> evaluate -> save report). **MODIFIED**
-- `setup_bird.py` — BIRD Mini-Dev setup/data verifier with expected DB list and download guidance. **MODIFIED**
-- `src/data/load_bird.py` — Loads BIRD JSON, optional MySQL->SQLite conversion, times queries (median of runs), logs failure categories. **MODIFIED**
-- `src/features/extract_features.py` — Extracts SQL structural features and applies quantile/median labeling for binary slow/fast targets. **MODIFIED**
-- `src/models/train.py` — Train/test split (`random` or `database_aware`), model registry (LR/RF/GB/XGBoost), 5-fold CV model selection and persistence. **MODIFIED**
-- `src/models/predict.py` — Inference helpers for single/batch SQL prediction using saved sklearn model. **MODIFIED**
-- `src/evaluation/evaluate.py` — Root evaluation/reporting: classification report, confusion matrix, F1/ROC-AUC, per-db/per-difficulty CSV outputs. **MODIFIED**
-- `data/query_dataset_raw.csv` — Root timed-query dataset (`question_id, db_id, sql, difficulty, runtime_s`). **MODIFIED**
-- `data/query_dataset_features.csv` — Root feature matrix with extracted SQL features and labels. **MODIFIED**
-- `reports/model_results.txt` — Root model selection and test-evaluation report text. **MODIFIED**
-- `reports/per_database_results.csv` — Root held-out per-database metrics. **MODIFIED**
-- `reports/per_difficulty_results.csv` — Root held-out per-difficulty metrics. **MODIFIED**
-- `artifacts/best_model.joblib` — Expected root persisted best model artifact. **[CHECK] NOT FOUND in current tree**
-- `streamlit_app/app.py` — Streamlit dashboard entrypoint with pages: Overview, Data Explorer, Model Results, Predict. **MODIFIED**
-- `streamlit_app/README.md` — Streamlit documentation; explicitly states it targets the root legacy classifier pipeline. **MODIFIED**
-- `streamlit_app/requirements.txt` — Streamlit-side dependency list. **NEW**
-- `streamlit_app/components/sidebar.py` — Sidebar rendering for root path, pipeline settings, missing artifact indicators, page routing. **NEW**
-- `streamlit_app/components/charts.py` — Plotly chart builder utilities used across pages. **NEW**
-- `streamlit_app/components/metrics.py` — Metric row helper utilities for Streamlit layouts. **NEW**
-- `streamlit_app/utils/paths.py` — Project-root resolution (`SQPP_PROJECT_ROOT` env support). **NEW**
-- `streamlit_app/utils/data_loader.py` — CSV/report parser + root config loader for dashboard. **NEW**
-- `streamlit_app/utils/model_loader.py` — Safe model loading + feature importance extraction for sklearn objects. **NEW**
-- `streamlit_app/utils/predictor.py` — In-dashboard prediction from feature vectors. **NEW**
-- `sql_runtime_predictor/README.md` — New end-to-end runtime regression workflow documentation (synthetic gen -> runtime collection -> plan-tree features -> PyTorch training/eval). **NEW**
-- `sql_runtime_predictor/requirements.txt` — Dependencies for the runtime-regression subsystem (PyTorch, sklearn, scipy, etc.). **NEW**
-- `sql_runtime_predictor/configs/default.yaml` — Runtime-regression config (BIRD roots, synthetic volume, timing, training, eval percentiles). **NEW**
-- `sql_runtime_predictor/data/bird_mini_dev/README.txt` — Data-location note for optional local BIRD Mini-Dev copy/symlink. **NEW**
-- `sql_runtime_predictor/notebooks/eda.ipynb` — Notebook stub for runtime collection exploratory analysis. **NEW**
-- `sql_runtime_predictor/notebooks/results.ipynb` — Notebook stub for evaluation report visualization. **NEW**
-- `sql_runtime_predictor/src/__init__.py` — Package marker for runtime predictor modules. **NEW**
-- `sql_runtime_predictor/src/generate_queries.py` — Phase 1 synthetic SQL generator (schema-aware joins/predicates/aggregates/subqueries/set-ops; validates executable SQL). **NEW**
-- `sql_runtime_predictor/src/collect_runtimes.py` — Phase 2 runtime collection (warmup + timed runs, timeout checks, metadata + JSONL outputs). **NEW**
-- `sql_runtime_predictor/src/extract_features.py` — Phase 3 feature extraction using `EXPLAIN QUERY PLAN` tree encoding + global query features. **NEW**
-- `sql_runtime_predictor/src/model.py` — QPPNet-style recursive tree encoder (`RuntimePredictor`) implemented in PyTorch. **NEW**
-- `sql_runtime_predictor/src/train.py` — Phase 4 training loop (log-runtime target, stratified-by-database split, AdamW + cosine LR + early stopping). **NEW**
-- `sql_runtime_predictor/src/evaluate.py` — Phase 5 evaluation (q-error, p90 q-error, MAE(log), Spearman, median-split accuracy; plus Ridge baselines). **NEW**
-- `sql_runtime_predictor/src/utils.py` — Shared schema inspection, config/path resolution, JSONL utilities, MySQL->SQLite conversion. **NEW**
-- `sql_runtime_predictor/src/creation/__init__.py` — Creation namespace package marker. **NEW**
-- `sql_runtime_predictor/src/creation/generate_queries.py` — Compatibility entry point re-exporting `src.generate_queries`. **NEW**
-- `sql_runtime_predictor/src/creation/collect_runtimes.py` — Compatibility entry point re-exporting `src.collect_runtimes`. **NEW**
-- `sql_runtime_predictor/src/modeling/__init__.py` — Modeling namespace package marker. **NEW**
-- `sql_runtime_predictor/src/modeling/extract_features.py` — Compatibility entry point re-exporting `src.extract_features`. **NEW**
-- `sql_runtime_predictor/src/modeling/model.py` — Compatibility exports re-exporting `src.model`. **NEW**
-- `sql_runtime_predictor/src/modeling/train.py` — Compatibility entry point re-exporting `src.train`. **NEW**
-- `sql_runtime_predictor/src/performance/__init__.py` — Performance namespace package marker. **NEW**
-- `sql_runtime_predictor/src/performance/evaluate.py` — Compatibility entry point re-exporting `src.evaluate`. **NEW**
-- `sql_runtime_predictor/src/database/__init__.py` — Database namespace package marker. **NEW**
-- `sql_runtime_predictor/src/database/utils.py` — Compatibility exports re-exporting `src.utils`. **NEW**
-- `sql_runtime_predictor/src/data_queries/__init__.py` — Data/query namespace package marker. **NEW**
-- `sql_runtime_predictor/src/data_queries/README.md` — Notes for future query-template/data-query helper modules. **NEW**
+- `config.py` — Root configuration for paths, split strategy, feature schema, timing, and evaluation flags. **MODIFIED**
+- `main.py` — End-to-end legacy classifier pipeline orchestrator (`load` -> `features` -> `train` -> `evaluate`). **MODIFIED**
+- `setup_bird.py` — Setup validator for Mini-Dev JSON/SQLite presence and expected database IDs.
+- `requirements.txt` — Root dependency list for the legacy classifier pipeline.
+- `rerun_full_stats.py` — Utility script for rerunning reporting/statistics generation. **NEW**
+- `run_codespaces.sh` — Shell helper script for environment setup/run flow. **NEW**
+- `run.log` — Pipeline runtime log output file. **NEW**
+- `new.md` — Ad-hoc markdown note file. **NEW**
+- `data/query_dataset_raw.csv` — Timed query dataset (`question_id`, `db_id`, `sql`, `difficulty`, `runtime_s`). **MODIFIED**
+- `data/query_dataset_features.csv` — Feature matrix + labels used for model training/evaluation. **MODIFIED**
+- `data/tpch_lite.sqlite` — Additional SQLite database asset outside baseline layout. **NEW**
+- `artifacts/best_model.joblib` — Persisted copy of selected best classifier. **MODIFIED**
+- `artifacts/logistic_regression_model.joblib` — Persisted Logistic Regression model. **MODIFIED**
+- `artifacts/random_forest_model.joblib` — Persisted Random Forest model. **MODIFIED**
+- `artifacts/gradient_boosting_model.joblib` — Persisted Gradient Boosting model. **MODIFIED**
+- `artifacts/xgboost_model.joblib` — Persisted XGBoost model. **MODIFIED**
+- `reports/model_results.txt` — Human-readable experiment summary and held-out metrics. **MODIFIED**
+- `reports/per_database_results.csv` — Held-out metrics grouped by `db_id`. **MODIFIED**
+- `reports/per_difficulty_results.csv` — Held-out metrics grouped by query difficulty. **MODIFIED**
+- `reports/all_models_test_comparison.csv` — Test metrics comparison across all trained models. **MODIFIED**
+- `reports/classification_report.csv` — Sklearn classification report persisted as CSV. **MODIFIED**
+- `reports/confusion_matrix.csv` — Raw confusion matrix counts (fast/slow). **MODIFIED**
+- `reports/confusion_matrix.png` — Confusion matrix plot image. **MODIFIED**
+- `reports/confusion_matrix_normalised.png` — Normalized confusion matrix plot image. **MODIFIED**
+- `reports/roc_curve.png` — ROC plot over test predictions. **MODIFIED**
+- `reports/pr_curve.png` — Precision-Recall plot for best model. **MODIFIED**
+- `reports/calibration_curve.png` — Probability calibration curve plot. **MODIFIED**
+- `reports/cv_fold_scores.csv` — Per-fold CV metrics and timing. **MODIFIED**
+- `reports/cv_boxplot.png` — CV F1 fold distribution plot. **MODIFIED**
+- `reports/feature_importance.csv` — Feature importance table for best model. **MODIFIED**
+- `reports/feature_importance.png` — Feature importance chart. **MODIFIED**
+- `reports/class_distribution.csv` — Quantile-label class counts and percentages. **MODIFIED**
+- `reports/class_distribution.png` — Class distribution chart. **MODIFIED**
+- `reports/runtime_distribution.png` — Runtime histogram with quantile markers. **MODIFIED**
+- `reports/split_summary.csv` — Train/test counts and database composition. **MODIFIED**
+- `reports/error_analysis.csv` — Misclassification counts grouped by database+difficulty. **MODIFIED**
+- `reports/learning_curve.png` — Learning-curve artifact (present in tree). **NEW**
+- `reports/quick_experiments_summary.csv` — Quick-iteration experiment table for additional runs. **NEW**
+- `reports/quick_experiments_summary.md` — Narrative summary for quick-iteration experiments. **NEW**
+- `src/data/load_bird.py` — Query loading/timing with conversion fallback, error categorization, per-DB diagnostics. **MODIFIED**
+- `src/features/extract_features.py` — SQL structural feature extraction + quantile/median labeling.
+- `src/models/train.py` — Split logic, model registry, CV scoring, artifact persistence (all models + best). **MODIFIED**
+- `src/models/predict.py` — Single-query and batch inference helpers against persisted model.
+- `src/evaluation/evaluate.py` — Expanded evaluation/reporting pipeline (plots, fold stats, error analysis, significance test). **MODIFIED**
+- `src/__init__.py`, `src/data/__init__.py`, `src/features/__init__.py`, `src/models/__init__.py`, `src/evaluation/__init__.py` — Package markers.
+- `streamlit_app/app.py` — Multi-page dashboard with legacy-classifier + runtime prediction UI. **MODIFIED**
+- `streamlit_app/README.md` — Dashboard documentation. **MODIFIED**
+- `streamlit_app/requirements.txt` — Streamlit app dependencies. **NEW**
+- `streamlit_app/_debug_streamlit_env.py` — Streamlit environment/debug helper. **NEW**
+- `streamlit_app/components/charts.py` — Plotly chart builders used by pages. **NEW**
+- `streamlit_app/components/sidebar.py` — Sidebar renderer and artifact status panel. **NEW**
+- `streamlit_app/components/metrics.py` — Shared metric-layout helper functions. **NEW**
+- `streamlit_app/components/live_compare.py` — Live measured-vs-predicted runtime/tier comparator. **NEW**
+- `streamlit_app/utils/paths.py` — Project-root resolution/path utilities. **NEW**
+- `streamlit_app/utils/data_loader.py` — Safe artifact loading and report parsing utilities. **NEW**
+- `streamlit_app/utils/model_loader.py` — Safe model loader and feature-importance extraction. **NEW**
+- `streamlit_app/utils/predictor.py` — Prediction helpers (legacy classifier + runtime predictor subprocess). **NEW**
+- `sql_runtime_predictor/` subtree (`README`, `configs`, `notebooks`, `src/*`) — Separate runtime-regression pipeline (query generation, timing, plan-tree features, PyTorch training/eval). **NEW**
+- `markdowns/` subtree — Project documentation/audit/support materials (`AI_CONTEXT`, `PROJECT_OVERVIEW`, `SDD`, briefs, etc.). **NEW**
+- `markdowns/SUBMISSION_READY_NOTES.md` — Submission-focused notes for packaging/checklist. **NEW**
+- `Mini Dev/MINIDEV/` subtree — BIRD Mini-Dev assets: query JSONs, DB files, schema-description CSVs, metadata, and zip payload. **NEW**
+- `rerun_quick_improvements.py` — Script for rerunning quick model-improvement experiments. **NEW**
+- `.gitignore` — Git ignore rules.
 
 ## New or changed features
-
-- Root pipeline feature set remains 25 columns (no detected additions): `n_tokens`, `query_length`, `n_joins`, `n_tables_approx`, `n_where_predicates`, `has_group_by`, `has_order_by`, `has_having`, `has_distinct`, `has_limit`, `has_union`, `n_subqueries`, `has_subquery`, `max_nesting_depth`, `n_aggregations`, `n_count`, `n_sum`, `n_avg`, `n_max`, `n_min`, `has_between`, `has_in_clause`, `has_like`, `has_exists`, `has_correlated_subquery`.
-- Root `src/features/extract_features.py` still uses quantile labeling logic (`p75` slow, `p50` fast, drop middle) when `LABEL_METHOD == "quantile"`; median labeling path remains available.
-- New runtime-regression subsystem does not use `FEATURE_COLS`; it defines structural vector dimensions in `sql_runtime_predictor/src/extract_features.py`:
-  - `NODE_FEATURE_DIM = len(OPERATOR_TYPES) + len(ACCESS_TYPES) + 8`
-  - `GLOBAL_FEATURE_DIM = 16`
-- New plan-tree features include one-hot operator/access classes plus numeric node attributes (table normalization, estimated row-scale proxy, predicate/index signals, selectivity heuristics).
+- `FEATURE_COLS` in `config.py` still contains 25 fields; no added/removed root-classifier features were found:
+  - `n_tokens`, `query_length`, `n_joins`, `n_tables_approx`, `n_where_predicates`, `has_group_by`, `has_order_by`, `has_having`, `has_distinct`, `has_limit`, `has_union`, `n_subqueries`, `has_subquery`, `max_nesting_depth`, `n_aggregations`, `n_count`, `n_sum`, `n_avg`, `n_max`, `n_min`, `has_between`, `has_in_clause`, `has_like`, `has_exists`, `has_correlated_subquery`.
+- `extract_features.py` logic remains structural-text based (no template metadata dependency), including parenthesis depth, aggregation counts, and correlated-subquery heuristic.
+- Labeling behavior is configurable in `config.py` via `LABEL_METHOD` (`"quantile"` default or `"median"`), with quantile mode still dropping the middle band.
 
 ## Pipeline changes
-
-- Root legacy classifier pipeline (baseline-aligned) is still present (`main.py`, `src/data`, `src/features`, `src/models`, `src/evaluation`) with key baseline settings preserved in `config.py`:
-  - `SPLIT_METHOD = "database_aware"`
-  - `HOLDOUT_DATABASES = ["formula_1", "financial"]`
-  - `TIMING_RUNS = 3`
-  - `QUERY_TIMEOUT_S = 30`
-- Root loading/timing in `load_and_time_bird_queries()` retains SQLite-first JSON choice via `pick_bird_json_path()`, MySQL fallback conversion via `convert_mysql_to_sqlite()`, median-of-runs runtime, and timeout handling.
-- Major NEW parallel pipeline introduced under `sql_runtime_predictor/`:
-  - **Phase 1** `src/generate_queries.py`: synthetic, schema-driven query generation (joins/predicates/aggregates/subqueries/set operations).
-  - **Phase 2** `src/collect_runtimes.py`: runtime collection from synthetic JSONL with timing metadata.
-  - **Phase 3** `src/extract_features.py`: `EXPLAIN QUERY PLAN` tree extraction + global feature construction.
-  - **Phase 4** `src/train.py`: PyTorch `RuntimePredictor` training on `log1p(runtime)`.
-  - **Phase 5** `src/evaluate.py`: runtime-regression metrics + optional baselines (`flat_ridge`, `tfidf_ridge`, `explain_opcode_ridge`).
-- Data format has diverged for the new subsystem: legacy root uses CSV (`data/query_dataset_*.csv`), while runtime predictor uses JSONL shards (`data/synthetic_queries`, `data/collected_runtimes`, `data/features`).
-- Streamlit pipeline integration changed architecture: from single-app expectations to modular files (`components/` + `utils/`), while still reading legacy root artifacts only.
+- `config.py` now includes path-fallback helpers (`_pick_first_existing`, `_BIRD_DIR_CANDIDATES`) and split/eval controls beyond baseline:
+  - `LABEL_METHOD = "quantile"`
+  - `EVAL_ENABLE_LEARNING_CURVE = False`
+  - `EVAL_LEARNING_CURVE_CV_FOLDS = 3`
+  - `EVAL_LEARNING_CURVE_TRAIN_SIZES = [0.2, 0.4, 0.6, 0.8, 1.0]`
+- Data loading (`src/data/load_bird.py`) keeps baseline SQLite/MySQL fallback and median-of-3 timing, but now adds:
+  - `_categorize_error()` bucketing
+  - per-database success counters
+  - sample failure logging.
+- Training (`src/models/train.py`) keeps 4-model registry and 5-fold stratified CV, but now computes broader CV metrics (`accuracy`, `precision`, `recall`, `roc_auc`) via `cross_validate()` and persists each fitted model artifact, not just best.
+- Evaluation (`src/evaluation/evaluate.py`) has major expansion beyond baseline:
+  - all-model test comparison CSV
+  - CV fold scores + boxplot
+  - calibration curve
+  - class/runtime distribution plots
+  - split summary CSV
+  - error analysis CSV
+  - optional learning curve path
+  - Wilcoxon significance note for top CV models (if SciPy available).
+- Dataset currently observed:
+  - `data/query_dataset_raw.csv`: 498 rows
+  - `data/query_dataset_features.csv`: 374 rows
+  - feature-label counts: `{'fast': 249, 'slow': 125}`.
+- Additional pipeline introduced: `sql_runtime_predictor/` implements a separate runtime regression stack (PyTorch + plan-tree features), which is outside the original baseline classifier flow.
 
 ## Current metrics
-
-- Source: `reports/model_results.txt`, `reports/per_database_results.csv`, `reports/per_difficulty_results.csv`.
-- Cross-validation F1 (training set):
-  - `XGBoost`: `0.5362 ± 0.0515`
-  - `Random Forest`: `0.5126 ± 0.0459`
-  - `Gradient Boosting`: `0.4728 ± 0.0998`
-  - `Logistic Regression`: `0.4138 ± 0.0638`
-- Best model: `XGBoost`
-- Held-out test metrics:
-  - Test F1: `0.1765`
-  - ROC-AUC: `0.5442`
-  - Accuracy: `0.49`
+- Source files: `reports/model_results.txt`, `reports/all_models_test_comparison.csv`, `reports/per_database_results.csv`, `reports/per_difficulty_results.csv`.
+- Cross-validation F1 (mean ± std):
+  - `XGBoost`: `0.5359 ± 0.0406`
+  - `Random Forest`: `0.5106 ± 0.0556`
+  - `Gradient Boosting`: `0.4741 ± 0.0237`
+  - `Logistic Regression`: `0.2694 ± 0.0856`
+- Held-out test (best model `XGBoost`):
+  - Test F1: `0.1860` (exact CSV: `0.18604651162790697`)
+  - ROC-AUC: `0.4610` (exact CSV: `0.461038961038961`)
+  - Accuracy: `0.52` (exact CSV: `0.5205479452054794`)
 - Per-database F1:
-  - `financial`: `0.16666666666666666` (22 queries)
-  - `formula_1`: `0.18181818181818182` (33 queries)
+  - `financial`: `0.18181818181818182` (support `32`)
+  - `formula_1`: `0.19047619047619047` (support `41`)
 - Per-difficulty F1:
-  - `challenging`: `0.4444444444444444` (9 queries)
-  - `moderate`: `0.16666666666666666` (23 queries)
-  - `simple`: `0.0` (23 queries)
-- Runtime-regression metrics (`sql_runtime_predictor/artifacts/eval_report.json`) are **[CHECK] not present** in current tree, so no exact values can be extracted for that subsystem.
+  - `challenging`: `0.2` (support `13`)
+  - `moderate`: `0.2608695652173913` (support `33`)
+  - `simple`: `0.0` (support `27`)
 
 ## Streamlit app state
-
-- Current app is multi-page and modular:
-  - Pages (`PAGE_OPTIONS`): `Overview`, `Data Explorer`, `Model Results`, `Predict`.
-  - Components/util modules split across `streamlit_app/components/*.py` and `streamlit_app/utils/*.py`.
-- Data sources are legacy root artifacts, not runtime-regression artifacts:
-  - Reads `data/query_dataset_raw.csv`, `data/query_dataset_features.csv`.
-  - Reads `reports/model_results.txt`, `reports/per_database_results.csv`, `reports/per_difficulty_results.csv`.
-  - Loads `artifacts/best_model.joblib` (if present).
-  - Loads root `config.py` for `FEATURE_COLS` and split/timing settings.
-- `Predict` page uses:
-  - Manual feature vector prediction via loaded sklearn model.
-  - SQL-to-feature extraction by importing `src.features.extract_features.extract_features` from the root project.
-- `streamlit_app/README.md` explicitly states the dashboard is for the legacy root classifier and does not connect to `sql_runtime_predictor/`.
-- Baseline layout expected `streamlit_app/snapshots/`; no snapshot files were found in current visible tree. **[CHECK]**
+- Page set in `streamlit_app/app.py` is `["Overview", "Data Explorer", "Model Results", "Predict", "Live Compare"]`.
+- App reads real pipeline outputs from root paths (`data/*.csv`, `reports/*.csv|*.txt`, `artifacts/best_model.joblib`) via `streamlit_app/utils/data_loader.py`; this is not demo-only wiring.
+- Predict surface now has three operational modes:
+  - manual feature-vector classifier prediction
+  - SQL->feature extraction classifier prediction
+  - runtime prediction/tier mapping using `sql_runtime_predictor/artifacts/runtime_predictor.pt` when available.
+- `Live Compare` page (`streamlit_app/components/live_compare.py`) executes SQL against real SQLite DBs, measures runtime, then compares measured tiers vs predicted tiers.
+- `streamlit_app/README.md` is now broadly aligned with the implemented hybrid UI surface.
 
 ## Code quality notes
-
-- Generated cache artifacts appear tracked in VCS (`sql_runtime_predictor/src/**/__pycache__/*.pyc` per git status), which should usually be excluded.
-- Duplicate path representations in git status (same files with `/` and `\`) suggest path-normalization/noise that can complicate review and diffs.
-- `reports/model_results.txt` contains mojibake for special characters (`�` where `±` appears), indicating encoding inconsistency in report writing/reading.
-- Legacy and new pipelines coexist with overlapping entrypoint names (`train.py`, `evaluate.py`, etc.); compatibility wrappers help, but naming overlap increases maintenance risk.
-- Root report files exist while `artifacts/best_model.joblib` is currently missing in tree. **[CHECK]** Verify artifact generation/output path before dashboard inference use.
+- Streamlit now derives the displayed feature count from `FEATURE_COLS`, avoiding the earlier hardcoded `25`-feature UI duplication.
+- `main.py` always prints `reports/learning_curve.png` in output checklist even when learning-curve generation is disabled (`EVAL_ENABLE_LEARNING_CURVE=False`), which can show expected `MISSING`.
+- Legacy classifier and runtime-regression pipelines coexist with overlapping script names (`train.py`, `evaluate.py`), increasing cognitive load for contributors.
+- No actionable `TODO`/`FIXME` markers were found in core code files during this audit pass.
